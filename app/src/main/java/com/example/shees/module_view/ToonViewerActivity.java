@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class ToonViewerActivity extends AppCompatActivity {
     private ArrayList<String> imageUrls;
+    private int imagecount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
