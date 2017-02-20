@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="10"
+    android:background="#EFCEC5"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.epcej.coint_mainactivity.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+<!--#EFCEC5 분홍-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="0.5"
+        android:weightSum="5">
+        <!--장르별, 작가별, 요일별, 베도, 설정 부분-->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop ="@drawable/genre"
+            android:text="장르별"
+            android:background="#00ff0000"
+            android:layout_weight="1"
+            android:id="@+id/genreBtn"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop ="@drawable/artist"
+            android:text="작가별"
+            android:background="#00ff0000"
+            android:layout_weight="1"
+            android:id="@+id/artistBtn" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop ="@drawable/weekday"
+            android:text="요일별"
+            android:background="#00ff0000"
+            android:layout_weight="1"
+            android:id="@+id/weekdayBtn"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop ="@drawable/bestchallenge"
+            android:text="베스트도전"
+            android:background="#00ff0000"
+            android:layout_weight="1"
+            android:id="@+id/bestBtn"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop ="@drawable/setting"
+            android:text="설정"
+            android:background="#00ff0000"
+            android:layout_weight="1"
+            android:id="@+id/settingBtn"/>
+    </LinearLayout>
+
+    <View style="@style/Divider"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_weight="0.5"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="6">
+        <!--즐겨찾는 웹툰 추가하는 부분-->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:background="@drawable/bookshelf">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/addmark"
+                android:id="@+id/addItemBtn"
+                android:background="#00ff0000"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text = "웹툰 추가하기"
+                android:textSize="30dp"
+                android:layout_marginStart="23dp"
+                android:fontFamily="monospace"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/addItemBtn" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="3">
+        <!--Top 15 띄우는 부분-->
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+        </android.support.v4.view.ViewPager>
+
+
+    </LinearLayout>
+</LinearLayout>
