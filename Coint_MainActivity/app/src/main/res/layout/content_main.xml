@@ -12,7 +12,9 @@
     tools:context="com.example.epcej.coint_mainactivity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 <!--#EFCEC5 분홍-->
-
+<!--
+    디자인을 픽셀아트처럼 해야되는건가....
+-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +30,8 @@
             android:text="장르별"
             android:background="#00ff0000"
             android:layout_weight="1"
-            android:id="@+id/genreBtn"/>
+            android:id="@+id/genreBtn"
+            android:onClick="onClick"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -37,7 +40,8 @@
             android:text="작가별"
             android:background="#00ff0000"
             android:layout_weight="1"
-            android:id="@+id/artistBtn" />
+            android:id="@+id/artistBtn"
+            android:onClick="onClick"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -46,7 +50,8 @@
             android:text="요일별"
             android:background="#00ff0000"
             android:layout_weight="1"
-            android:id="@+id/weekdayBtn"/>
+            android:id="@+id/weekdayBtn"
+            android:onClick="onClick"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -55,7 +60,8 @@
             android:text="베스트도전"
             android:background="#00ff0000"
             android:layout_weight="1"
-            android:id="@+id/bestBtn"/>
+            android:id="@+id/bestBtn"
+            android:onClick="onClick"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -64,15 +70,9 @@
             android:text="설정"
             android:background="#00ff0000"
             android:layout_weight="1"
-            android:id="@+id/settingBtn"/>
+            android:id="@+id/settingBtn"
+            android:onClick="onClick"/>
     </LinearLayout>
-
-    <TextView
-        android:text="Test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_weight="0.5" />
 
     <View style="@style/Divider"
         android:layout_margin="@dimen/activity_horizontal_margin"
@@ -124,7 +124,5 @@
             android:layout_height="200dp">
 
         </android.support.v4.view.ViewPager>
-
-
     </LinearLayout>
 </LinearLayout>

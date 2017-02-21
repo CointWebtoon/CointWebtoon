@@ -1,5 +1,6 @@
 package com.example.epcej.coint_mainactivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -101,5 +103,38 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onClick(View view) {        // 베스트도전은 웹뷰로 띄우고, 나머지는 액티비티
+        int id = view.getId();
+        Intent intent;
+        switch (id){
+            case R.id.genreBtn:
+                intent = new Intent(MainActivity.this, IntentTest.class);
+                intent.putExtra("Intent","genre");
+                startActivity(intent);
+                break;
+            case R.id.artistBtn:
+                intent = new Intent(MainActivity.this, IntentTest.class);
+                intent.putExtra("Intent","artist");
+                startActivity(intent);
+                break;
+            case R.id.weekdayBtn:
+                intent = new Intent(MainActivity.this, IntentTest.class);
+                intent.putExtra("Intent","weekday");
+                startActivity(intent);
+                break;
+            case R.id.bestBtn:
+                //webview로 띄울 예정
+                intent = new Intent(MainActivity.this, BestChallenge.class);
+                intent.putExtra("Best","bestchallenge");
+                startActivity(intent);
+                break;
+            case R.id.settingBtn:
+                intent = new Intent(MainActivity.this, IntentTest.class);
+                intent.putExtra("Intent","setting");
+                startActivity(intent);
+                break;
+        }
     }
 }

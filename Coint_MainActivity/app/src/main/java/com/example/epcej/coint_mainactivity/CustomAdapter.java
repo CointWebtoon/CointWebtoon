@@ -31,7 +31,7 @@ public class CustomAdapter extends PagerAdapter{
     //ViewPager가 현재 보여질 Item(View객체)를 생성할 필요가 있는 때 자동으로 호출
     //쉽게 말해, 스크롤을 통해 현재 보여져야 하는 View를 만들어냄.
     //첫번째 파라미터 : ViewPager
-    //두번째 파라미터 : ViewPager가 보여줄 View의 위치(가장 처음부터 0,1,2,3...)
+    //두번째 파라미터 : ViewPager가 보여줄 View의 위치(처음부터 0,1,2,3...)
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         // TODO Auto-generated method stub
@@ -39,7 +39,7 @@ public class CustomAdapter extends PagerAdapter{
         View view=null;
 
         //새로운 View 객체를 Layoutinflater를 이용해서 생성
-        //만들어질 View의 설계는 res폴더>>layout폴더>>view_pager.xml 레이아웃 파일 사용
+        //만들어질 View의 설계는 view_pager.xml 레이아웃 파일 사용
         view= inflater.inflate(R.layout.view_pager, null);
 
         //만들어진 View안에 있는 ImageView 객체 참조
@@ -57,9 +57,9 @@ public class CustomAdapter extends PagerAdapter{
         return view;
     }
 
-    //화면에 보이지 않은 View는파쾨를 해서 메모리를 관리함.
+    //화면에 보이지 않은 View는 destroy를 해서 메모리를 관리함.
     //첫번째 파라미터 : ViewPager
-    //두번째 파라미터 : 파괴될 View의 인덱스(가장 처음부터 0,1,2,3...)
+    //두번째 파라미터 : 파괴될 View의 인덱스(처음부터 0,1,2,3...)
     //세번째 파라미터 : 파괴될 객체(더 이상 보이지 않은 View 객체)
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
