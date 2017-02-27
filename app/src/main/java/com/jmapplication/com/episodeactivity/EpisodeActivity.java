@@ -47,7 +47,38 @@ public class EpisodeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         listView = (ListView)findViewById(R.id.episodeListView);
+
+        COINT_SQLiteManager manager = COINT_SQLiteManager.getInstance(this);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public void onBackPressed() {
