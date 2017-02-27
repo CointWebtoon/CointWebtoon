@@ -3,6 +3,7 @@ package com.jmapplication.com.episodeactivity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -49,18 +53,26 @@ public class EpisodeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        listView = (ListView)findViewById(R.id.episodeListView);
+/*        listView = (ListView)findViewById(R.id.episodeListView);
+        listView.setDivider(null);*/
 
         COINT_SQLiteManager manager = COINT_SQLiteManager.getInstance(this);
 
          for(int i = 0 ; i < 45; i++){
-             Episode object = new Episode(i, "2부 " + (239 - i) + "화" ,"http://thumb.comic.naver.net/webtoon/183559/321/thumbnail_202x120_efa036fb-89af-4c62-bc16-8729f6ed3bd3.jpg");
+             Episode object = new Episode(i + 1, "2부 " + (239 - i) + "화" ,"http://thumb.comic.naver.net/webtoon/183559/321/thumbnail_202x120_efa036fb-89af-4c62-bc16-8729f6ed3bd3.jpg");
              episodes.add(object);
          }
 
-        listView.setAdapter(new EpisodeAdapter(this , makeData(episodes)));
-    }
+        for(Episode episode : episodes){
+            Log.i("jungmin", String.valueOf(episode.ep_id) + " " + episode.subtitle + " " + episode.thumbURL);
+        }
 
+        //listView.setAdapter(new EpisodeAdapter(this , makeData(episodes)));
+
+        Glide.with(this)
+                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Samsung_Galaxy_S5.png/220px-Samsung_Galaxy_S5.png")
+                .into((ImageView)findViewById(R.id.testimageview));
+    }
 
     private ArrayList<Episode[]> makeData(ArrayList<Episode> episodes){
         ArrayList<Episode[]> data = new ArrayList<>();
@@ -68,11 +80,9 @@ public class EpisodeActivity extends AppCompatActivity
 
         for(int i = 0 ; i < episodes.size(); i++){
             episodeArray[i%7] = episodes.get(i);
-            if((i != 0)&&(((i % 7) == 0) || i == episodes.size() -1)){
+            if((i != 0)&&((((i + 1) % 7) == 0) || i == episodes.size() -1)){
                 data.add(episodeArray);
-                for(int j = 0; j < episodeArray.length; j++){
-                    episodeArray[j] = null;
-                }
+                episodeArray = new Episode[7];
             }
         }
 

@@ -1,6 +1,7 @@
 package com.jmapplication.com.episodeactivity;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -80,7 +84,19 @@ public class EpisodeAdapter extends BaseAdapter{
         for(int i = 0 ; i < episodeArray.length; i++){
             if(episodeArray[i] != null){
                 holder.textViews[i].setText(episodeArray[i].subtitle);
-                Glide.with(mContext).load(episodeArray[i].thumbURL).into(holder.imageViews[i]);
+                try{
+                    Log.i("jungmin", episodeArray[i].thumbURL);
+                    Glide.with(mContext)
+                            .load(new URL(episodeArray[i].thumbURL))
+                            .asBitmap()
+                            .override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL)
+                            .into(holder.imageViews[i]);
+                }catch (MalformedURLException muex){
+                    muex.printStackTrace();
+                }
+            }else {
+                holder.textViews[i].setText("");
+                holder.imageViews[i].setImageBitmap(null);
             }
         }
         return view;

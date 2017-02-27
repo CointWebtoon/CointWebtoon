@@ -32,6 +32,8 @@
         </LinearLayout>
 
         <TextView
+            android:paddingLeft="10dp"
+            android:gravity="left"
             android:layout_gravity="center_vertical"
             android:textSize="20dp"
             android:id="@+id/subtitle1"
@@ -47,6 +49,8 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:paddingRight="10dp"
+            android:gravity="right"
             android:layout_gravity="center_vertical"
             android:textSize="20dp"
             android:id="@+id/subtitle2"
@@ -85,6 +89,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:paddingRight="10dp"
+            android:gravity="right"
             android:layout_gravity="center_vertical"
             android:textSize="20dp"
             android:id="@+id/subtitle3"
@@ -121,6 +127,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:paddingRight="10dp"
+            android:gravity="right"
             android:layout_gravity="center_vertical"
             android:textSize="20dp"
             android:id="@+id/subtitle4"
@@ -157,6 +165,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:paddingRight="10dp"
+            android:gravity="right"
             android:layout_gravity="center_vertical"
             android:textSize="20dp"
             android:id="@+id/subtitle5"
@@ -193,6 +203,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:paddingRight="10dp"
+            android:gravity="right"
             android:layout_gravity="center_vertical"
             android:textSize="20dp"
             android:id="@+id/subtitle6"
@@ -251,6 +263,8 @@
         </LinearLayout>
 
         <TextView
+            android:paddingLeft="10dp"
+            android:gravity="left"
             android:layout_gravity="center_vertical"
             android:textSize="20dp"
             android:id="@+id/subtitle7"
