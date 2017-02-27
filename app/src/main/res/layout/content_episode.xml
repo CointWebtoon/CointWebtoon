@@ -10,13 +10,8 @@
     tools:context="com.jmapplication.com.episodeactivity.EpisodeActivity"
     tools:showIn="@layout/app_bar_episode">
 
-    <ImageView
-        android:id="@+id/testimageview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-<!--    <ListView
+    <ListView
         android:id="@+id/episodeListView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>-->
+        android:layout_height="match_parent"/>
 </RelativeLayout>

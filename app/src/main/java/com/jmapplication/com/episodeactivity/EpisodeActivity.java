@@ -53,13 +53,13 @@ public class EpisodeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-/*        listView = (ListView)findViewById(R.id.episodeListView);
-        listView.setDivider(null);*/
+        listView = (ListView)findViewById(R.id.episodeListView);
+        listView.setDivider(null);
 
         COINT_SQLiteManager manager = COINT_SQLiteManager.getInstance(this);
 
          for(int i = 0 ; i < 45; i++){
-             Episode object = new Episode(i + 1, "2부 " + (239 - i) + "화" ,"http://thumb.comic.naver.net/webtoon/183559/321/thumbnail_202x120_efa036fb-89af-4c62-bc16-8729f6ed3bd3.jpg");
+             Episode object = new Episode(i + 1, "2부 " + (239 - i) + "화" ,"http://thumb.comic.naver.net/webtoon/692512/3/thumbnail_202x120_4fbfb2f2-83ac-4093-ae08-d4336a1377b5.jpg");
              episodes.add(object);
          }
 
@@ -67,11 +67,7 @@ public class EpisodeActivity extends AppCompatActivity
             Log.i("jungmin", String.valueOf(episode.ep_id) + " " + episode.subtitle + " " + episode.thumbURL);
         }
 
-        //listView.setAdapter(new EpisodeAdapter(this , makeData(episodes)));
-
-        Glide.with(this)
-                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Samsung_Galaxy_S5.png/220px-Samsung_Galaxy_S5.png")
-                .into((ImageView)findViewById(R.id.testimageview));
+        listView.setAdapter(new EpisodeAdapter(this , makeData(episodes)));
     }
 
     private ArrayList<Episode[]> makeData(ArrayList<Episode> episodes){
@@ -88,12 +84,6 @@ public class EpisodeActivity extends AppCompatActivity
 
         return data;
     }
-
-
-
-
-
-
 
     @Override
     public void onBackPressed() {
