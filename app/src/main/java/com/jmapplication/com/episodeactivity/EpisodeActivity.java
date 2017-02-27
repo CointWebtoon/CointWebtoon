@@ -16,10 +16,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 public class EpisodeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ListView listView;
+    ArrayList<Episode> episodes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {//hello
@@ -49,30 +52,32 @@ public class EpisodeActivity extends AppCompatActivity
         listView = (ListView)findViewById(R.id.episodeListView);
 
         COINT_SQLiteManager manager = COINT_SQLiteManager.getInstance(this);
+
+         for(int i = 0 ; i < 45; i++){
+             Episode object = new Episode(i, "2부 " + (239 - i) + "화" ,"http://thumb.comic.naver.net/webtoon/183559/321/thumbnail_202x120_efa036fb-89af-4c62-bc16-8729f6ed3bd3.jpg");
+             episodes.add(object);
+         }
+
+        listView.setAdapter(new EpisodeAdapter(this , makeData(episodes)));
     }
 
 
+    private ArrayList<Episode[]> makeData(ArrayList<Episode> episodes){
+        ArrayList<Episode[]> data = new ArrayList<>();
+        Episode[] episodeArray = new Episode[7];
 
+        for(int i = 0 ; i < episodes.size(); i++){
+            episodeArray[i%7] = episodes.get(i);
+            if((i != 0)&&(((i % 7) == 0) || i == episodes.size() -1)){
+                data.add(episodeArray);
+                for(int j = 0; j < episodeArray.length; j++){
+                    episodeArray[j] = null;
+                }
+            }
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return data;
+    }
 
 
 
