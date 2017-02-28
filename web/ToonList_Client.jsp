@@ -26,7 +26,8 @@
             /* Query statement (Need to modify as needed) */
             String id = request.getParameter("id");
             String sql = "SELECT * " +
-                         "FROM WEBTOON";
+                         "FROM WEBTOON " +
+                         "WHERE id = " + id + ";";
 
             /* Query request */
             pstmt= conn.prepareStatement(sql);
