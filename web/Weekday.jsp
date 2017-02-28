@@ -14,24 +14,27 @@
 <%@ page contentType="application/json;charset=EUC-KR" language="java" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="org.json.simple.JSONObject" %>
-<%@ page import="org.json.simple.JSONArray" %>
+<%@ page import="org.json.simple.JSONArray" %><%@ page import="importClasses.DBAuthentication"%>
 <%-- JSP에서 JDBC의 객체를 사용하기 위해 java.sql 패키지를 import한다--%>
 <%
   try {
+    Connection conn = null;
     JSONObject jsonObject = new JSONObject();
     JSONArray jsonArray = new JSONArray();
 
-    Class.forName("com.mysql.jdbc.Driver").newInstance();
-    Connection connection = null;
-    connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/coint_webtoon","root","dmswnqt1");          //나중에 수정해야 할 부분
-    if(connection != null) {
+         /* Corresponding development environment is required for DB access */
+        Class.forName(DBAuthentication.driverName);
+        conn = DriverManager.getConnection(DBAuthentication.url, DBAuthentication.id, DBAuthentication.password);
+        System.out.println("Connection successful");
 
-      String weekday = request.getParameter("weekday");
+    if(conn != null) {
 
-      String sql = "SELECT  * FROM WEBTOON WHERE ID IN (SELECT ID_W FROM WEEKDAY WHERE Weekday=?)";
-      PreparedStatement statement = connection.prepareStatement(sql);
+      /*String weekday = request.getParameter("weekday");*/
 
-      statement.setString(1,weekday);
+      String sql = "SELECT * FROM WEEKDAY";
+      PreparedStatement statement = conn.prepareStatement(sql);
+
+      /*statement.setString(1,weekday);*/
       ResultSet resultSet = statement.executeQuery();                         // sql 쿼리문 실행 결과를 resultSet에 저장
 
       int i=0;
@@ -39,15 +42,8 @@
 
         JSONObject object = new JSONObject();                                        // JSON내용을 담을 객체
 
-        object.put("id",resultSet.getString("Id"));
-        object.put("title",resultSet.getString("Title"));
-        object.put("artist",resultSet.getString("Artist"));
-        object.put("starscore",resultSet.getString("Starscore"));
-        object.put("hits",resultSet.getString("Hits"));
-        object.put("url",resultSet.getString("Thumburl"));
-        object.put("toontype",resultSet.getString("Toontype"));
-        object.put("is_adult",resultSet.getString("Is_adult"));
-        object.put("is_charged",resultSet.getString("Is_charged"));
+        object.put("id",resultSet.getString("Id_W"));
+        object.put("weekday",resultSet.getString("Weekday"));
 
         jsonArray.add(i,object);
         jsonObject.put("result",jsonArray);                                                 // JSON의 제목 지정
