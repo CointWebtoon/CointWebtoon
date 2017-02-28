@@ -5,10 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -486,6 +483,30 @@ public class WebtoonParse {
                 webtoon.printToon();
                 result = true;
             }
+        }
+
+        ArrayList<Integer> checkList = new ArrayList<>();
+
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection(DBAuthentication.url, DBAuthentication.id, DBAuthentication.password);//드라이버 로드
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("select Id from webtoon");
+            while(rs.next()){
+                checkList.add(rs.getInt(1));
+            }
+            for(Webtoon webtoon : webtoons){
+                checkList.remove(Integer.valueOf(webtoon.getId()));
+            }
+            if(checkList.size() > 0){
+                System.out.println(checkList);
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }finally {
+            try{con.close();}catch (Exception e){}
         }
         return result;
     }

@@ -31,7 +31,9 @@ private static final int
             int genreTableInsertNum = 0;
             for (Webtoon webtoon : webtoons) {
                 genreTableInsertNum += webtoon.getGenre().size();
+                webtoon.printToon();
             }
+            System.out.println("총 " + webtoons.size() + "개의 웹툰 로드 완료");
 
             out.print("총 " + webtoons.size() + "개 웹툰 로드 완료\r\n총 " + genreTableInsertNum + "개의 장르 tuple 생성 완료\r\n");
             out.print("에러 검사..............");
