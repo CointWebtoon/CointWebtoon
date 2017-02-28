@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);            // 액션바에서 앱 이름 보이지 않게 함
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity
         pager = (ViewPager)findViewById(R.id.pager);                        //뷰페이저에 어댑터를 연결하는 부분
         CustomAdapter adapter = new CustomAdapter(getLayoutInflater());
         pager.setAdapter(adapter);
+
+        GetServerData getServerData = new GetServerData(this);
+
     }
 
     @Override
@@ -70,10 +76,11 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        EditText search = (EditText)findViewById(R.id.searchbar);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            Toast.makeText(this,"눌렸당",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,search.getText().toString(),Toast.LENGTH_SHORT).show();     //search를 누르면 해당 텍스트로 디비에 접근해서 결과를 새로운 창에 뿌리기
             return true;
         }
 
@@ -86,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+/*        if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
@@ -98,7 +105,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -134,6 +141,25 @@ public class MainActivity extends AppCompatActivity
                 intent = new Intent(MainActivity.this, IntentTest.class);
                 intent.putExtra("Intent","setting");
                 startActivity(intent);
+                break;
+            case R.id.addItemBtn:
+                intent = new Intent(MainActivity.this, IntentTest.class);
+                intent.putExtra("Intent","weekday");
+                startActivity(intent);
+                break;
+        }
+    }
+
+    public void bestClick(View view) {
+        int id = view.getId();
+        Intent intent;
+        switch (id){
+            case R.id.top:
+                Toast.makeText(this, "toptop", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.middle:
+                break;
+            case R.id.bottom:
                 break;
         }
     }

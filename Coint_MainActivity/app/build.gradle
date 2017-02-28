@@ -26,5 +26,10 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'
+
+    /*글라이드 라이브러리 추가*/
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'jp.wasabeef:glide-transformations:1.0.6@aar'
+
     testCompile 'junit:junit:4.12'
 }
