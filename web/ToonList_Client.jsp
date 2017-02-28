@@ -26,8 +26,7 @@
             /* Query statement (Need to modify as needed) */
             String id = request.getParameter("id");
             String sql = "SELECT * " +
-                         "FROM WEBTOON " +
-                         "WHERE id = " + id + ";";
+                    "FROM WEBTOON";
 
             /* Query request */
             pstmt= conn.prepareStatement(sql);
@@ -44,9 +43,10 @@
                 jsonObject.put("Hits", rs.getString("Hits"));
                 jsonObject.put("Thumburl", rs.getString("Thumburl"));
                 jsonObject.put("Likes", rs.getString("Likes"));
-                jsonObject.put("Toontype", rs.getString("Toontpye"));
+                jsonObject.put("Toontype", rs.getString("Toontype"));
                 jsonObject.put("Is_adult", rs.getString("Is_adult"));
-                jsonObject.put("Is_charged", rs.getString("Is_charged"))
+                jsonObject.put("Is_charged", rs.getString("Is_charged"));
+                jsonObject.put("Is_charged", rs.getString("Is_updated"));
 
                 jsonArray.add(resultCount, jsonObject); resultCount++;
             }
