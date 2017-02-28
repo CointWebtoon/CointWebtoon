@@ -47,7 +47,7 @@
                 jsonObject.put("Toontype", rs.getString("Toontype"));
                 jsonObject.put("Is_adult", rs.getString("Is_adult"));
                 jsonObject.put("Is_charged", rs.getString("Is_charged"));
-                jsonObject.put("Is_charged", rs.getString("Is_updated"));
+                jsonObject.put("Is_updated", rs.getString("Is_updated"));
 
                 jsonArray.add(resultCount, jsonObject); resultCount++;
             }
