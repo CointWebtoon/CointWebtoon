@@ -22,19 +22,16 @@
     JSONObject jsonObject = new JSONObject();
     JSONArray jsonArray = new JSONArray();
 
-         /* Corresponding development environment is required for DB access */
+        /* Corresponding development environment is required for DB access */
         Class.forName(DBAuthentication.driverName);
         conn = DriverManager.getConnection(DBAuthentication.url, DBAuthentication.id, DBAuthentication.password);
         System.out.println("Connection successful");
 
     if(conn != null) {
 
-      /*String weekday = request.getParameter("weekday");*/
-
-      String sql = "SELECT * FROM WEEKDAY";
+      String sql = "SELECT * FROM GENRE";
       PreparedStatement statement = conn.prepareStatement(sql);
 
-      /*statement.setString(1,weekday);*/
       ResultSet resultSet = statement.executeQuery();                         // sql 쿼리문 실행 결과를 resultSet에 저장
 
       int i=0;
@@ -42,8 +39,8 @@
 
         JSONObject object = new JSONObject();                                        // JSON내용을 담을 객체
 
-        object.put("id",resultSet.getString("Id_W"));
-        object.put("weekday",resultSet.getString("Weekday"));
+        object.put("id",resultSet.getString("Id_G"));
+        object.put("genre",resultSet.getString("Genre"));
 
         jsonArray.add(i,object);
         jsonObject.put("result",jsonArray);                                                 // JSON의 제목 지정
