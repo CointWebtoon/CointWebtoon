@@ -410,15 +410,14 @@ public class WebtoonParse {
                         finishedPst.clearParameters();
                     }//완결웹툰이면 다른 요일 삭제
                     else{
-                        pst.setInt(1, webtoon.getId());
-                        pst.setInt(2, weekdayValue);
-                        pst.addBatch();
-                        pst.clearParameters();
-
                         weekdayPst.setInt(1, webtoon.getId());
                         weekdayPst.addBatch();
                         weekdayPst.clearParameters();
                     }
+                    pst.setInt(1, webtoon.getId());
+                    pst.setInt(2, weekdayValue);
+                    pst.addBatch();
+                    pst.clearParameters();
                 }
             }
 
