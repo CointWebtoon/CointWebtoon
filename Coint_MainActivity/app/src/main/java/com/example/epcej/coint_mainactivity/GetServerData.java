@@ -37,10 +37,10 @@ public class GetServerData {
         getWeekday getWeekday = new getWeekday();
         getGenre getGenre = new getGenre();
 
-        getWebtoon.execute();
+/*        getWebtoon.execute();
         getEpisode.execute();
         getWeekday.execute();
-        getGenre.execute();
+        getGenre.execute();*/
     }
 
     //ToonList_Client.jsp

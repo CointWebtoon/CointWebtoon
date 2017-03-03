@@ -2,6 +2,7 @@ package com.example.epcej.coint_mainactivity;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Date;
@@ -85,6 +86,11 @@ public class COINT_SQLiteManager {
                 "FOREIGN KEY(Episode_id) REFERENCES EPISODE(Episode_id) ON DELETE CASCADE ON UPDATE CASCADE);");
     }
 
+    public Cursor  topHits(int position){
+        Cursor c= null;
+        position*=3;
+        return c = db.rawQuery("SELECT Id, Title, Artist, Thumburl, Starscore FROM WEBTOON ORDER BY Hits DESC LIMIT 3 OFFSET "+Integer.toString(position), null);
+    }
     public long insertWebtoon(Webtoon webtoon){
         int id;                                        //웹툰 고유 ID
         String title;                               //웹툰 제목
@@ -162,6 +168,7 @@ public class COINT_SQLiteManager {
         values.put("Is_saved", 0);
         values.put("Is_read", 0);
         values.put("Location", 0);
+
         return db.insert("EPISODE", null,values);
     }
 

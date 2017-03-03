@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         pager = (ViewPager)findViewById(R.id.pager);                        //뷰페이저에 어댑터를 연결하는 부분
-        CustomAdapter adapter = new CustomAdapter(getLayoutInflater());
+        CustomAdapter adapter = new CustomAdapter(this);
         pager.setAdapter(adapter);
 
         GetServerData getServerData = new GetServerData(this);

@@ -13,4 +13,8 @@
         android:id="@+id/intentText"
         android:textSize="40dp"
         android:textColor="#EFCEC5"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

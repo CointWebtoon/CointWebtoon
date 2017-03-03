@@ -1,12 +1,15 @@
 package com.example.epcej.coint_mainactivity;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -15,13 +18,21 @@ import com.bumptech.glide.Glide;
  */
 
 public class CustomAdapter extends PagerAdapter{
-    LayoutInflater inflater;
 
-    public CustomAdapter(LayoutInflater inflater) {
+     LayoutInflater inflater;
+    Context mContext;
+    COINT_SQLiteManager coint_sqLiteManager;
+    Cursor c;
+
+//adapter의 데이터는 보통 액티비티라던가 다른 클래스에서 해서 생성자로 넘겨줌.
+
+    public CustomAdapter(Context mContext) {
         // TODO Auto-generated constructor stub
 
         //전달 받은 LayoutInflater를 멤버변수로 전달
-        this.inflater=inflater;
+        this.inflater = LayoutInflater.from(mContext);
+        this.mContext = mContext;
+        coint_sqLiteManager = COINT_SQLiteManager.getInstance(mContext);
     }
 
     //PagerAdapter가 가지고 잇는 View의 개수를 리턴
@@ -40,39 +51,60 @@ public class CustomAdapter extends PagerAdapter{
     public Object instantiateItem(ViewGroup container, int position) {
         // TODO Auto-generated method stub
         View view;
-        Context context = null;
+        ImageView imgTop,imgMid,imgBot;
+        TextView rankTop, rankMid, rankBot, starTop, starMid, starBot, artistTop, artistMid, artistBot, titleTop, titleMid, titleBot;
+
+        c = coint_sqLiteManager.topHits(position);             //현재 페이지에 맞는 순위 세개를 가져옴
 
         //새로운 View 객체를 Layoutinflater를 이용해서 생성
         //만들어질 View의 설계는 view_pager.xml 레이아웃 파일 사용
         view= inflater.inflate(R.layout.view_pager, null);
 
-        context = view.getContext();                //글라이더를 위한 getContext
-
-        //만들어진 View안에 있는 ImageView 객체 참조
+        //만들어진 View안에 있는 ImageView, TextView들을 가져옴
         //위에서 inflated 되어 만들어진 view로부터 findViewById()를 해야한다.
-        ImageView img= (ImageView)view.findViewById(R.id.webtoonImg);
-        TextView lankTop, lankMid, lankBot;
+        imgTop= (ImageView)view.findViewById(R.id.webtoonImg);
+        imgMid= (ImageView)view.findViewById(R.id.webtoonImg1);
+        imgBot= (ImageView)view.findViewById(R.id.webtoonImg2);
 
-        lankTop = (TextView)view.findViewById(R.id.lankTop);
-        lankTop.setText(Integer.toString(position*3+1));
+        titleTop = (TextView)view.findViewById(R.id.webtoonName);
+        titleMid = (TextView)view.findViewById(R.id.webtoonName1);
+        titleBot = (TextView)view.findViewById(R.id.webtoonName2);
 
-        lankMid = (TextView)view.findViewById(R.id.lankmiddle);
-        lankMid.setText(Integer.toString(position*3+2));
+        artistTop = (TextView)view.findViewById(R.id.artistName);
+        artistMid = (TextView)view.findViewById(R.id.artistName1);
+        artistBot = (TextView)view.findViewById(R.id.artistName2);
 
-        lankBot = (TextView)view.findViewById(R.id.lankBottom);
-        lankBot.setText(Integer.toString(position*3+3));
+        starTop = (TextView)view.findViewById(R.id.starScore);
+        starMid = (TextView)view.findViewById(R.id.starScore1);
+        starBot = (TextView)view.findViewById(R.id.starScore2);
 
-        //ImageView에 현재 position 번째에 해당하는 이미지를 보여주기 위한 작업
-        //현재 position에 해당하는 이미지를 setting
-        /*img.setImageResource(R.drawable.genre+position);*/
+        rankTop = (TextView)view.findViewById(R.id.rankTop);
+        rankTop.setText(Integer.toString(position*3+1));
 
-        if(position <3){
-            //Glide를 통해 img에 이미지를 로드한다.
-            Glide.with(context).load("http://thumb.comic.naver.net/webtoon/667573/thumbnail/title_thumbnail_20151120112903_t83x90.jpg").into(img);
-        }
-        else{
-            //Glide를 통해 img에 이미지를 로드한다.
-            Glide.with(context).load("http://thumb.comic.naver.net/webtoon/679519/thumbnail/title_thumbnail_20160601180804_t83x90.jpg").into(img);
+        rankMid = (TextView)view.findViewById(R.id.rankMiddle);
+        rankMid.setText(Integer.toString(position*3+2));
+
+        rankBot = (TextView)view.findViewById(R.id.rankBottom);
+        rankBot.setText(Integer.toString(position*3+3));
+
+        while (c.moveToNext()) {
+            //Glide를 통해 img에 이미지를 로드, 타이틀과 작가, 별점을 set
+            Glide.with(mContext).load(c.getString(3).toString()).into(imgTop);
+            titleTop.setText(c.getString(1).toString());
+            artistTop.setText(c.getString(2).toString());
+            starTop.setText(c.getString(4).toString());
+            c.moveToNext();
+
+            Glide.with(mContext).load(c.getString(3).toString()).into(imgMid);
+            titleMid.setText(c.getString(1).toString());
+            artistMid.setText(c.getString(2).toString());
+            starMid.setText(c.getString(4).toString());
+            c.moveToNext();
+
+            Glide.with(mContext).load(c.getString(3).toString()).into(imgBot);
+            titleBot.setText(c.getString(1).toString());
+            artistBot.setText(c.getString(2).toString());
+            starBot.setText(c.getString(4).toString());
         }
 
         //ViewPager에 만들어 낸 View 추가
@@ -81,6 +113,7 @@ public class CustomAdapter extends PagerAdapter{
         //Image가 세팅된 View를 리턴
         return view;
     }
+
 
     //화면에 보이지 않은 View는 destroy를 해서 메모리를 관리함.
     //첫번째 파라미터 : ViewPager
