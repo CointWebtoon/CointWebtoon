@@ -13,7 +13,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by epcej on 2017-02-28.
@@ -26,10 +29,18 @@ public class GetServerData {
     private Context mContext;
 
     GetServerData(Context context){
+        this.mContext = context;
+
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(context);
         getWebtoon getWebtoon = new getWebtoon();
+        getEpisode getEpisode = new getEpisode();
+        getWeekday getWeekday = new getWeekday();
+        getGenre getGenre = new getGenre();
+
         getWebtoon.execute();
-        this.mContext = context;
+        getEpisode.execute();
+        getWeekday.execute();
+        getGenre.execute();
     }
 
     //ToonList_Client.jsp
@@ -37,7 +48,9 @@ public class GetServerData {
         protected String doInBackground(String... urls) {
             StringBuilder jsonHtml = new StringBuilder();
             try {
-                URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정
+                /*URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정*/
+                URL url = new URL("http://10.0.2.2:8080/ToonList_Client.jsp"); //연결 url 설정
+
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -96,8 +109,8 @@ public class GetServerData {
                         isUpdated = Integer.parseInt(jsonObject.getString("Is_updated"));
 
                         Webtoon webtoon = new Webtoon(id, title, artist, starscore, thumburl, likes, hits, toonType, isCharged, isAdult, isUpdated);
-                        Log.i("log", title);
-                        coint_sqLiteManager.insert(webtoon);
+
+                        coint_sqLiteManager.insertWebtoon(webtoon);
                         /*webtoonInfo.add(arrayList);*/
                     }
                 }
@@ -113,7 +126,8 @@ public class GetServerData {
         protected String doInBackground(String... urls) {
             StringBuilder jsonHtml = new StringBuilder();
             try {
-                URL url = new URL(urls[0]); //연결 url 설정
+                /*URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정*/
+                URL url = new URL("http://10.0.2.2:8080/Episode_Client.jsp?id=20853"); //연결 url 설정
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -134,12 +148,16 @@ public class GetServerData {
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
+                Log.i("log", "ERR");
             }
             return jsonHtml.toString();
         }
 
         protected void onPostExecute(String str) {          //JSON 파싱부분
-            String id, epId, epTitle, epStarscore, epThumburl, regDate, mention, likesE;
+            String epTitle, epThumburl, mention;
+            int epId, idE, likesE;
+            String regDate;
+            float epStarscore;
             try {
                 JSONObject root = new JSONObject(str);
 
@@ -151,16 +169,31 @@ public class GetServerData {
                         ArrayList arrayList = new ArrayList();
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                        id = jsonObject.getString("Id_E");
-                        epId = jsonObject.getString("Episode_id");
+                        idE = Integer.parseInt(jsonObject.getString("Id_E"));
+                        epId = Integer.parseInt(jsonObject.getString("Episode_id"));
                         epTitle = jsonObject.getString("Episode_title");
-                        epStarscore = jsonObject.getString("Ep_starscore");
+                        epStarscore = Float.parseFloat(jsonObject.getString("Ep_starscore"));
                         epThumburl = jsonObject.getString("Ep_thumburl");
                         regDate = jsonObject.getString("Reg_date");
                         mention = jsonObject.getString("Mention");
-                        likesE = jsonObject.getString("Likes_E");
+                        likesE = Integer.parseInt(jsonObject.getString("Likes_E"));
 
-                        webtoonInfo.add(arrayList);
+/*                        SimpleDateFormat toFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = null;
+
+                        try{
+                            date = toFormat.parse(regDate);
+                        }catch (ParseException e){
+                            e.printStackTrace();
+                            date = new Date();
+                        }
+
+                        toFormat.format(date);*/
+
+                        Episode episode = new Episode(idE, epId, epTitle, epStarscore, epThumburl, regDate, mention, likesE);
+                        coint_sqLiteManager.insertEpsode(episode);
+
+                        Log.i("log", epTitle);
                     }
                 }
             } catch (JSONException e) {
@@ -174,7 +207,8 @@ public class GetServerData {
         protected String doInBackground(String... urls) {
             StringBuilder jsonHtml = new StringBuilder();
             try {
-                URL url = new URL(urls[0]); //연결 url 설정
+                /*URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정*/
+                URL url = new URL("http://10.0.2.2:8080/Weekday.jsp"); //연결 url 설정
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -200,7 +234,7 @@ public class GetServerData {
         }
 
         protected void onPostExecute(String str) {          //JSON 파싱부분
-            String id, weekday;
+            int idW, weekday;
             try {
                 JSONObject root = new JSONObject(str);
 
@@ -212,13 +246,14 @@ public class GetServerData {
                         ArrayList arrayList = new ArrayList();
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                        id = jsonObject.getString("id");
-                        weekday = jsonObject.getString("weekday");
+                        idW = Integer.parseInt(jsonObject.getString("id"));
+                        weekday = Integer.parseInt(jsonObject.getString("weekday"));
 
-                        arrayList.add(id);
+                        arrayList.add(idW);
                         arrayList.add(weekday);
 
-                        webtoonInfo.add(arrayList);
+                        Weekday weekday1 = new Weekday(idW, weekday);
+                        coint_sqLiteManager.insertWeekday(weekday1);
                     }
                 }
             } catch (JSONException e) {
@@ -232,7 +267,8 @@ public class GetServerData {
         protected String doInBackground(String... urls) {
             StringBuilder jsonHtml = new StringBuilder();
             try {
-                URL url = new URL(urls[0]); //연결 url 설정
+                /*URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정*/
+                URL url = new URL("http://10.0.2.2:8080/Genre.jsp"); //연결 url 설정
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -258,7 +294,8 @@ public class GetServerData {
         }
 
         protected void onPostExecute(String str) {          //JSON 파싱부분
-            String id, genre;
+            int idG;
+            String genre;
             try {
                 JSONObject root = new JSONObject(str);
 
@@ -270,10 +307,12 @@ public class GetServerData {
                         ArrayList arrayList = new ArrayList();
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                        id = jsonObject.getString("id");
+                        idG = Integer.parseInt(jsonObject.getString("id"));
                         genre = jsonObject.getString("genre");
 
-                        webtoonInfo.add(arrayList);
+                        Genre genre1 = new Genre(idG, genre);
+                        coint_sqLiteManager.insertGenre(genre1);
+                        /*webtoonInfo.add(arrayList);*/
                     }
                 }
             } catch (JSONException e) {
@@ -281,5 +320,4 @@ public class GetServerData {
             }
         }
     }
-
 }

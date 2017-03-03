@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.Date;
+
 /**
  * Created by epcej on 2017-02-28.
  */
@@ -83,7 +85,7 @@ public class COINT_SQLiteManager {
                 "FOREIGN KEY(Episode_id) REFERENCES EPISODE(Episode_id) ON DELETE CASCADE ON UPDATE CASCADE);");
     }
 
-    public long insert(Webtoon webtoon){
+    public long insertWebtoon(Webtoon webtoon){
         int id;                                        //웹툰 고유 ID
         String title;                               //웹툰 제목
         String artist;                             //작가명
@@ -122,5 +124,72 @@ public class COINT_SQLiteManager {
         values.put("Hits", hits);
         return db.insert("WEBTOON", null,values);
     }
+
+    public long insertEpsode(Episode episode){
+         int id_E;                                        //웹툰 고유 ID
+         int episode_id;                       //에피소드 ID
+         String episode_title;                    //에피소드 제목
+         float ep_starScore;                      //평균 평점
+         String ep_thumbURL;                 //썸네일 URL
+         String reg_date;                               //등록일
+         String mention;                                //작가의말
+         int likes_E;                                //좋아요
+         int is_saved;                      //임시저장 여부
+         int is_read;                        //읽음 여부
+         int location;                               //책갈피한 이미지 url 위치
+
+        id_E = episode.getId();
+        episode_id = episode.getEpisode_id();
+        episode_title = episode.getEpisode_title();
+        ep_starScore = episode.getEp_starScore();
+        ep_thumbURL = episode.getEp_thumbURL();
+        reg_date = episode.getReg_date();
+        mention = episode.getMention();
+        likes_E = episode.getLikes_E();
+/*        is_saved = episode.getIs_saved()? 1 : 0;
+        is_read = episode.getIs_read()? 1 : 0;
+        location = episode.getLocation();*/
+
+        ContentValues values = new ContentValues();
+        values.put("Id_E", id_E);
+        values.put("Episode_id", episode_id);
+        values.put("Episode_title", episode_title);
+        values.put("Ep_starscore", ep_starScore);
+        values.put("Ep_thumburl", ep_thumbURL);
+        values.put("Reg_date", String.valueOf(reg_date));
+        values.put("Mention", mention);
+        values.put("Likes_E", likes_E);
+        values.put("Is_saved", 0);
+        values.put("Is_read", 0);
+        values.put("Location", 0);
+        return db.insert("EPISODE", null,values);
+    }
+
+    public long insertWeekday(Weekday weekday){
+        int id;                                        //웹툰 고유 ID
+        int weekday1;                               //웹툰 요일
+
+        id = weekday.getId();
+        weekday1 = weekday.getWeekday();
+
+        ContentValues values = new ContentValues();
+        values.put("Id_W", id);
+        values.put("Weekday", weekday1);
+        return db.insert("WEEKDAY", null,values);
+    }
+
+    public long insertGenre(Genre genre){
+        int id;                                        //웹툰 고유 ID
+        String genre1;                               //웹툰 장르
+
+        id = genre.getId();
+        genre1 = genre.getGenre();
+
+        ContentValues values = new ContentValues();
+        values.put("Id_G", id);
+        values.put("Genre", genre1);
+        return db.insert("GENRE", null,values);
+    }
+
 }
 
