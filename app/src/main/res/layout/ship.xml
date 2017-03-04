@@ -15,6 +15,8 @@
             android:layout_height="match_parent" />
 
         <LinearLayout
+            android:onClick="onImageViewItemClick"
+            android:id="@+id/item1"
             android:orientation="vertical"
             android:layout_weight="6"
             android:layout_width="0dp"
@@ -32,6 +34,9 @@
         </LinearLayout>
 
         <TextView
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="TEST"
             android:paddingLeft="10dp"
             android:gravity="left"
             android:layout_gravity="center_vertical"
@@ -49,6 +54,9 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="TEST"
             android:paddingRight="10dp"
             android:gravity="right"
             android:layout_gravity="center_vertical"
@@ -59,6 +67,8 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:onClick="onImageViewItemClick"
+            android:id="@+id/item2"
             android:orientation="vertical"
             android:layout_weight="6"
             android:layout_width="0dp"
@@ -89,6 +99,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="TEST"
             android:paddingRight="10dp"
             android:gravity="right"
             android:layout_gravity="center_vertical"
@@ -99,6 +112,8 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:onClick="onImageViewItemClick"
+            android:id="@+id/item3"
             android:orientation="vertical"
             android:layout_weight="5.5"
             android:layout_width="0dp"
@@ -127,6 +142,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="TEST"
             android:paddingRight="10dp"
             android:gravity="right"
             android:layout_gravity="center_vertical"
@@ -137,6 +155,8 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:onClick="onImageViewItemClick"
+            android:id="@+id/item4"
             android:orientation="vertical"
             android:layout_weight="5"
             android:layout_width="0dp"
@@ -165,6 +185,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="TEST"
             android:paddingRight="10dp"
             android:gravity="right"
             android:layout_gravity="center_vertical"
@@ -175,6 +198,8 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:onClick="onImageViewItemClick"
+            android:id="@+id/item5"
             android:orientation="vertical"
             android:layout_weight="5"
             android:layout_width="0dp"
@@ -203,6 +228,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="TEST"
             android:paddingRight="10dp"
             android:gravity="right"
             android:layout_gravity="center_vertical"
@@ -213,6 +241,8 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:onClick="onImageViewItemClick"
+            android:id="@+id/item6"
             android:orientation="vertical"
             android:layout_weight="2"
             android:layout_width="0dp"
@@ -246,6 +276,8 @@
             android:layout_height="match_parent" />
 
         <LinearLayout
+            android:onClick="onImageViewItemClick"
+            android:id="@+id/item7"
             android:orientation="vertical"
             android:layout_weight="5.8"
             android:layout_width="0dp"
@@ -263,6 +295,9 @@
         </LinearLayout>
 
         <TextView
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="TEST"
             android:paddingLeft="10dp"
             android:gravity="left"
             android:layout_gravity="center_vertical"

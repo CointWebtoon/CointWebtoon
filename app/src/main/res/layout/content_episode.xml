@@ -10,6 +10,13 @@
     tools:context="com.jmapplication.com.episodeactivity.EpisodeActivity"
     tools:showIn="@layout/app_bar_episode">
 
+    <ProgressBar
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        android:id="@+id/loadingbar"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
     <ListView
         android:id="@+id/episodeListView"
         android:layout_width="match_parent"
