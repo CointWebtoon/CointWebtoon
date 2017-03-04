@@ -133,10 +133,6 @@
                 android:text="조회수 Top 15"
                 android:textSize="20dp"
                 android:layout_weight="2.00"/>
-            <Button
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_weight="1"/>
         </LinearLayout>
 
         <android.support.v4.view.ViewPager

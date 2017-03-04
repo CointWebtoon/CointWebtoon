@@ -1,11 +1,13 @@
 package com.example.epcej.coint_mainactivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -76,11 +78,17 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent intent;
         EditText search = (EditText)findViewById(R.id.searchbar);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             Toast.makeText(this,search.getText().toString(),Toast.LENGTH_SHORT).show();     //search를 누르면 해당 텍스트로 디비에 접근해서 결과를 새로운 창에 뿌리기
+
+            intent = new Intent(MainActivity.this, IntentTest.class);
+            intent.putExtra("Intent",search.getText().toString());
+            startActivity(intent);
+
             return true;
         }
 

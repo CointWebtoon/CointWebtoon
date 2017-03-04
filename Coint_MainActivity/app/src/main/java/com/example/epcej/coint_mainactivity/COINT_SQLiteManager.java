@@ -91,6 +91,7 @@ public class COINT_SQLiteManager {
         position*=3;
         return c = db.rawQuery("SELECT Id, Title, Artist, Thumburl, Starscore FROM WEBTOON ORDER BY Hits DESC LIMIT 3 OFFSET "+Integer.toString(position), null);
     }
+
     public long insertWebtoon(Webtoon webtoon){
         int id;                                        //웹툰 고유 ID
         String title;                               //웹툰 제목
@@ -198,5 +199,10 @@ public class COINT_SQLiteManager {
         return db.insert("GENRE", null,values);
     }
 
+    public Cursor findquery(String s) {
+        Cursor c;
+        return c=db.rawQuery("SELECT DISTINCT Id, Title, Artist, Thumburl, Starscore "+
+                                                "FROM WEBTOON WHERE Title Like \"%"+s+"%\" OR Artist Like \"%"+s+"%\"",null);
+    }
 }
 
