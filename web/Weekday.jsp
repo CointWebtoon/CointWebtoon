@@ -29,8 +29,6 @@
 
     if(conn != null) {
 
-      /*String weekday = request.getParameter("weekday");*/
-
       String sql = "SELECT * FROM WEEKDAY";
       PreparedStatement statement = conn.prepareStatement(sql);
 
