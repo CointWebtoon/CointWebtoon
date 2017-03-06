@@ -88,7 +88,7 @@ public class GetServerData extends Observable{
                         }
                         bufferedReader.close();
                     } else {
-                        throw new Exception("CONNECTION ERR");
+                        throw new Exception("WEBTOON CONNECTION ERR");
                     }
                     connection.disconnect();
 
@@ -166,7 +166,7 @@ public class GetServerData extends Observable{
                     }
                     connection.disconnect();
                 }else{
-                    throw new Exception("GET EPISODE ERR");
+                    throw new Exception("EPISODE CONNECTION ERR");
                 }
                 JSONObject root = new JSONObject(jsonHtml.toString());
 
@@ -184,7 +184,7 @@ public class GetServerData extends Observable{
                         regDate = jsonObject.getString("Reg_date");
                         mention = jsonObject.getString("Mention");
                         likesE = Integer.parseInt(jsonObject.getString("Likes_E"));
-                        episodes.add(new Episode(idE, epId, epTitle, epStarscore, epThumburl, regDate, mention, likesE));
+                        episodes.add(new Episode(idE, epId, epTitle, epStarscore, epThumburl, regDate, mention, likesE, -1));
                     }
                     coint_sqLiteManager.insertEpsode(episodes);
                 }
@@ -231,7 +231,7 @@ public class GetServerData extends Observable{
                     }
                     connection.disconnect();
                 }else{
-
+                    throw new Exception("WEEKDAY CONNECTION ERR");
                 }
                 JSONObject root = new JSONObject(jsonHtml.toString());
 
@@ -298,7 +298,7 @@ public class GetServerData extends Observable{
                     }
                     connection.disconnect();
                 }else{
-
+                    throw new Exception("GENRE CONNECTION ERR");
                 }
                 JSONObject root = new JSONObject(jsonHtml.toString());
 

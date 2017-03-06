@@ -117,19 +117,12 @@ public class COINT_SQLiteManager {
                 likes = webtoon.getLikes();
                 hits = webtoon.getHits();
 
-                db.execSQL("INSERT OR REPLACE INTO WEBTOON( Id, Title, Artist, Starscore, Thumburl, Toontype, Is_charged, Is_adult, Is_updated, Likes, Hits)" +
-                        " VALUES(" +
-                        id + ", '" +
-                        title+ "', '" +
-                        artist + "', " +
-                        starScore+ ", '"+
-                        thumbURL + "', '" +
-                        toonType + "', " +
-                        is_charged+ ", " +
-                        is_adult + ", " +
-                        is_updated + ", " +
-                        likes + ", " +
-                        hits + ");");
+                db.execSQL("INSERT OR IGNORE INTO WEBTOON(Id)" +
+                        " VALUES(" + id + ");");
+                db.execSQL("UPDATE WEBTOON SET Title='" + title + "', Artist='" + artist + "', Starscore=" + starScore
+                        + ", Thumburl='" + thumbURL + "', Toontype='" + toonType + "', Is_charged=" + is_charged
+                        + ", Is_adult=" + is_adult + ", Is_updated=" + is_updated + ", Likes=" + likes + ", Hits=" + hits
+                        + " WHERE Id=" + id + ";");
             }
             db.setTransactionSuccessful();
         }catch (Exception e){
@@ -165,16 +158,11 @@ public class COINT_SQLiteManager {
                 mention = episode.getMention().replace("\'", "\''").replace("\"", "\"");
                 likes_E = episode.getLikes_E();
 
-                db.execSQL("INSERT OR REPLACE INTO EPISODE(Id_E, Episode_id, Episode_title, Ep_starscore, Ep_thumburl, Reg_date, Mention, Likes_E)" +
-                        " VALUES (" +
-                        id_E + ", " +
-                        episode_id + ", '" +
-                        episode_title + "' , " +
-                        ep_starScore + ", '" +
-                        ep_thumbURL + "', '" +
-                        reg_date + "', '" +
-                        mention + "', " +
-                        likes_E + ");");
+                db.execSQL("INSERT OR IGNORE INTO EPISODE(Id_E, Episode_id)" +
+                        " VALUES (" + id_E + ", " + episode_id + ");");
+                db.execSQL("UPDATE EPISODE SET Episode_title='" + episode_title + "' , Ep_starscore="
+                        + ep_starScore + " , Ep_thumburl='" + ep_thumbURL + "', Reg_date='" + reg_date + "', Mention='" + mention + "', Likes_E=" + likes_E
+                        + " WHERE Id_E=" + id_E + " AND Episode_id=" + episode_id + ";");
             }
             db.setTransactionSuccessful();
         }catch (Exception e){
@@ -239,11 +227,19 @@ public class COINT_SQLiteManager {
      */
     public Cursor getEpisodes(int toonId){
         //Episode Constructor
-        //int id_E, int episode_id, String episode_title, float ep_starScore, String ep_thumbURL, String reg_date, String mention, int likes_E
-        return db.rawQuery("SELECT Id_E, Episode_id, Episode_title, Ep_starscore, Ep_thumburl, Reg_date, Mention, Likes_E " +
+        //int id_E, int episode_id, String episode_title, float ep_starScore, String ep_thumbURL, String reg_date, String mention, int likes_E, Is_read
+        return db.rawQuery("SELECT Id_E, Episode_id, Episode_title, Ep_starscore, Ep_thumburl, Reg_date, Mention, Likes_E, Is_read " +
                 "FROM EPISODE " +
                 "WHERE Id_E=" + String.valueOf(toonId) +
                 " ORDER BY Episode_id DESC;", null);
+    }
+
+    public void updateEpisodeRead(int toonId, int episodeId){
+        db.execSQL("UPDATE EPISODE SET Is_read=1 WHERE Id_E=" + String.valueOf(toonId) + " AND Episode_id=" + String.valueOf(episodeId) + "");
+    }
+
+    public void initializeEpisodeRead(){
+        db.execSQL("UPDATE EPISODE SET Is_read=0");
     }
 }
 

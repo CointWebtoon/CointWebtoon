@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 검색 버튼 --> <!-- Action Bar에 버튼을 추가하기 위해서는 <item> 사용 -->
+    <item android:id="@+id/search_btn"
+        android:icon="@drawable/search"
+        android:title="검색"/>
+</menu>

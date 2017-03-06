@@ -13,12 +13,12 @@ public class Episode {
     private String reg_date;                               //등록일
     private String mention;                                //작가의말
     private int likes_E;                                //좋아요
-    private boolean is_saved;                      //임시저장 여부
-    private boolean is_read;                        //읽음 여부
+    private int is_saved;                      //임시저장 여부
+    private int is_read;                        //읽음 여부
     private int location;                               //책갈피한 이미지 url 위치
 
     //Constructor
-    public Episode(int id_E, int episode_id, String episode_title, float ep_starScore, String ep_thumbURL, String reg_date, String mention, int likes_E) {
+    public Episode(int id_E, int episode_id, String episode_title, float ep_starScore, String ep_thumbURL, String reg_date, String mention, int likes_E, int is_read) {
         this.id_E = id_E;
         this.episode_id = episode_id;
         this.episode_title = episode_title;
@@ -27,8 +27,8 @@ public class Episode {
         this.reg_date = reg_date;
         this.mention = mention;
         this.likes_E = likes_E;
-/*        this.is_saved = is_saved;
         this.is_read = is_read;
+/*        this.is_saved = is_saved;
         this.location = location;*/
     }
 
@@ -65,9 +65,9 @@ public class Episode {
         return likes_E;
     }
 
-/*    public boolean getIs_saved() { return is_saved;}
+    public int getIs_read(){ return is_read;}
 
-    public boolean getIs_read(){ return is_read;}
+/*    public int getIs_saved() { return is_saved;}
 
     public int getLocation(){return location;}*/
 

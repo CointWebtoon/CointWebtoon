@@ -10,10 +10,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".EpisodeActivity"
-            android:label="@string/app_name"
+
+        <activity android:name=".CommentActivity"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity android:name=".EpisodeActivityWithRecycler"
+            android:label="EpisodeActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
