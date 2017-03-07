@@ -1,13 +1,8 @@
 package com.example.epcej.coint_mainactivity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,12 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,9 +40,16 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         pager = (ViewPager)findViewById(R.id.pager);                        //뷰페이저에 어댑터를 연결하는 부분
-        CustomAdapter adapter = new CustomAdapter(this);
+        Top15Adapter adapter = new Top15Adapter(this);
         pager.setAdapter(adapter);
 
+/*        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {             //리스트뷰 클릭 리스너로 id를 보내줌
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(SearchList.this,resultQueries.get(position).title.toString(),Toast.LENGTH_SHORT).show();
+                // Intent로 id를 넘겨주면 회차정보 액티비티가 뜨면 됨.
+            }
+        });*/
         GetServerData getServerData = new GetServerData(this);
 
     }
@@ -80,15 +79,18 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Intent intent;
         EditText search = (EditText)findViewById(R.id.searchbar);
+        String searchString = search.getText().toString();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            Toast.makeText(this,search.getText().toString(),Toast.LENGTH_SHORT).show();     //search를 누르면 해당 텍스트로 디비에 접근해서 결과를 새로운 창에 뿌리기
 
-            intent = new Intent(MainActivity.this, IntentTest.class);
-            intent.putExtra("Intent",search.getText().toString());
-            startActivity(intent);
-
+            if(searchString.equals("")){
+                Toast.makeText(this,"검색어를 입력하세요",Toast.LENGTH_SHORT).show();
+            }else{
+                intent = new Intent(MainActivity.this, SearchList.class);
+                intent.putExtra("Intent",search.getText().toString());
+                startActivity(intent);
+            }
             return true;
         }
 

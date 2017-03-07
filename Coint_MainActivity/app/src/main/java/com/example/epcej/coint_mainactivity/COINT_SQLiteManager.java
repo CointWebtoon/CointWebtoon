@@ -199,7 +199,7 @@ public class COINT_SQLiteManager {
         return db.insert("GENRE", null,values);
     }
 
-    public Cursor findquery(String s) {
+    public Cursor searchquery(String s) {
         Cursor c;
         return c=db.rawQuery("SELECT DISTINCT Id, Title, Artist, Thumburl, Starscore "+
                                                 "FROM WEBTOON WHERE Title Like \"%"+s+"%\" OR Artist Like \"%"+s+"%\"",null);

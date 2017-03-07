@@ -26,6 +26,11 @@
             android:exported="false"
             android:theme="@style/Theme.Transparent"
             ></activity>
+        <activity
+            android:name=".SearchList"
+            android:label="Intent Test"
+            android:exported="false"
+            ></activity>
 
         <activity
             android:name=".BestChallenge"

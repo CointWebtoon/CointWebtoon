@@ -3,6 +3,7 @@ package com.example.epcej.coint_mainactivity;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import com.bumptech.glide.Glide;
  * Created by epcej on 2017-02-14.
  */
 
-public class CustomAdapter extends PagerAdapter{
+public class Top15Adapter extends PagerAdapter{
 
      LayoutInflater inflater;
     Context mContext;
@@ -24,7 +25,7 @@ public class CustomAdapter extends PagerAdapter{
 
 //adapter의 데이터는 보통 액티비티라던가 다른 클래스에서 해서 생성자로 넘겨줌.
 
-    public CustomAdapter(Context mContext) {
+    public Top15Adapter(Context mContext) {
         // TODO Auto-generated constructor stub
 
         //전달 받은 LayoutInflater를 멤버변수로 전달
@@ -33,7 +34,7 @@ public class CustomAdapter extends PagerAdapter{
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(mContext);
     }
 
-    //PagerAdapter가 가지고 잇는 View의 개수를 리턴
+    //PagerAdapter가 가지고 있는 View의 개수를 리턴
     //보통 보여줘야하는 이미지 배열 데이터의 길이를 리턴
     @Override
     public int getCount() {

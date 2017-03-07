@@ -3,13 +3,16 @@ package com.example.epcej.coint_mainactivity;
 import android.content.Context;
 import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -68,6 +71,16 @@ public class SearchAdapter extends BaseAdapter {
             viewHolder.title.setText(resultQuery.get(position).title);
             viewHolder.artist.setText(resultQuery.get(position).artist);
             viewHolder.starScore.setText(Float.toString(resultQuery.get(position).starScore));
+
+        //버튼을 누르면 해당 웹툰의 id를 가져옴
+        //버튼이나 이미지버튼을 사용 할 경우, 리스트뷰의 focus가 버튼에 가서 onClickListener가 동작하지 않음
+        final int getId = resultQuery.get(position).id;
+        ImageView addWebtoon = (ImageView)itemLayout.findViewById(R.id.addWebtoon);
+        addWebtoon.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Log.i("addWebtoon", Integer.toString(getId));
+            }
+        });
         return itemLayout;
     }
 
