@@ -90,6 +90,7 @@ public class COINT_SQLiteManager {
         Cursor c= null;
         position*=3;
         return c = db.rawQuery("SELECT Id, Title, Artist, Thumburl, Starscore FROM WEBTOON ORDER BY Hits DESC LIMIT 3 OFFSET "+Integer.toString(position), null);
+        //position으로부터 내림차순 정리된 것 중 세개의 정보를 리턴함.
     }
 
     public long insertWebtoon(Webtoon webtoon){

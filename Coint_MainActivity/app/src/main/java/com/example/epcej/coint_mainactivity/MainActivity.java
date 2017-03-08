@@ -159,18 +159,4 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-
-    public void bestClick(View view) {
-        int id = view.getId();
-        Intent intent;
-        switch (id){
-            case R.id.top:
-                Toast.makeText(this, "toptop", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.middle:
-                break;
-            case R.id.bottom:
-                break;
-        }
-    }
 }
