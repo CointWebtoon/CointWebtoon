@@ -25,6 +25,7 @@ import java.util.ArrayList;
  */
 
 public class SearchAdapter extends BaseAdapter {
+    COINT_SQLiteManager coint_sqLiteManager;
     Context context = null;
     ArrayList<SearchResult> resultQuery = null;
     LayoutInflater layoutInflater = null;
@@ -33,6 +34,7 @@ public class SearchAdapter extends BaseAdapter {
         this.context = context;
         this.resultQuery = arrayList;
         this.layoutInflater = LayoutInflater.from(this.context);
+        coint_sqLiteManager = COINT_SQLiteManager.getInstance(this.context);
     }
 
     public int getCount(){
@@ -47,7 +49,7 @@ public class SearchAdapter extends BaseAdapter {
         return resultQuery.get(position);
     }
 
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, final View convertView, ViewGroup parent){
 
         View itemLayout = convertView;
         ViewHolder viewHolder = null;
@@ -76,9 +78,16 @@ public class SearchAdapter extends BaseAdapter {
         //버튼이나 이미지버튼을 사용 할 경우, 리스트뷰의 focus가 버튼에 가서 onClickListener가 동작하지 않음
         final int getId = resultQuery.get(position).id;
         ImageView addWebtoon = (ImageView)itemLayout.findViewById(R.id.addWebtoon);
+
         addWebtoon.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Log.i("addWebtoon", Integer.toString(getId));
+                try {
+                    String result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
+                    Toast.makeText(context,result,Toast.LENGTH_SHORT).show();
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
             }
         });
         return itemLayout;

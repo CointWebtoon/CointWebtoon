@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -204,6 +205,29 @@ public class COINT_SQLiteManager {
         Cursor c;
         return c=db.rawQuery("SELECT DISTINCT Id, Title, Artist, Thumburl, Starscore "+
                                                 "FROM WEBTOON WHERE Title Like \"%"+s+"%\" OR Artist Like \"%"+s+"%\"",null);
+    }
+
+    public String updateMyWebtoon(String id) {
+        Cursor c;
+
+        // db에 my webtoon 업데이트
+        db.execSQL("UPDATE WEBTOON SET Is_mine = " +
+                "CASE WHEN Is_mine = 0 THEN 1 " +
+                "ELSE 0 END " +
+                "WHERE Id = " +id);
+
+        //My Webtoon에 추가 여부 판단
+        c = db.rawQuery("SELECT Is_mine FROM WEBTOON WHERE Id = "+id,null);
+
+        c.moveToFirst();
+
+        if(Integer.parseInt(c.getString(0))==0){
+            Log.i("MY WEBTOON", c.getString(0).toString());
+            return "마이 웹툰 해제";
+        }else{
+            Log.i("MY WEBTOON", c.getString(0).toString());
+            return "마이 웹툰 설정";
+        }
     }
 }
 

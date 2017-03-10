@@ -37,18 +37,22 @@ public class Top15Adapter extends PagerAdapter {
         public void onClick(View v) {
             c = coint_sqLiteManager.topHits(position-1);             // 버튼을 누를 때 다음 페이지의 정보가 나와서 쿼리를 position-1로 날려주었음
             int id = v.getId();
+            String result;
             switch(id){
                 case R.id.addTopBtn:
                     c.moveToFirst();
-                    Toast.makeText(mContext,c.getString(2).toString(),Toast.LENGTH_SHORT).show();
+                    result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
+                    Toast.makeText(mContext,result,Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.addMidBtn:
                     c.moveToPosition(1);
-                    Toast.makeText(mContext,c.getString(2).toString(),Toast.LENGTH_SHORT).show();
+                    result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
+                    Toast.makeText(mContext,result,Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.addBotBtn:
                     c.moveToLast();
-                    Toast.makeText(mContext,c.getString(2).toString(),Toast.LENGTH_SHORT).show();
+                    result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
+                    Toast.makeText(mContext,result,Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.top:
                     c.moveToFirst();
