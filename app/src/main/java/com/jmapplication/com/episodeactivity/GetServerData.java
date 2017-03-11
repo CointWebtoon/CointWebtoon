@@ -63,6 +63,12 @@ public class GetServerData extends Observable{
         episode.execute(toonId);
     }
 
+    public void getImagesFromServer(int toonId, int episodeId){
+        String url = "http://10.0.2.2:8080/Image_Client.jsp?id="  + String.valueOf(toonId) + "&ep_id=" + String.valueOf(episodeId);
+        GetImage getImage = new GetImage();
+        getImage.execute(url);
+    }
+
     //ToonList_Client.jsp
     private class GetWebtoon extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... urls) {
@@ -326,6 +332,57 @@ public class GetServerData extends Observable{
         protected void onPostExecute(Void aVoid) {
             updateObserver();
             super.onPostExecute(aVoid);
+        }
+    }
+
+    //Image_Client.jsp
+    private class GetImage extends AsyncTask<String, Void, Void>{
+        private ArrayList<String> imageUrls = new ArrayList<>();
+        protected Void doInBackground(String... urls){
+            StringBuilder jsonHtml = new StringBuilder();
+            String image_url;
+            try{
+                URL url = new URL(urls[0]); //연결 url 설정
+                HttpURLConnection connection = (HttpURLConnection)url.openConnection(); //커넥션 객체 생성
+                if(connection!=null){
+                    connection.setConnectTimeout(10000);
+                    connection.setUseCaches(false);
+                    if(connection.getResponseCode()==HttpURLConnection.HTTP_OK){
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(),"EUC-KR"));
+                        for(;;){
+                            //웹상에 보여지는 텍스트를 라인단위로 읽어 저장
+                            String line = bufferedReader.readLine();
+                            if (line == null)
+                                break;
+                            jsonHtml.append(line+"\n");
+                        }
+                        bufferedReader.close();
+                    }
+                    connection.disconnect();
+                    JSONObject root = new JSONObject(jsonHtml.toString());
+                    if(root.isNull("result") != true){
+                        JSONArray jsonArray = root.getJSONArray("result");
+                        for(int i=0; i<jsonArray.length();i++){
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            image_url = jsonObject.getString("image_url");
+                            imageUrls.add(image_url);
+                        }
+                    }
+                }else {
+                    throw new Exception("IMAGE CONNECTION ERROR");
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            for(Observer observer : observers){
+                observer.update(GetServerData.this, imageUrls);
+            }
         }
     }
 }

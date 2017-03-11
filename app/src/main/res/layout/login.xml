@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_marginRight="@dimen/login_edittext_margin"
+        android:layout_marginLeft="@dimen/login_edittext_margin"
+        android:layout_marginBottom="@dimen/login_edittext_margin"
+        android:src="@drawable/naver_ci_green"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp" />
+    <TextView
+        android:layout_marginLeft="@dimen/login_edittext_margin"
+        android:layout_marginBottom="@dimen/login_edittext_margin"
+        android:layout_gravity="left"
+        android:text="네이버 아이디로 로그인 해주세요."
+        android:textSize="15dp"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:textCursorDrawable="@drawable/textcursor"
+        android:layout_marginRight="@dimen/login_edittext_margin"
+        android:layout_marginLeft="@dimen/login_edittext_margin"
+        android:layout_marginBottom="@dimen/login_edittext_margin"
+        android:id="@+id/idEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_style"
+        android:ems="20"
+        android:hint="아이디"
+        android:textColorHint="#44000000"
+        android:textSize="20dp"/>
+
+    <EditText
+        android:textCursorDrawable="@drawable/textcursor"
+        android:layout_marginRight="@dimen/login_edittext_margin"
+        android:layout_marginLeft="@dimen/login_edittext_margin"
+        android:layout_marginBottom="@dimen/login_edittext_margin"
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_style"
+        android:ems="20"
+        android:hint="비밀번호"
+        android:inputType="textPassword"
+        android:textColorHint="#44000000"
+        android:textSize="20dp" />
+
+    <CheckBox
+        android:buttonTint="@color/naver_signature"
+        android:id="@+id/chekBox_AutoLogin"
+        android:text="자동 로그인"
+        android:layout_marginLeft="@dimen/login_edittext_margin"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/loginBtn"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:onClick="loginButtonClick"
+        android:src="@drawable/login" />
+</LinearLayout>

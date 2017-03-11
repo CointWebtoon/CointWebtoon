@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="myWhite">#444444</color>
-    <color name="topBar">#009900</color>
+    <color name="gray">#444444</color>
+    <color name="pure_black">#000000</color>
+    <color name="naver_signature">#004400</color>
 </resources>
