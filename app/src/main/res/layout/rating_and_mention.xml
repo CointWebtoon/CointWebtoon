@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/mylayout">
+    <RatingBar android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:rating="5"
+        android:stepSize="0.5"
+        android:max="6"
+        style="?android:attr/ratingBarStyleSmall"
+        />
+
+    <Button
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="별점주기"/>
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF69B4"
+        android:text="9.99"
+        android:layout_toRightOf="@+id/rating_bar" />
+
+
+    <TextView
+        android:id="@+id/mentionTitle"
+        android:layout_below="@id/rating_bar"
+        android:text="작가의 말"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/mention"
+        android:layout_below="@id/mentionTitle"
+        android:text="작가의 말을 적어보았습니다."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
