@@ -229,5 +229,12 @@ public class COINT_SQLiteManager {
             return "마이 웹툰 설정";
         }
     }
+
+    public Cursor isMyWebtoon() {
+        Cursor c;
+        return c = db.rawQuery("SELECT Id, Title, Artist, Thumburl, Starscore " +
+                "FROM WEBTOON " +
+                "WHERE Is_mine=1", null);
+    }
 }
 

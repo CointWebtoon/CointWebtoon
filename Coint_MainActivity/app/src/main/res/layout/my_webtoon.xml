@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview"
+        card:cardCornerRadius="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="105dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:elevation="15dp"
+        app:cardusecompatpadding="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#EFCEC5"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/bag_on_head"
+                android:id="@+id/addView"/>
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/mainTitle"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+            <!--마지막 두줄은 애니메이션 효과를 위한것-->
+
+            <TextView
+                android:text="Artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mainArtist"
+                android:textSize="10dp"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

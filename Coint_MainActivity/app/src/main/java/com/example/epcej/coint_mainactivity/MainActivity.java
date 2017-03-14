@@ -1,8 +1,11 @@
 package com.example.epcej.coint_mainactivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,14 +15,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ViewPager pager;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+    RecyclerView.LayoutManager layoutManager;
+    private ArrayList<SearchResult> arrayList;
+    private COINT_SQLiteManager coint_sqLiteManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,19 +50,27 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //안드로이드에 데이터를 넣음
+        GetServerData getServerData = new GetServerData(this);
+
         pager = (ViewPager)findViewById(R.id.pager);                        //뷰페이저에 어댑터를 연결하는 부분
         Top15Adapter adapter = new Top15Adapter(this);
         pager.setAdapter(adapter);
 
-/*        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {             //리스트뷰 클릭 리스너로 id를 보내줌
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(SearchList.this,resultQueries.get(position).title.toString(),Toast.LENGTH_SHORT).show();
-                // Intent로 id를 넘겨주면 회차정보 액티비티가 뜨면 됨.
-            }
-        });*/
-        GetServerData getServerData = new GetServerData(this);
+        //즐겨찾는 웹툰 추가하는 부분
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
 
+        recyclerView.setHasFixedSize(true);
+
+        coint_sqLiteManager = COINT_SQLiteManager.getInstance(this);
+
+        Cursor cursor = coint_sqLiteManager.isMyWebtoon();          //is_mine이 1인 웹툰을 불러옴 Id, Title, Artist, Thumburl, Starscore순.
+
+        layoutManager = new StaggeredGridLayoutManager(5,StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        MyWebtoonAdp myWebtoonAdapter = new MyWebtoonAdp(cursor,this);
+        recyclerView.setAdapter(myWebtoonAdapter);
     }
 
     @Override
@@ -147,16 +166,16 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra("Best","bestchallenge");
                 startActivity(intent);
                 break;
-            case R.id.settingBtn:
+/*            case R.id.settingBtn:
                 intent = new Intent(MainActivity.this, IntentTest.class);
                 intent.putExtra("Intent","setting");
                 startActivity(intent);
-                break;
-            case R.id.addItemBtn:
+                break;*/
+/*            case R.id.addItemBtn:
                 intent = new Intent(MainActivity.this, IntentTest.class);
                 intent.putExtra("Intent","weekday");
                 startActivity(intent);
-                break;
+                break;*/
         }
     }
 }

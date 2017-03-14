@@ -4,45 +4,37 @@
     <item android:title="부가기능">
         <menu>
                 <item
-                    android:id="@+id/autoLotate"
-                    android:title="자동회전" />
+                    android:id="@+id/webtoonRanking"
+                    android:title="웹툰 랭킹" />
 
             <item
-                android:id="@+id/autoPlay"
-                android:title="동영상 자동 재생" />
-        </menu>
-    </item>
+                android:id="@+id/moreMyWebtoon"
+                android:title="마이웹툰 전체보기" />
 
-    <item android:title="알림">
-        <menu>
             <item
-                android:id="@+id/useLte"
-                android:title="이동통신망 사용알림" />
-            <item
-                android:id="@+id/push"
-                android:title="푸시 알림" />
-        </menu>
-    </item>
+                android:id="@+id/bookmark"
+                android:title="책갈피" />
 
-    <item android:title="고객 도움말">
-        <menu>
+            <item
+                android:id="@+id/setting"
+                android:title="책갈피" />
+
+            <item
+                android:id="@+id/personalLiking"
+                android:title="취향 분석" />
+
             <item
                 android:id="@+id/customService"
-                android:title="웹툰 고객센터" />
+                android:title="코인트 고객센터" />
+
             <item
                 android:id="@+id/error"
                 android:title="오류 신고" />
-            <item
-                android:id="@+id/notify"
-                android:title="공지사항" />
-        </menu>
-    </item>
 
-    <item android:title="정보">
-        <menu>
             <item
                 android:id="@+id/appInfo"
                 android:title="프로그램 정보" />
+
         </menu>
     </item>
 

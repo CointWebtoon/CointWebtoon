@@ -6,11 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!--    <ListView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/chartListView" />-->
-
     <RelativeLayout
         android:id="@+id/top"
         android:layout_width="wrap_content"
@@ -23,8 +18,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="17dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/starScore"
@@ -73,7 +68,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            app:srcCompat="@drawable/bag_on_head" />
+            android:src="@drawable/bag_on_head" />
 
     </RelativeLayout>
 
@@ -119,7 +114,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            app:srcCompat="@drawable/bag_on_head" />
+            android:src="@drawable/bag_on_head" />
 
         <ImageView
             android:id="@+id/webtoonImg1"
@@ -128,8 +123,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/addMidBtn"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="17dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/starScore1"
@@ -155,8 +150,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="17dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/starScore2"
@@ -205,7 +200,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            app:srcCompat="@drawable/bag_on_head" />
+            android:src="@drawable/bag_on_head" />
 
     </RelativeLayout>
 </LinearLayout>
