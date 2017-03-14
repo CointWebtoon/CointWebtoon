@@ -77,12 +77,11 @@ public class Top15Adapter extends PagerAdapter {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                c = coint_sqLiteManager.topHits(position);             // 버튼을 누를 때 다음 페이지의 정보가 나와서 쿼리를 position-1로 날려주었음
-/*                TextView textView = (TextView)((Activity)mContext).findViewById(R.id.editText);*/
+                c = coint_sqLiteManager.topHits(position);
 
                 int id = v.getId();
                 String result = null;
-
+                Intent intent;
                 switch(id){
                     case R.id.addTopBtn:
                         c.moveToFirst();
@@ -102,23 +101,25 @@ public class Top15Adapter extends PagerAdapter {
                     case R.id.top:
                         c.moveToFirst();
                         Toast.makeText(mContext,c.getString(1).toString(),Toast.LENGTH_SHORT).show();
+                        intent = new Intent(mContext, IntentTest.class);
+                        intent.putExtra("Intent","Episode");
+                        mContext.startActivity(intent);
                         break;
                     case R.id.middle:
                         c.moveToPosition(1);
                         Toast.makeText(mContext,c.getString(1).toString(),Toast.LENGTH_SHORT).show();
+                        intent = new Intent(mContext, IntentTest.class);
+                        intent.putExtra("Intent","Episode");
+                        mContext.startActivity(intent);
                         break;
                     case R.id.bottom:
                         c.moveToLast();
                         Toast.makeText(mContext,c.getString(1).toString(),Toast.LENGTH_SHORT).show();
+                        intent = new Intent(mContext, IntentTest.class);
+                        intent.putExtra("Intent","Episode");
+                        mContext.startActivity(intent);
                         break;
                 }
-/*                if(result.equals("마이 웹툰 설정")){
-                    Log.i("Name",c.getString(2).toString());
-                    textView.setText(c.getString(1).toString());
-                }else{
-                    textView.setText("");
-                }*/
-
             }
         };
 

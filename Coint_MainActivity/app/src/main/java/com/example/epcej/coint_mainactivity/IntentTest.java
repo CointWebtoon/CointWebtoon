@@ -29,5 +29,8 @@ public class IntentTest extends Activity {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E");          //왜 미국시간으로 나오는지는 모르겠으나... 일단 나오긴 함
             textView.setText(simpleDateFormat.format(date));
         }
+        else{
+            textView.setText(something);
+        }
     }
 }

@@ -166,16 +166,6 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra("Best","bestchallenge");
                 startActivity(intent);
                 break;
-/*            case R.id.settingBtn:
-                intent = new Intent(MainActivity.this, IntentTest.class);
-                intent.putExtra("Intent","setting");
-                startActivity(intent);
-                break;*/
-/*            case R.id.addItemBtn:
-                intent = new Intent(MainActivity.this, IntentTest.class);
-                intent.putExtra("Intent","weekday");
-                startActivity(intent);
-                break;*/
         }
     }
 }

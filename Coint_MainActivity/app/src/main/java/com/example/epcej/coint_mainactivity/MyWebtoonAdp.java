@@ -1,6 +1,7 @@
 package com.example.epcej.coint_mainactivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import java.util.ArrayList;
@@ -21,15 +23,17 @@ import java.util.ArrayList;
 
 public class MyWebtoonAdp extends RecyclerView.Adapter<MyWebtoonAdp.ViewHolder>{
   private ArrayList<SearchResult> arrayList;
+    private View v;
     private Context mContext;
     private int lastPosition = -1;
     private Cursor cursor;
+
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
         TextView title;
         TextView artist;
-
 
         public ViewHolder(View view){
             super(view);
@@ -45,13 +49,13 @@ public class MyWebtoonAdp extends RecyclerView.Adapter<MyWebtoonAdp.ViewHolder>{
     }
 
     public MyWebtoonAdp.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_webtoon,parent,false);
+        v = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_webtoon,parent,false);
         ViewHolder viewHolder = new ViewHolder(v);
 
         return viewHolder;
     }
 
-    public void onBindViewHolder(ViewHolder holder, int position){
+    public void onBindViewHolder(ViewHolder holder, final int position){
         if(position==0){
             holder.title.setText("웹툰 추가");
             holder.artist.setText("");
@@ -63,6 +67,27 @@ public class MyWebtoonAdp extends RecyclerView.Adapter<MyWebtoonAdp.ViewHolder>{
             Glide.with(mContext).load(cursor.getString(3).toString()).into(holder.imageView);
         }
 
+        View.OnClickListener onClickListener = new View.OnClickListener(){
+            public void onClick(View v){
+                int id = v.getId();
+                Intent intent;
+
+                switch (id){
+                    case R.id.cardview:
+                        if(position==0){
+                            intent = new Intent(mContext,IntentTest.class);
+                            intent.putExtra("Intent","weekday");
+                            mContext.startActivity(intent);
+                        }else{
+                            intent = new Intent(mContext, IntentTest.class);
+                            intent.putExtra("Intent","Episode");
+                            mContext.startActivity(intent);
+                        }
+                        break;
+                }
+            }
+        };
+        v.findViewById(R.id.cardview).setOnClickListener(onClickListener);
 
         setAnimation(holder.imageView, position);
     }
