@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,8 +27,9 @@ public class MainActivity extends AppCompatActivity
 
     ViewPager pager;
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
+    Top15Adapter top15Adapter;
     RecyclerView.LayoutManager layoutManager;
+    MyWebtoonAdp myWebtoonAdapter;
     private ArrayList<SearchResult> arrayList;
     private COINT_SQLiteManager coint_sqLiteManager;
 
@@ -54,8 +56,8 @@ public class MainActivity extends AppCompatActivity
         GetServerData getServerData = new GetServerData(this);
 
         pager = (ViewPager)findViewById(R.id.pager);                        //뷰페이저에 어댑터를 연결하는 부분
-        Top15Adapter adapter = new Top15Adapter(this);
-        pager.setAdapter(adapter);
+        top15Adapter = new Top15Adapter(this);
+        pager.setAdapter(top15Adapter);
 
         //즐겨찾는 웹툰 추가하는 부분
         recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
@@ -65,11 +67,12 @@ public class MainActivity extends AppCompatActivity
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(this);
 
         Cursor cursor = coint_sqLiteManager.isMyWebtoon();          //is_mine이 1인 웹툰을 불러옴 Id, Title, Artist, Thumburl, Starscore순.
-
-        layoutManager = new StaggeredGridLayoutManager(5,StaggeredGridLayoutManager.VERTICAL);
+/*
+        layoutManager = new StaggeredGridLayoutManager(5,StaggeredGridLayoutManager.VERTICAL);*/
+        layoutManager = new GridLayoutManager(this,5);
         recyclerView.setLayoutManager(layoutManager);
 
-        MyWebtoonAdp myWebtoonAdapter = new MyWebtoonAdp(cursor,this);
+        myWebtoonAdapter = new MyWebtoonAdp(this);
         recyclerView.setAdapter(myWebtoonAdapter);
     }
 
@@ -143,7 +146,11 @@ public class MainActivity extends AppCompatActivity
 
     public void onClick(View view) {        // 베스트도전은 웹뷰로 띄우고, 나머지는 액티비티
         int id = view.getId();
+        String result;
         Intent intent;
+        int position = top15Adapter.returnPosition-1;
+        Cursor c = coint_sqLiteManager.topHits(position);
+
         switch (id){
             case R.id.genreBtn:
                 intent = new Intent(MainActivity.this, IntentTest.class);
@@ -166,6 +173,44 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra("Best","bestchallenge");
                 startActivity(intent);
                 break;
+            case R.id.addTopBtn:
+                position = (Integer)view.getTag();
+
+                c = coint_sqLiteManager.topHits(position);
+                c.moveToFirst();
+
+                result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
+                c = coint_sqLiteManager.isMyWebtoon();
+                myWebtoonAdapter.addRemoveItem(c);
+                break;
+
+            case R.id.addMidBtn:
+                position = (Integer)view.getTag();
+
+                c = coint_sqLiteManager.topHits(position);
+                c.moveToPosition(1);
+
+                result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
+                c = coint_sqLiteManager.isMyWebtoon();
+                myWebtoonAdapter.addRemoveItem(c);
+                break;
+            case R.id.addBotBtn:
+                position = (Integer)view.getTag();
+
+                c = coint_sqLiteManager.topHits(position);
+                c.moveToLast();
+
+                result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
+                c = coint_sqLiteManager.isMyWebtoon();
+                myWebtoonAdapter.addRemoveItem(c);
+                break;
         }
     }
+
+    protected void onResume() {
+        super.onResume();
+        Cursor c = coint_sqLiteManager.isMyWebtoon();
+        myWebtoonAdapter.addRemoveItem(c);
+    }
+
 }

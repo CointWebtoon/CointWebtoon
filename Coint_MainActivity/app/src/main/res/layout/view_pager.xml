@@ -9,7 +9,8 @@
     <RelativeLayout
         android:id="@+id/top"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="onClick">
 
         <ImageView
             android:id="@+id/webtoonImg"
@@ -68,14 +69,16 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            android:src="@drawable/bag_on_head" />
+            android:src="@drawable/bag_on_head"
+            android:onClick="onClick" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/middle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="onClick">
 
         <TextView
             android:id="@+id/artistName1"
@@ -114,7 +117,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            android:src="@drawable/bag_on_head" />
+            android:src="@drawable/bag_on_head"
+            android:onClick="onClick"/>
 
         <ImageView
             android:id="@+id/webtoonImg1"
@@ -141,7 +145,8 @@
     <RelativeLayout
         android:id="@+id/bottom"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="onClick">
 
         <ImageView
             android:id="@+id/webtoonImg2"
@@ -200,7 +205,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
-            android:src="@drawable/bag_on_head" />
+            android:src="@drawable/bag_on_head"
+            android:onClick="onClick"/>
 
     </RelativeLayout>
 </LinearLayout>

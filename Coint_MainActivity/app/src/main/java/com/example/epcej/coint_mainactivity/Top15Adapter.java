@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class Top15Adapter extends PagerAdapter {
     Context mContext;
     COINT_SQLiteManager coint_sqLiteManager;
     Cursor c;
+    int returnPosition;
 
 //adapter의 데이터는 보통 액티비티라던가 다른 클래스에서 해서 생성자로 넘겨줌.
 
@@ -64,7 +66,7 @@ public class Top15Adapter extends PagerAdapter {
         View view;
         ImageView imgTop, imgMid, imgBot;
         TextView rankTop, rankMid, rankBot, starTop, starMid, starBot, artistTop, artistMid, artistBot, titleTop, titleMid, titleBot;
-        RelativeLayout relativeTop, relativeMiddle, relativeBottom;
+        returnPosition = position;
 
         c = coint_sqLiteManager.topHits(position);             //현재 페이지에 맞는 순위 세개를 가져옴
 
@@ -80,24 +82,8 @@ public class Top15Adapter extends PagerAdapter {
                 c = coint_sqLiteManager.topHits(position);
 
                 int id = v.getId();
-                String result = null;
                 Intent intent;
                 switch(id){
-                    case R.id.addTopBtn:
-                        c.moveToFirst();
-                        result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
-                        Toast.makeText(mContext,result,Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.addMidBtn:
-                        c.moveToPosition(1);
-                        result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
-                        Toast.makeText(mContext,result,Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.addBotBtn:
-                        c.moveToLast();
-                        result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
-                        Toast.makeText(mContext,result,Toast.LENGTH_SHORT).show();
-                        break;
                     case R.id.top:
                         c.moveToFirst();
                         Toast.makeText(mContext,c.getString(1).toString(),Toast.LENGTH_SHORT).show();
@@ -124,9 +110,7 @@ public class Top15Adapter extends PagerAdapter {
         };
 
         //추가버튼과 각각의 RelativeLayout에 setOnClickListener 설정
-        view.findViewById(R.id.addTopBtn).setOnClickListener(onClickListener);
-        view.findViewById(R.id.addMidBtn).setOnClickListener(onClickListener);
-        view.findViewById(R.id.addBotBtn).setOnClickListener(onClickListener);
+
         view.findViewById(R.id.top).setOnClickListener(onClickListener);
         view.findViewById(R.id.middle).setOnClickListener(onClickListener);
         view.findViewById(R.id.bottom).setOnClickListener(onClickListener);
@@ -134,6 +118,15 @@ public class Top15Adapter extends PagerAdapter {
 
         //만들어진 View안에 있는 ImageView, TextView들을 가져옴
         //위에서 inflated 되어 만들어진 view로부터 findViewById()를 해야한다.
+        ImageView topPlusBtn = (ImageView)view.findViewById(R.id.addTopBtn);
+        topPlusBtn.setTag(Integer.valueOf(position));
+
+        ImageView midPlusBtn = (ImageView)view.findViewById(R.id.addMidBtn);
+        midPlusBtn.setTag(Integer.valueOf(position));
+
+        ImageView botPlusBtn = (ImageView)view.findViewById(R.id.addBotBtn);
+        botPlusBtn.setTag(Integer.valueOf(position));
+
         imgTop = (ImageView) view.findViewById(R.id.webtoonImg);
         imgMid = (ImageView) view.findViewById(R.id.webtoonImg1);
         imgBot = (ImageView) view.findViewById(R.id.webtoonImg2);
@@ -205,5 +198,9 @@ public class Top15Adapter extends PagerAdapter {
     public boolean isViewFromObject(View v, Object obj) {
         // TODO Auto-generated method stub
         return v == obj;
+    }
+
+    public int getReturnPosition(){
+        return returnPosition;
     }
 }
