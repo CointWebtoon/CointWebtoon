@@ -123,21 +123,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {        // navigation drawer에 있는 메뉴 선택시 실행
         // Handle navigation view item clicks here.
+        Intent intent;
         int id = item.getItemId();
 
-/*        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
+        switch(id){
+            case R.id.webtoonRanking:
+                intent = new Intent(MainActivity.this, Top100RankList.class);
+                intent.putExtra("Intent","조회수 Top 100");
+                startActivity(intent);
+            break;
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

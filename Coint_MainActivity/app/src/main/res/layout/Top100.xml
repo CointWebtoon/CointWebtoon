@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -16,7 +17,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="60dp"
             android:layout_marginTop="17dp"
             android:src="@mipmap/ic_launcher" />
 
@@ -59,6 +60,16 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="30dp"
             android:src="@drawable/bag_on_head" />
+
+        <TextView
+            android:text="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textAlignment="center"
+            android:textSize="30dp"
+            android:id="@+id/totalRanking"
+            android:layout_alignTop="@+id/webtoonImg" />
 
 
     </RelativeLayout>

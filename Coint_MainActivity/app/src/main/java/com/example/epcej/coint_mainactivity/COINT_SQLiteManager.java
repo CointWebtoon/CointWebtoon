@@ -207,6 +207,11 @@ public class COINT_SQLiteManager {
                                                 "FROM WEBTOON WHERE Title Like \"%"+s+"%\" OR Artist Like \"%"+s+"%\"",null);
     }
 
+    public Cursor Top100Ranking() {
+        Cursor c;
+        return c=db.rawQuery("SELECT Id, Title, Artist, Thumburl, Starscore FROM WEBTOON ORDER BY Hits DESC LIMIT 100", null);
+    }
+
     public String updateMyWebtoon(String id) {
         Cursor c;
 
@@ -236,5 +241,7 @@ public class COINT_SQLiteManager {
                 "FROM WEBTOON " +
                 "WHERE Is_mine=1", null);
     }
+
+
 }
 

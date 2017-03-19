@@ -126,8 +126,8 @@ public class MyWebtoonAdp extends RecyclerView.Adapter<MyWebtoonAdp.ViewHolder> 
             /*Log.i("result", resultQuery.title);*/
             arrayList.add(resultQuery);
         }
-        getItemCount();
-        notifyItemRangeChanged(0,getItemCount());
+//        notifyItemRangeChanged(0,getItemCount());
+        notifyDataSetChanged();
     }
 
     private void setAnimation(View viewToAnimate, int position) {
