@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -333,6 +334,56 @@ public class WebtoonParse {
         }
 
         return true;    //모든 작업을 예외, 오류 없이 완료 했다면 true를 return
+    }
+
+    /*
+     * 완결 웹툰에 들어가지 않는 브랜드웹툰 정보를 얻어오는 메소드
+     * Output : webtoons ArrayList에 브랜드웹툰 추가
+     */
+    public void getBrandWebtoons(){
+        String URL = "http://comic.naver.com/webtoon/theme.nhn";
+        int id;                                         //웹툰 고유 ID
+        String title;                               //웹툰 제목
+        String artist;                             //작가명
+        float starScore;                   //평균 평점
+        String thumbURL;                    //썸네일 URL
+        boolean is_cuttoon;            //컷툰, 일반툰 구분
+        boolean is_smarttoon;       //스마트툰,
+        boolean is_charged;         //유료
+        int is_updated;
+
+        Webtoon insertElement;
+        try{
+            Document themePage = Jsoup.connect(URL).get();
+            Element brandZone = themePage.select(".img_list").first();
+            Elements brandWebtoons = brandZone.select("li");
+            for(Element brandWebtoon : brandWebtoons){
+                id = parseId(brandWebtoon);
+                title = parseTitle(brandWebtoon);
+                artist = parseArtist(brandWebtoon);
+                starScore = parseStarScore(brandWebtoon);
+                thumbURL = parseThumbURL(brandWebtoon);
+                is_cuttoon = parseIs_cuttoon(brandWebtoon);
+                is_smarttoon = parseIs_smarttoon(brandWebtoon);
+                is_charged = parseIs_charged(brandWebtoon);
+
+                if(parseIs_break(brandWebtoon)){
+                    is_updated = 2;
+                }else if(parseIs_updated(brandWebtoon)){
+                    is_updated = 1;
+                }else{
+                    is_updated = 0;
+                }
+
+                insertElement = new Webtoon(id, title, artist, starScore, thumbURL, is_cuttoon, is_smarttoon, is_charged, is_updated, 0);
+                if(webtoons.contains(insertElement)){   //이미 들어있는 경우
+                    insertElement = webtoons.get(webtoons.indexOf(insertElement));
+                    insertElement.getGenre().add("BRAND");
+                }else {
+                    webtoons.add(insertElement);
+                }
+            }
+        }catch (IOException ioex){ioex.printStackTrace();}
     }
 
     /*

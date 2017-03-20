@@ -28,6 +28,8 @@ private static final int
                     return;
                 }
             }
+            parsingInstance.getBrandWebtoons();
+
             int genreTableInsertNum = 0;
             for (Webtoon webtoon : webtoons) {
                 genreTableInsertNum += webtoon.getGenre().size();
