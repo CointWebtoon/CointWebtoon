@@ -14,6 +14,7 @@ public class WebtoonParse {
     private static final int ERR_CODE = -1;
     private static final float ERR_FLOAT_CODE = -1;
     private static final String ERR_STRING = "ERR";
+    private static final int timeout = 3600 * 1000;               //Jsoup timeout exception방지
     private static final int
             mon = 1,
             tue = 2,
@@ -281,7 +282,7 @@ public class WebtoonParse {
         }
         URL = baseURL + weekdayString;
         try {
-            Document doc = Jsoup.connect(URL).timeout(30 * 1000).get();
+            Document doc = Jsoup.connect(URL).timeout(timeout).get();
             Elements toons = doc.select(".img_list > li");
             Webtoon insertElement;
             for (Element toon : toons) {//id, title, artist, starscore, thumbURL, is_cuttoon, is_smarttoon
@@ -316,10 +317,11 @@ public class WebtoonParse {
             Webtoon redaundancyCheckInstance = new Webtoon(-1, null, null, -1, null, false, false, false ,-1,-1);
             //id 중복 확인을 위해 만들어진 임의의 객체
             for(String genreString : genreType){
-                doc = Jsoup.connect(baseURL + genreString).timeout(30 * 1000).get();
+                doc = Jsoup.connect(baseURL + genreString).timeout(timeout).get();
                 toons = doc.select(".img_list > li");
                 for(Element toon : toons){
                     id = parseId(toon);
+
                     genre = genreString.toUpperCase();
                     redaundancyCheckInstance.setId(id);//id를 현재 id로 설정하고 겹치는 아이디가 있는지 확인(equals)
                     if (webtoons.contains(redaundancyCheckInstance)) {//만약 ArrayList 안에 해당 id의 웹툰이 있다면 장르만 업데이트한다. --> 장르는 HashSet으로 구현되어 중복된 값이 들어가지 않으므로 문제X
@@ -354,7 +356,7 @@ public class WebtoonParse {
 
         Webtoon insertElement;
         try{
-            Document themePage = Jsoup.connect(URL).get();
+            Document themePage = Jsoup.connect(URL).timeout(timeout).get();
             Element brandZone = themePage.select(".img_list").first();
             Elements brandWebtoons = brandZone.select("li");
             for(Element brandWebtoon : brandWebtoons){

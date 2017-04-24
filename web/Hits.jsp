@@ -19,7 +19,6 @@
 
       String id = request.getParameter("id");
 
-
       //Connection 객체에 대해, 질의문 사용을 위한 statement 객체 생성
 
       String sql = "UPDATE webtoon SET Hits=Hits+1 WHERE Id=?";
@@ -27,7 +26,6 @@
 
       statement.setString(1,id);            //  where절의 조건을 설정
       statement.executeUpdate();                      //쿼리 실행
-
    }
   }catch (SQLException ex){
     System.out.println("SQL Exception "+ex);

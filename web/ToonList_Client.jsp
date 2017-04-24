@@ -26,7 +26,7 @@
             /* Query statement (Need to modify as needed) */
             String id = request.getParameter("id");
             String sql = "SELECT * " +
-                         "FROM WEBTOON;";
+                         "FROM WEBTOON WHERE Mobile_unsupported=0;";
 
             /* Query request */
             pstmt= conn.prepareStatement(sql);

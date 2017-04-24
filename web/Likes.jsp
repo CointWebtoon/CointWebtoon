@@ -35,12 +35,6 @@
 
           statement.setString(1,id);
           statement.executeUpdate();
-
-          String result = "SELECT Likes FROM webtoon WHERE Id=?";
-          statement = connection.prepareStatement(result);
-
-          statement.setString(1,id);
-          resultSet = statement.executeQuery();
       }
       else if(type.equals("episode")){                           //요청 형식이 episode인 경우 Likes_E를 1 올리고 결과물을 resultSet에 저장한다
           ep_id = request.getParameter("ep_id");
@@ -50,30 +44,6 @@
           statement.setString(1,id);
           statement.setString(2,ep_id);
           statement.executeUpdate();
-
-          String result = "SELECT Likes_E FROM episode WHERE Id_E=? AND Episode_id=?";
-          statement = connection.prepareStatement(result);
-
-          statement.setString(1,id);
-          statement.setString(2,ep_id);
-
-          resultSet = statement.executeQuery();
-      }
-
-      while(resultSet.next()){                                                                  //저장한 결과를 JSON으로 만든다.
-
-          JSONObject object = new JSONObject();
-
-          if(type.equals("webtoon")){
-              object.put("likes", resultSet.getString("Likes"));
-              out.print(resultSet.getString("Likes"));
-          }else if(type.equals("episode")){
-              object.put("likes", resultSet.getString("Likes_E"));
-              out.print(resultSet.getString("Likes_E"));
-          }
-
-          jsonArray.add(0,object);
-          jsonObject.put("result",jsonArray);
       }
    }
   }catch (SQLException ex){

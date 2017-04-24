@@ -2,9 +2,13 @@
 <html>
 <head>
     <title>SERVER</title>
+    <style>
+        h1{
+            font-size: 70px;
+        }
+    </style>
 </head>
 <body>
 <h1>SERVER STARTED!</h1><br/>
-<img src="http://thumb.comic.naver.net/webtoon/679519/74/thumbnail_600x315_29cbce65-18cf-487b-b84c-f7e823cd5320.jpg">
 </body>
 </html>

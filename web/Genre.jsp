@@ -29,7 +29,7 @@
 
     if(conn != null) {
 
-      String sql = "SELECT * FROM GENRE";
+      String sql = "SELECT Id_G, Genre FROM GENRE, WEBTOON WHERE Id=Id_G AND Mobile_unsupported=0";
       PreparedStatement statement = conn.prepareStatement(sql);
 
       ResultSet resultSet = statement.executeQuery();                         // sql 쿼리문 실행 결과를 resultSet에 저장

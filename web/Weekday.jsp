@@ -1,11 +1,4 @@
 <%--
-  User: EunJoo Choi
-  Date: 2017-02-05
-  Time: 오후 8:02
-  To change this template use File | Settings | File Templates.
---%>
-
-<%--
         안드로이드에서 json파싱할때 <html>같은 태그부분도 같이 따라오는 바람에
          contentType을 application/json으로 바꿔주어 파싱 문제를 해결했습니다.
 

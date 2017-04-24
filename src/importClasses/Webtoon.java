@@ -16,7 +16,8 @@ public class Webtoon {
     private HashSet<String> genre;          //장르
 
     //Constructor
-    public Webtoon(int id, String title, String artist, float starScore, String thumbURL, boolean is_cuttoon, boolean is_smarttoon, boolean is_charged, int is_updated, int weekday) {
+    public Webtoon(int id, String title, String artist, float starScore, String thumbURL,
+                   boolean is_cuttoon, boolean is_smarttoon, boolean is_charged, int is_updated, int weekday) {
         this.id = id;
         this.title = title;
         this.artist = artist;

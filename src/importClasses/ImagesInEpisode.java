@@ -30,7 +30,7 @@ public class ImagesInEpisode {
         return images;
     }
     public String getMention(){return mention;}
-
+    //Setter methods
     public void setMention(String mention){this.mention = mention;}
     public void setImages(ArrayList<String> images){this.images = images;}
 }

@@ -1,7 +1,5 @@
 package importClasses;
-/**
- * Created by shees on 2017-02-04.
- */
+
 public class Episode {
     private int id_e; //웹툰 고유 id
     private int episode_id; // 회차 고유 id

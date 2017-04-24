@@ -10,11 +10,13 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Map;
 
 public class ImageURLParse {
     private static final int threadSleepTime = 500;     //도스 공격이라고 오해받지 않도록 Sleep 할 시간
     private static final int numOfThreads = 8;             //업데이트에 사용할 쓰레드 개수
+    private static final int timeout = 3600 * 1000;               //Jsoup timeout exception방지
 
     private Thread[] updateThreads = new Thread[numOfThreads];      //업데이트에 사용할 쓰레드들의 배열
     private ArrayList<ArrayList<ImagesInEpisode>> episodes;             //업데이트 할 회차들이 담길 ArrayList
@@ -22,6 +24,7 @@ public class ImageURLParse {
     private int[] countsUpdateImage = new int[numOfThreads];     //각 쓰레드 별로 몇 개의 이미지 업데이트문을 작성했는지 모니터하기 위해 만든 배열
     private int[] countsUpdateMention = new int[numOfThreads];  //각 쓰레드 별로 몇 개의 작가의 말 업데이트문을 작성했는지 모니터하기 위해 만든 배열
     private Map<String,String> loginCookie;                                    //성인 웹툰을 받아오기 위해 로그인을 하고 그 쿠키를 저장
+    private HashSet<Integer> errorList = new HashSet<>();
 
     //DB에서 사용할 인증 정보, SQL
     private static final String allQuery = "SELECT Id, Episode_id, Toontype FROM WEBTOON, EPISODE WHERE Id=Id_E";//모든 회차 이미지 업데이트하는 질의
@@ -51,6 +54,7 @@ public class ImageURLParse {
     private static final String insertSQL = "INSERT INTO IMAGE(Id_I, Ep_id, Image_id, Image_url)" +
             " VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE Image_url=?"; //업데이트 시 사용할 SQL. 해당 회차가 이미 존재할 경우 INSERT 대신 업데이트
     private static final String updateMentionSQL= "UPDATE EPISODE SET Mention=? WHERE Id_E=? AND Episode_id=?"; //작가의 말을 업데이트 하는 SQL
+    private static final String updateBlackListSQL = "UPDATE WEBTOON SET Mobile_unsupported=1 WHERE Id=?";
 
     private Connection connection;  //DB 업데이트에 사용할 Connection 객체
     private PreparedStatement[] psts = new PreparedStatement[numOfThreads]; //각 쓰레드에서 사용할 이미지 업데이트 PreparedStatement 객체 -> 동기화 문제때문에 배열 사용
@@ -64,7 +68,7 @@ public class ImageURLParse {
         this.out = out;
 
         try{
-            NaverLogin login = new NaverLogin("jungmin7623", "kosaf19288");
+            NaverLogin login = new NaverLogin(NaverAuthentication.id, NaverAuthentication.pw, false);
             if(login.isLogin()){
                 out.println("네이버 로그인 성공!");
                 loginCookie = login.getCookies();
@@ -101,17 +105,17 @@ public class ImageURLParse {
                 countMention+= countsUpdateMention[i];
             }
             //쓰레드들에서 업데이트 한 SQL 개수 출력
-            System.out.println("====================" + countImage + "개의 이미지 업데이트문 작성 완료=================");
+            System.out.println(countImage + "개의 이미지 업데이트문 작성 완료");
             try{
-                out.println("====================" + countImage + "개의 이미지 업데이트문 작성 완료=================");
+                out.println(countImage + "개의 이미지 업데이트문 작성 완료");
             }catch (IOException ioex){}
-            System.out.println("====================" + countMention + "개의 작가의 말 업데이트문 작성 완료=================");
+            System.out.println(countMention + "개의 작가의 말 업데이트문 작성 완료");
             try{
-                out.println("====================" + countMention + "개의 작가의 말 업데이트문 작성 완료=================");
+                out.println(countMention + "개의 작가의 말 업데이트문 작성 완료");
             }catch (IOException ioex){}
-            System.out.println("====================DB 업데이트 시작====================");
+            System.out.println("DB 업데이트 시작");
             try{
-                out.println("====================DB 업데이트 시작====================");
+                out.println("DB 업데이트 시작");
             }catch (IOException ioex){}
             for (int i = 0; i < numOfThreads; i++) {
                 psts[i].executeBatch();
@@ -119,12 +123,20 @@ public class ImageURLParse {
             for(int i = 0; i < numOfThreads;i++){
                 mentionPsts[i].executeBatch();
             }                                                                                           //Thread에서 담았던 PreparedStatement 객체들에 있는 Batch를 실행
+            PreparedStatement insertBlackListStatement = connection.prepareStatement(updateBlackListSQL);
+            for(Integer blackListId :  errorList){
+                insertBlackListStatement.setInt(1, blackListId);
+                insertBlackListStatement.addBatch();
+                insertBlackListStatement.clearParameters();
+            }
+            insertBlackListStatement.executeBatch();
             connection.commit();                                        //모두 실행 후 Commit
-            System.out.println("====================DB 업데이트 완료=================");
+            System.out.println("DB 업데이트 완료");
             try{
-                out.println("====================DB 업데이트 완료=================");
+                out.println("DB 업데이트 완료");
             }catch (IOException ioex){}
 
+            System.out.println(errorList);
         } catch (SQLException sqlex) {  //에러시 에러 출력 후 false return
             sqlex.printStackTrace();
             return false;
@@ -290,8 +302,10 @@ public class ImageURLParse {
 
                         //진행 상황 모니터, 현재 받아오고 있는 정보들을 출력한다
                         if(instance.getImages() == null) {
+                            errorList.add(instance.getId_i());  //이미지를 받아오는 데 실패했다면 해당 웹툰의 id를 errror list에 넣는다
                             System.out.println(instance.getId_i() + " " + instance.getEp_id() + "회 " + String.valueOf(progress++) + "/" + episodeInstance.size() + " NULL 개 업데이트  Thread[" + String.valueOf(currentIndex + 1) + "]");
                             blockID = instance.getId_i();
+                            System.out.println("Thread[" + String.valueOf(currentIndex + 1) + "] ID " + instance.getId_i() + "BLOCKED");
                         }
                         else{
                             synchronized (ImageURLParse.class){
@@ -381,7 +395,8 @@ public class ImageURLParse {
         try {
             String url;
             Thread.sleep(threadSleepTime);   //도스 공격처럼 보이지 않게 하기 위한 Sleep
-            Document doc = Jsoup.connect("http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id_i + "&no=" + listNum).cookies(loginCookie).get();
+            Document doc = Jsoup.connect("http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id_i + "&no=" + listNum)
+                    .timeout(timeout).cookies(loginCookie).get();
             instance.setMention(doc.select(".desc").first().text());   //작가의말 설정
             Elements imgs = doc.select(".toon_view_lst > ul > li > p > img");
             for(int i = 1 ; i <= imgs.size(); i++){
@@ -396,7 +411,6 @@ public class ImageURLParse {
             }
         } catch (Exception e) {
             System.out.println("ERROR OCCURRED IN ID : " + id_i + " EP : " + listNum + " --- " + e.getMessage());
-            e.printStackTrace();
             return null;
         }
         return imageURLs;
@@ -417,7 +431,7 @@ public class ImageURLParse {
                 return null;
             }
 
-            Document doc = Jsoup.connect(baseURL).cookies(loginCookie).get();
+            Document doc = Jsoup.connect(baseURL).timeout(timeout).cookies(loginCookie).get();
             instance.setMention(doc.select(".desc").first().text());
 
             Elements  images = doc.select(".swiper-lazy");
@@ -473,7 +487,7 @@ public class ImageURLParse {
         String commentURL = "http://m.comic.naver.com/smarttoon/starComment.nhn?titleId=" + id + "&no=" + listNum;
         try{
             Thread.sleep(threadSleepTime);
-            Document doc = Jsoup.connect(baseURL).cookies(loginCookie).get();
+            Document doc = Jsoup.connect(baseURL).timeout(timeout).cookies(loginCookie).get();
             String content = doc.html();
 
             int startIndex = content.indexOf(searchImageString);
@@ -499,7 +513,7 @@ public class ImageURLParse {
                 }
             }
             Thread.sleep(threadSleepTime);
-            doc = Jsoup.connect(commentURL).cookies(loginCookie).get();
+            doc = Jsoup.connect(commentURL).timeout(timeout).cookies(loginCookie).get();
             instance.setMention(doc.select(".desc").first().text());
         }catch (InterruptedException intex){}
         catch (IOException ioex){

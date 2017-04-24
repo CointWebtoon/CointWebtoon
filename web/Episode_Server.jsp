@@ -16,7 +16,6 @@
             out.println("권한이 없습니다.");
         }else {
             EpisodeParse parseInstance = new EpisodeParse();
-            Calendar now = Calendar.getInstance();
 
             if(parseInstance.updateEpisodes(request.getParameter("update")))
                 out.print("총 " + parseInstance.updateCount() + "개의 에피소드 업데이트 완료");
