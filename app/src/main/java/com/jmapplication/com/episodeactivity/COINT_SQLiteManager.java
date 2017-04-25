@@ -6,14 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-/**
- * Created by epcej on 2017-02-28.
- */
-
-/**
- * Created by jm on 2017-02-27.
- */
-
 public class COINT_SQLiteManager {
     private static final String DBNAME = "COINT.db";
     private static final int DB_VERSION = 1;
@@ -234,10 +226,45 @@ public class COINT_SQLiteManager {
                 " ORDER BY Episode_id DESC;", null);
     }
 
+    //ViewerActivity 를 통해 사용자가 본 웹툰을 EpisodeActivity 에서 사용자가 읽은 웹툰이라고 표시하기 위해 SQLite 를 업데이트 하는 메소드
     public void updateEpisodeRead(int toonId, int episodeId){
         db.execSQL("UPDATE EPISODE SET Is_read=1 WHERE Id_E=" + String.valueOf(toonId) + " AND Episode_id=" + String.valueOf(episodeId) + "");
     }
 
+
+    //ViewerActivity 에서 다음 화가 존재하는지 확인하기 위해서 해당 웹툰의 가장 최신 회차의 ID를 알아오는 메소드
+    //에러 시 -1 RETURN
+    public int maxEpisodeId(int toonId){
+        Cursor queryResult = db.rawQuery("SELECT Episode_id FROM EPISODE WHERE Id_E=" + String.valueOf(toonId) + " ORDER BY Episode_id DESC LIMIT 1;", null);
+        if(queryResult.moveToNext()){
+            return queryResult.getInt(0);
+        }else {
+            return -1;
+        }
+    }
+
+    //웹툰 고유 ID를 이용해 해당 웹툰의 제목을 SQLite 에서 가져오는 메소드
+    //에러 시 NULL RETURN
+    public String getWebtoonTitleById(int toonId){
+        Cursor queryResult = db.rawQuery("SELECT Title FROM WEBTOON WHERE Id=" + String.valueOf(toonId) + ";", null);
+        if(queryResult.moveToNext()){
+            return queryResult.getString(0);
+        }else
+            return null;
+    }
+
+    //웹툰 고유 ID와 회차 ID를 이용해 해당 회차의 제목을 SQLite 에서 가져오는 메소드
+    //에러 시 NULL RETURN
+    public String getEpisodeTitle(int toonId, int episodeId){
+        Cursor queryResult = db.rawQuery("SELECT Episode_title FROM EPISODE WHERE Id_E=" + String.valueOf(toonId) + " AND Episode_id=" + String.valueOf(episodeId) + ";", null);
+        if(queryResult.moveToNext()){
+            return queryResult.getString(0);
+        }else{
+            return null;
+        }
+    }
+
+    //테스트용 --> 모든 Episode를 안읽은 상태로 만드는 메소드
     public void initializeEpisodeRead(){
         db.execSQL("UPDATE EPISODE SET Is_read=0");
     }
