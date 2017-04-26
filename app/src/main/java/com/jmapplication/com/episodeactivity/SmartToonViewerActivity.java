@@ -1,14 +1,17 @@
 package com.jmapplication.com.episodeactivity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
@@ -20,10 +23,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
-/**
- * Created by jm on 2017-03-10.
- */
-
 public class SmartToonViewerActivity extends AppCompatActivity implements Observer {
     private ViewFlipper imageFlipper;
     private int toonId, episodeId;
@@ -33,17 +32,26 @@ public class SmartToonViewerActivity extends AppCompatActivity implements Observ
     private Random rand = new Random();
     private Context mContext;
     private Toolbar topToolbar, bottomToolbar;
+    private GetServerData serverData;
+    private SeekBar progressSeekBar;
+    private TextView progressTextView, episodeTitleTextView;
+    private boolean runMode = false;
+    private COINT_SQLiteManager manager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.smarttoon_viewer);
-
         topToolbar = (Toolbar) findViewById(R.id.topToolbar_smart);
         bottomToolbar = (Toolbar) findViewById(R.id.bottomToolbar_smart);
-        //setSupportActionBar(topToolbar);    //현재 Activity의 ActionBar를 Toolbar로 설정
-
+        setSupportActionBar(topToolbar);    //현재 Activity의 ActionBar를 Toolbar로 설정
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mContext = this;
+        getWindow().setStatusBarColor(Color.BLACK);
+        manager = COINT_SQLiteManager.getInstance(this);
+        Intent getIntent = getIntent();
+        toonId = getIntent.getIntExtra("id", -1);
+        episodeId = getIntent.getIntExtra("ep_id", -1);
 
         //애니메이션 in, out 세트 설정
         animations.put(R.anim.push_down_in, R.anim.push_down_out);
@@ -54,10 +62,14 @@ public class SmartToonViewerActivity extends AppCompatActivity implements Observ
         imageFlipper = (ViewFlipper) findViewById(R.id.smarttoon_Flipper);
         imageFlipper.setOnLongClickListener(new OnFlipperLongClick());
 
-        toonId = 617882;
-        episodeId = 2;
+        progressSeekBar = (SeekBar) findViewById(R.id.cutProgressSeekbar);
+        progressSeekBar.setOnSeekBarChangeListener(new OnCutSeekBarChanged());
 
-        GetServerData serverData = new GetServerData(this);
+        progressTextView = (TextView) findViewById(R.id.cutProgressTextView);
+
+        episodeTitleTextView = (TextView) findViewById(R.id.smarttoon_episodeTitle);
+
+        serverData = new GetServerData(this);
         serverData.registerObserver(this);
         serverData.getImagesFromServer(toonId, episodeId);
     }
@@ -66,30 +78,56 @@ public class SmartToonViewerActivity extends AppCompatActivity implements Observ
     @Override
     public void update(Observable observable, Object data) {
         imageURLs = (ArrayList<String>) data;
+        episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
+        if(imageURLs.size() == 0) {
+            Toast.makeText(this, "이미지 로드 에러", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        imageIndex = 0;
+        progressSeekBar.setMax(imageURLs.size());
+        progressSeekBar.setProgress(1);
+        progressTextView.setText("1 / " + imageURLs.size());
         for (String imageURL : imageURLs) {
-            CustomImageView smartCut = new CustomImageView(SmartToonViewerActivity.this);
-            smartCut.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            Glide.with(SmartToonViewerActivity.this)
+            Smart_Cut_Toon_ImageView smartCut = new Smart_Cut_Toon_ImageView(this);
+            Glide.with(this)
                     .load(imageURL)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .fitCenter()
+                    .centerCrop()
                     .into(smartCut);
             imageFlipper.addView(smartCut);
         }
     }
 
-    private void showToolbars(boolean show){
-        if(show){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        this.finish();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        serverData.removeObserver(this);
+        super.onDestroy();
+    }
+
+    private void showToolbars(boolean show) {
+        if (show) {
             topToolbar.setVisibility(View.VISIBLE);
             bottomToolbar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             topToolbar.setVisibility(View.GONE);
             bottomToolbar.setVisibility(View.GONE);
         }
     }
 
-    public void flipperClick(View v){
-        if(topToolbar.getVisibility() == View.VISIBLE){
+    /*
+     * imageFlipper 를 클릭했을 때의 행동
+     * 1. 현재 툴바가 보이는 상태일 경우 툴바를 보이지 않게 설정하고 return
+     * 2. 현재 툴바가 보이지 않는 상태이고,
+     */
+    public void flipperClick(View v) {
+        if (topToolbar.getVisibility() == View.VISIBLE) {
             showToolbars(false);
             return;
         }
@@ -115,23 +153,84 @@ public class SmartToonViewerActivity extends AppCompatActivity implements Observ
         if (imageIndex < imageURLs.size() - 1) {
             imageFlipper.showNext();
             imageIndex++;
+            progressSeekBar.setProgress(imageIndex + 1);
+        } else {
+            if (runMode && (episodeId < manager.maxEpisodeId(toonId))) {
+                //정주행 모드일 때, 마지막 컷에서 Flipper 를 클릭했을 경우 다음 회차가 존재할 경우에 다음 회차로 넘어감
+                imageFlipper.removeAllViews();
+                imageURLs.clear();
+                episodeId += 1;
+                serverData.getImagesFromServer(toonId, episodeId);
+                manager.updateEpisodeRead(toonId, episodeId);
+            }
         }
     }
 
-    public void previousBtnClick(View v){
+    public void previousBtnClick(View v) {
         if (imageIndex > 0) {
             imageFlipper.setInAnimation(null);
             imageFlipper.setOutAnimation(null);
             imageFlipper.showPrevious();
             imageIndex--;
+            progressSeekBar.setProgress(imageIndex + 1);
+        }else {
+            if(runMode && episodeId > 1){   //정주행 모드 일 때, 첫 컷에서 이전 버튼을 클릭하면 이전 회차로 넘어감
+                imageFlipper.removeAllViews();
+                imageURLs.clear();
+                episodeId -= 1;
+                serverData.getImagesFromServer(toonId, episodeId);
+                manager.updateEpisodeRead(toonId, episodeId);
+            }
         }
     }
 
-    private class OnFlipperLongClick implements View.OnLongClickListener{
+    public void commentClick(View v) {
+        Intent goToCommentIntent = new Intent(this, CommentActivity.class);
+        goToCommentIntent.putExtra("id", toonId);
+        goToCommentIntent.putExtra("ep_id", episodeId);
+        startActivity(goToCommentIntent);
+    }
+
+    public void runButtonClick(View v){
+        if(runMode) {
+            runMode = false;
+            v.setBackgroundColor(Color.WHITE);
+        }
+        else {
+            runMode = true;
+            v.setBackgroundColor(Color.RED);
+        }
+    }
+
+    private class OnFlipperLongClick implements View.OnLongClickListener {
         @Override
         public boolean onLongClick(View v) {
             showToolbars(true);
             return true;
+        }
+    }
+
+    private class OnCutSeekBarChanged implements SeekBar.OnSeekBarChangeListener {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            try {
+                if (fromUser) {
+                    if (progress == 0)
+                        progress = 1;
+                    imageFlipper.setDisplayedChild(progress - 1);
+                    imageIndex = progress - 1;
+                }
+                progressTextView.setText(String.valueOf(progress) + " / " + String.valueOf(imageFlipper.getChildCount()));
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
         }
     }
 }

@@ -1,47 +1,67 @@
 package com.jmapplication.com.episodeactivity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-
-/**
- * Created by jm on 2017-03-08.
- */
+import java.util.ArrayList;
+import java.util.Observer;
 
 public class LoginActivity extends AppCompatActivity implements View.OnKeyListener{
-    EditText idEditText, pwEditText;
-    ImageButton loginBtn;
+    private EditText idEditText, pwEditText;
+    private ImageButton loginBtn;
+    private CheckBox autoLoginCheckBox;
+    private COINT_Application mContext;
+    private CustomProgressDialog progressDialog = null;
+    private String id, pw;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        getWindow().setStatusBarColor(Color.parseColor("#009900"));
+        progressDialog = new CustomProgressDialog(this);
         idEditText = (EditText) findViewById(R.id.idEditText);
         pwEditText = (EditText) findViewById(R.id.passwordEditText);
+        autoLoginCheckBox = (CheckBox)findViewById(R.id.chekBox_AutoLogin);
         loginBtn = (ImageButton) findViewById(R.id.loginBtn);
         idEditText.setOnKeyListener(this);
         pwEditText.setOnKeyListener(this);
+        mContext = (COINT_Application)getApplicationContext();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(progressDialog != null && progressDialog.isShowing())
+            progressDialog.dismiss();
+        super.onDestroy();
     }
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_ENTER){
+        if(keyCode==KeyEvent.KEYCODE_ENTER && loginBtn.isEnabled()){
             loginBtn.callOnClick();
             InputMethodManager imm= (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(idEditText.getWindowToken(), 0);
@@ -53,34 +73,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
 
     public void loginButtonClick(View v) {
         LoginTask task = new LoginTask();
-        task.execute(idEditText.getText().toString(), pwEditText.getText().toString());
+        id = idEditText.getText().toString();
+        pw = pwEditText.getText().toString();
+        task.execute(id, pw);
     }
 
-    public String parseBody(String html) {
-        String bodyStart = "<body>";
-        String bodyEnd = "</body>";
-        return html.substring(html.indexOf(bodyStart) + bodyStart.length(), html.indexOf(bodyEnd));
-    }
-
-    private class LoginTask extends AsyncTask<String, Boolean, Integer> {
-        CustomProgressDialog progressDialog;
-
+    private class LoginTask extends AsyncTask<String, Boolean, JSONObject> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             loginBtn.setEnabled(false);
-            progressDialog = new CustomProgressDialog(LoginActivity.this);
             progressDialog.show();
         }
 
         @Override
-        protected Integer doInBackground(String... values) {
+        protected JSONObject doInBackground(String... values) {
             try {
-                String urlParameters = "id=" + values[0] + "&pw=" + values[1];
+                String urlParameters = "id=" + values[0] + "&pw=" + values[1] + "&info=TEAM_COINT";
                 String response = "";
                 byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
                 int postDataLength = postData.length;
-                String request = "http://10.0.2.2:8080/Login.jsp";
+                String request = "http://coint.iptime.org:8080/Login.jsp";
                 URL url = new URL(request);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
@@ -100,35 +113,55 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
                     while ((line = br.readLine()) != null) {
                         response += line;
                     }
+                    response = response.trim();
+                    return new JSONObject(response);
+                }else {
+                    throw new Exception("LOGIN CONNECTION ERROR");
                 }
-                return Integer.parseInt(parseBody(response));
-            } catch (IOException ioex) {
-                ioex.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
                 return null;
-            }finally {
-                publishProgress(true);
             }
         }
 
         @Override
-        protected void onProgressUpdate(Boolean... values) {
-            //Dialog 닫는 행동을 onPostExecute에 지정했더니 WindowManager에서 오류떠서 onProgressUpdate에 넣었다.
-            progressDialog.dismiss();
-            super.onProgressUpdate(values);
-        }
+        protected void onPostExecute(JSONObject jsonObject) {
+            super.onPostExecute(jsonObject);
+            try{
+                if(jsonObject == null){
+                    Log.i("Login", "로그인 실패 NULL JSON");
+                    progressDialog.dismiss();
+                    return;
+                }
+                if(jsonObject.getString("RESULT").equals("SUCCESS")){
+                    Log.i("Login", "로그인 성공");
+                    Toast.makeText(LoginActivity.this, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
+                    if(jsonObject.getString("ADULT").equals("YES")){
+                        Log.i("Login", "성인");
+                        mContext.setLogin(id, pw, true);
+                    }else if(jsonObject.getString("ADULT").equals("NO")){
+                        Log.i("Login", "미성년자");
+                        mContext.setLogin(id, pw, false);
+                    }
 
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-            loginBtn.setEnabled(true);
-            if (integer == Integer.valueOf(1)) {
-                Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                LoginActivity.this.finish();
-            } else if (integer == Integer.valueOf(2)) {
-                Toast.makeText(LoginActivity.this, "로그인 성공(성인)", Toast.LENGTH_SHORT).show();
-                LoginActivity.this.finish();
-            } else {
-                Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
+                    if(autoLoginCheckBox.isChecked()){
+                        mContext.setAutoLoginEnabled(true);
+                        mContext.saveLoginToSharedPreference();
+                    }
+
+                    LoginActivity.this.finish();
+                }else if(jsonObject.getString("RESULT").equals("FAIL")){
+                    Log.i("Login", "로그인 실패");
+                    Toast.makeText(LoginActivity.this, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(LoginActivity.this, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                Log.i("Login", "로그인 실패, EXCEPTION");
+                progressDialog.dismiss();
+            }finally {
+                loginBtn.setEnabled(true);
             }
         }
     }

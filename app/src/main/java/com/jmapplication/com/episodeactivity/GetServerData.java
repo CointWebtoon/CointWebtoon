@@ -15,10 +15,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-/**
- * Created by epcej on 2017-02-28.
- */
-
 public class GetServerData extends Observable{
     private static ArrayList<Observer> observers = new ArrayList<>();
     private static COINT_SQLiteManager coint_sqLiteManager = null;
@@ -37,9 +33,15 @@ public class GetServerData extends Observable{
         observers.remove(observer);
     }
 
-    private void updateObserver(){
+    private void updateObservers(){
         for(Observer observer : observers){
             observer.update(this, null);
+        }
+    }
+
+    private void updateObservers(Object objectToSend){
+        for(Observer observer : observers){
+            observer.update(this, objectToSend);
         }
     }
     //--------------Observer Pattern-----------end---//
@@ -64,11 +66,16 @@ public class GetServerData extends Observable{
     }
 
     public void getImagesFromServer(int toonId, int episodeId){
-        String url = "http://10.0.2.2:8080/Image_Client.jsp?id="  + String.valueOf(toonId) + "&ep_id=" + String.valueOf(episodeId);
+        String url = "http://coint.iptime.org:8080/Image_Client.jsp?id="  + String.valueOf(toonId) + "&ep_id=" + String.valueOf(episodeId);
         GetImage getImage = new GetImage();
         getImage.execute(url);
     }
 
+    /*
+        GetWebtoon 클래스, GetWeekday 클래스, GetGenre 클래스는 연쇄적으로 호출되도록 구성하였다.
+        GetWebtoon의 AsyncTask를 execute하게 되면 연쇄적으로 GetWeekday, GetGenre가 자동으로 호출되므로
+        따로 호출해줄 필요 없다! 이 과정은 getWebtoonFromServer라는 메소드를 통해서만 진행하도록 하자.
+     */
     //ToonList_Client.jsp
     private class GetWebtoon extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... urls) {
@@ -78,7 +85,7 @@ public class GetServerData extends Observable{
             StringBuilder jsonHtml = new StringBuilder();
 
             try {
-                URL url = new URL("http://10.0.2.2:8080/ToonList_Client.jsp"); //연결 url 설정 --> 추후에 서버 IP로 URL 변경하여야 함
+                URL url = new URL("http://coint.iptime.org:8080/ToonList_Client.jsp"); //연결 url 설정 --> 추후에 서버 IP로 URL 변경하여야 함
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -123,7 +130,7 @@ public class GetServerData extends Observable{
 
                                 webtoons.add(new Webtoon(id, title, artist, starscore, thumburl, likes, hits, toonType, isCharged, isAdult, isUpdated));
                             }
-                            coint_sqLiteManager.insertWebtoon(webtoons);
+                            coint_sqLiteManager.insertWebtoon(webtoons);//서버에서 웹툰 목록 받아서 SQLite 업데이트
                         }
                 }
             } catch (Exception ex) {
@@ -139,74 +146,6 @@ public class GetServerData extends Observable{
             super.onPostExecute(aVoid);
         }
     }
-
-    //Episode_Client.jsp
-    private class GetEpisode extends AsyncTask<Integer, Void, Void>{
-        @Override
-        protected Void doInBackground(Integer... toonIds) {
-
-            String epTitle, epThumburl, mention;
-            int epId, idE, likesE;
-            String regDate;
-            float epStarscore;
-            StringBuilder jsonHtml = new StringBuilder();
-            ArrayList<Episode> episodes = new ArrayList<>();
-
-            try {
-                URL url = new URL("http://10.0.2.2:8080/Episode_Client.jsp?id=" + toonIds[0].toString()); //연결 url 설정
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
-                if (connection != null) {
-                    connection.setConnectTimeout(10000);
-                    connection.setUseCaches(false);
-
-                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "EUC-KR"));
-                        for (; ; ) {
-                            //웹상에 보여지는 텍스트를 라인단위로 읽어 저장
-                            String line = bufferedReader.readLine();
-                            if (line == null)
-                                break;
-                            jsonHtml.append(line + "\n");
-                        }
-                        bufferedReader.close();
-                    }
-                    connection.disconnect();
-                }else{
-                    throw new Exception("EPISODE CONNECTION ERR");
-                }
-                JSONObject root = new JSONObject(jsonHtml.toString());
-
-                if (root.isNull("result") != true) {                                          //JSON으로 파싱할 내용이 있는지 검사
-                    JSONArray jsonArray = root.getJSONArray("result");
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                        idE = Integer.parseInt(jsonObject.getString("Id_E"));
-                        epId = Integer.parseInt(jsonObject.getString("Episode_id"));
-                        epTitle = jsonObject.getString("Episode_title");
-                        epStarscore = Float.parseFloat(jsonObject.getString("Ep_starscore"));
-                        epThumburl = jsonObject.getString("Ep_thumburl");
-                        regDate = jsonObject.getString("Reg_date");
-                        mention = jsonObject.getString("Mention");
-                        likesE = Integer.parseInt(jsonObject.getString("Likes_E"));
-                        episodes.add(new Episode(idE, epId, epTitle, epStarscore, epThumburl, regDate, mention, likesE, -1));
-                    }
-                    coint_sqLiteManager.insertEpsode(episodes);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            updateObserver();
-            super.onPostExecute(aVoid);
-        }
-    }
-
     //Weekday.jsp
     private class GetWeekday extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... urls) {
@@ -218,7 +157,7 @@ public class GetServerData extends Observable{
 
             try {
                 /*URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정*/
-                URL url = new URL("http://10.0.2.2:8080/Weekday.jsp"); //연결 url 설정
+                URL url = new URL("http://coint.iptime.org:8080/Weekday.jsp"); //연결 url 설정
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -272,7 +211,6 @@ public class GetServerData extends Observable{
             super.onPostExecute(aVoid);
         }
     }
-
     //Genre.jsp
     private class GetGenre extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... aVoid) {
@@ -285,7 +223,7 @@ public class GetServerData extends Observable{
 
             try {
                 /*URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정*/
-                URL url = new URL("http://10.0.2.2:8080/Genre.jsp"); //연결 url 설정
+                URL url = new URL("http://coint.iptime.org:8080/Genre.jsp"); //연결 url 설정
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -330,7 +268,74 @@ public class GetServerData extends Observable{
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            updateObserver();
+            updateObservers();
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    //Episode_Client.jsp
+    private class GetEpisode extends AsyncTask<Integer, Void, Void>{
+        @Override
+        protected Void doInBackground(Integer... toonIds) {
+
+            String epTitle, epThumburl, mention;
+            int epId, idE, likesE;
+            String regDate;
+            float epStarscore;
+            StringBuilder jsonHtml = new StringBuilder();
+            ArrayList<Episode> episodes = new ArrayList<>();
+
+            try {
+                URL url = new URL("http://coint.iptime.org:8080/Episode_Client.jsp?id=" + toonIds[0].toString()); //연결 url 설정
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
+                if (connection != null) {
+                    connection.setConnectTimeout(10000);
+                    connection.setUseCaches(false);
+
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "EUC-KR"));
+                        for (; ; ) {
+                            //웹상에 보여지는 텍스트를 라인단위로 읽어 저장
+                            String line = bufferedReader.readLine();
+                            if (line == null)
+                                break;
+                            jsonHtml.append(line + "\n");
+                        }
+                        bufferedReader.close();
+                    }
+                    connection.disconnect();
+                }else{
+                    throw new Exception("EPISODE CONNECTION ERR");
+                }
+                JSONObject root = new JSONObject(jsonHtml.toString());
+
+                if (root.isNull("result") != true) {                                          //JSON으로 파싱할 내용이 있는지 검사
+                    JSONArray jsonArray = root.getJSONArray("result");
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        idE = Integer.parseInt(jsonObject.getString("Id_E"));
+                        epId = Integer.parseInt(jsonObject.getString("Episode_id"));
+                        epTitle = jsonObject.getString("Episode_title");
+                        epStarscore = Float.parseFloat(jsonObject.getString("Ep_starscore"));
+                        epThumburl = jsonObject.getString("Ep_thumburl");
+                        regDate = jsonObject.getString("Reg_date");
+                        mention = jsonObject.getString("Mention");
+                        likesE = Integer.parseInt(jsonObject.getString("Likes_E"));
+                        episodes.add(new Episode(idE, epId, epTitle, epStarscore, epThumburl, regDate, mention, likesE, -1));
+                    }
+                    coint_sqLiteManager.insertEpsode(episodes); //받아온 회차 정보 SQLite에 업데이트
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            updateObservers();
             super.onPostExecute(aVoid);
         }
     }
@@ -380,9 +385,7 @@ public class GetServerData extends Observable{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            for(Observer observer : observers){
-                observer.update(GetServerData.this, imageUrls);
-            }
+            updateObservers(imageUrls);
         }
     }
 }

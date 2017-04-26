@@ -231,7 +231,6 @@ public class COINT_SQLiteManager {
         db.execSQL("UPDATE EPISODE SET Is_read=1 WHERE Id_E=" + String.valueOf(toonId) + " AND Episode_id=" + String.valueOf(episodeId) + "");
     }
 
-
     //ViewerActivity 에서 다음 화가 존재하는지 확인하기 위해서 해당 웹툰의 가장 최신 회차의 ID를 알아오는 메소드
     //에러 시 -1 RETURN
     public int maxEpisodeId(int toonId){

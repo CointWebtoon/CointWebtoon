@@ -1,5 +1,6 @@
 package com.jmapplication.com.episodeactivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,30 +20,32 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-/**
- * Created by jm on 2017-03-05.
- */
-
-public class EpisodeActivityWithRecycler extends AppCompatActivity implements Observer {
+public class EpisodeActivity extends AppCompatActivity implements Observer {
     private RecyclerView recycler;
     private ArrayList<Episode> episodes = new ArrayList<>();
     private COINT_SQLiteManager manager;
     private GetServerData getServerData;
-    private int currentToonId = 626907;
+    private int currentToonId;
     private boolean isFirst = true;
     private RelativeLayout scrollSection;
     private ImageView scrollbar;
     private int yDelta, y = 0;
     private int maxTopMargin = 0;
     private boolean scrollManually = true;
+    private static final int ERR_CODE  = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("마음의 소리");
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo);
         setContentView(R.layout.recycleractivity);
+        Intent getIntent = getIntent();
+        currentToonId = getIntent.getIntExtra("id", ERR_CODE);
+        if(currentToonId == ERR_CODE){
+            Toast.makeText(this, "존재하지 않는 타이틀입니다.", Toast.LENGTH_LONG);
+        }
+        currentToonId=20853;
         scrollSection = (RelativeLayout) findViewById(R.id.scrollSection);
         scrollbar = (ImageView) findViewById(R.id.scrollbar);
         scrollbar.setOnTouchListener(new ScrollBarOnTouchListener());
@@ -50,10 +53,23 @@ public class EpisodeActivityWithRecycler extends AppCompatActivity implements Ob
         recycler.setVerticalScrollBarEnabled(false);
         recycler.setOnScrollListener(new ActionbarShowHideListener());
         manager = COINT_SQLiteManager.getInstance(this);
+        getSupportActionBar().setTitle(manager.getWebtoonTitleById(currentToonId));
         getServerData = new GetServerData(this);
         getServerData.registerObserver(this);
+        getServerData.getWebtoonFromServer();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        get();
+        new Thread() {
+            public void run() {
+                Cursor episodeCursor = manager.getEpisodes(currentToonId);
+                if (episodeCursor.getCount() < 1) {
+                    getServerData.getEpisodesFromServer(currentToonId);
+                } else {
+                    //일단 Cursor에 있는 데이터를 띄움
+                    updateCursorFromSQLite(episodeCursor);
+                    getServerData.getEpisodesFromServer(currentToonId);
+                }
+            }
+        }.start();
     }
 
     private void updateCursorFromSQLite(Cursor episodeCursor) {
@@ -81,25 +97,9 @@ public class EpisodeActivityWithRecycler extends AppCompatActivity implements Ob
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                recycler.setAdapter(new RecyclerAdapter(EpisodeActivityWithRecycler.this, episodes));
+                recycler.setAdapter(new RecyclerAdapter(EpisodeActivity.this, episodes));
             }
         });
-    }
-
-    private void get() {
-        new Thread() {
-            public void run() {
-                Cursor episodeCursor = manager.getEpisodes(currentToonId);
-                if (episodeCursor.getCount() < 1) {
-                    //프로그레스바 동작하게 하자
-                    getServerData.getEpisodesFromServer(currentToonId);
-                } else {
-                    //일단 Cursor에 있는 데이터를 띄움
-                    updateCursorFromSQLite(episodeCursor);
-                    getServerData.getEpisodesFromServer(currentToonId);
-                }
-            }
-        }.start();
     }
 
     @Override
@@ -144,11 +144,11 @@ public class EpisodeActivityWithRecycler extends AppCompatActivity implements Ob
 
     public void onRecyclerViewItemClick(View v) {
         Episode tag = (Episode) v.findViewById(R.id.reg_date).getTag();
-        if (tag != null) {
-            Toast.makeText(this, String.valueOf(tag.getEpisode_id()) + " " + String.valueOf(tag.getIs_read()), Toast.LENGTH_SHORT).show();
-        }
+        Intent viewerIntent = new Intent(this, SmartToonViewerActivity.class);
+        viewerIntent.putExtra("id", tag.getId());
+        viewerIntent.putExtra("ep_id", tag.getEpisode_id());
+        startActivity(viewerIntent);
         manager.updateEpisodeRead(tag.getId(), tag.getEpisode_id());
-        updateCursorFromSQLite(manager.getEpisodes(currentToonId));
     }
 
     private void showUIs(boolean show) {
@@ -173,11 +173,9 @@ public class EpisodeActivityWithRecycler extends AppCompatActivity implements Ob
                     RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                     yDelta = y - lParams.topMargin;
                     break;
-
                 case MotionEvent.ACTION_UP:
                     scrollManually = true;
                     break;
-
                 case MotionEvent.ACTION_MOVE:
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                     if (scrollSection.getHeight() - (y - yDelta) > view.getHeight()) {
