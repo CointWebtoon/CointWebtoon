@@ -19,6 +19,7 @@
         }
     } catch (Exception e){
         out.println("권한이 없습니다.");
+        e.printStackTrace();
     }
 %>
 </body>

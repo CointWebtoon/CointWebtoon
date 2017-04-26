@@ -33,4 +33,9 @@ public class ImagesInEpisode {
     //Setter methods
     public void setMention(String mention){this.mention = mention;}
     public void setImages(ArrayList<String> images){this.images = images;}
+
+    @Override
+    public String toString(){
+        return "[ID : " + id_i + "(EP : " + ep_id + ")]";
+    }
 }

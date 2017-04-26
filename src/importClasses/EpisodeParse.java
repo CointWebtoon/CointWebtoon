@@ -5,17 +5,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class EpisodeParse {
     //Parse Method에서 반환할 오류 코드들
     private static final int ERR_CODE = -1;
     private static final float ERR_FLOAT_CODE = -1;
     private static final String ERR_STRING = "ERR";
-    private static final int timeout = 3600 * 1000;               //Jsoup timeout exception방지
+    private static final int timeout = 60 * 1000;               //Jsoup timeout exception방지
     private boolean isUpdateAll = false;    //모든 회차 업데이트시 23시~1시에도 OnePage 말고 모든 회차 업데이트 되도록 한다
     private static final int
             finished = 0,
@@ -33,15 +36,17 @@ public class EpisodeParse {
     private Thread[] updateThreads;     //업데이트를 진행할 쓰레드들을 담을 배열
     private ArrayList<ArrayList<Integer>> idLists;    //쓰레드에서 사용할 ArrayList
     private HashMap<Integer, Integer> adultMap = new HashMap<>();
+    private HashSet<Integer> errorList = new HashSet<>();
+    private int timeoutCount = 0;
 
     //DB에서 사용할 인증 정보, SQL
     private static final String query = "SELECT Id FROM WEBTOON WHERE Mobile_unsupported=0";   //모든 웹툰 Id를 가져오는 질의(모바일 지원 웹툰만)
     private static final String weekdayQuery = "SELECT DISTINCT Id FROM WEBTOON, WEEKDAY WHERE Id=Id_W AND Weekday>0 " +
             "AND Mobile_unsupported=0";
     private static final String oneWeekdayQuery = "SELECT Id FROM WEBTOON, WEEKDAY WHERE Id=Id_W AND Weekday=";
-    private static final String sql = "INSERT INTO EPISODE(Id_E, Episode_id, Episode_title, Ep_starscore, Ep_thumburl, Reg_date)" +
+    private static final String insertSQL = "INSERT INTO EPISODE(Id_E, Episode_id, Episode_title, Ep_starscore, Ep_thumburl, Reg_date)" +
             "VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE Episode_title=?, Ep_starscore=?,Ep_thumburl=?,Reg_date=?";
-                    //해당 회차가 존재하지 않으면 INSERT, 존재하면 UPDATE
+    //해당 회차가 존재하지 않으면 INSERT, 존재하면 UPDATE
     private static final String isAdultUpdate = "UPDATE WEBTOON SET Is_adult=? WHERE Id=?";
     private static final String deleteChargedWebtoon = "DELETE FROM EPISODE WHERE Id_E=? AND Episode_Id > ?";
     private Connection connection = null;   //DB Connection
@@ -239,8 +244,14 @@ public class EpisodeParse {
                     episodes.add(insertItem);
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SocketTimeoutException toutex) {
+            System.out.println("Timeout Exception Occurred - id : " + Id_e);
+            timeoutCount++;
+            errorList.add(Id_e);
+            return null;
+        } catch (IOException ioex) {
+            System.out.println("IOException Occurred - id : " + Id_e);
+            errorList.add(Id_e);
             return null;
         }
         return episodes;
@@ -251,11 +262,10 @@ public class EpisodeParse {
      * Input Parameter : 가져오고 싶은 웹툰의 고유 ID
      * Output : 해당 웹툰의 회차들의 정보가 담긴 ArrayList        --> 11시 ~ 1시 빠른 업데이트를 위한 메소드
      */
-    private ArrayList<Episode> getEpisodesOnePage(Integer Id_e){
+    private ArrayList<Episode> getEpisodesOnePage(Integer Id_e) {
         ArrayList<Episode> episodes = new ArrayList<>();
         String id_e = Id_e.toString();
         String url = "http://comic.naver.com/webtoon/list.nhn?titleId=" + id_e + "&page=";
-        int pageNum;
 
         //가져와야 할 요소들
         String ep_Title;
@@ -316,8 +326,14 @@ public class EpisodeParse {
                 System.out.println("JSOUP PARSE ERROR");
                 return null;
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SocketTimeoutException toutex) {
+            System.out.println("Timeout Exception Occurred - id : " + Id_e);
+            errorList.add(Id_e);
+            timeoutCount++;
+            return null;
+        } catch (IOException ioex) {
+            System.out.println("IOException Occurred - id : " + Id_e);
+            errorList.add(Id_e);
             return null;
         }
         return episodes;
@@ -335,7 +351,8 @@ public class EpisodeParse {
             adultStatement.setInt(2, toonId);
             adultStatement.addBatch();
             adultStatement.clearParameters();
-            System.out.println(toonId + " : " + booleanValue);
+            if(booleanValue == 1)
+                System.out.print(toonId + " ");
         }
         adultStatement.executeBatch();
     }
@@ -351,26 +368,26 @@ public class EpisodeParse {
 
         String idQuery = "";
 
-        if(weekday.equals("all")){
+        if (weekday.equals("all")) {
             idQuery = query;
             isUpdateAll = true;
-        }else if(weekday.equals("weekday")){
+        } else if (weekday.equals("weekday")) {
             idQuery = weekdayQuery;
-        }else if(weekday.equals("mon")){
+        } else if (weekday.equals("mon")) {
             idQuery = oneWeekdayQuery + String.valueOf(mon);
-        }else if(weekday.equals("tue")){
+        } else if (weekday.equals("tue")) {
             idQuery = oneWeekdayQuery + String.valueOf(tue);
-        }else if(weekday.equals("wed")) {
+        } else if (weekday.equals("wed")) {
             idQuery = oneWeekdayQuery + String.valueOf(wed);
-        }else if(weekday.equals("thu")){
+        } else if (weekday.equals("thu")) {
             idQuery = oneWeekdayQuery + String.valueOf(thu);
-        }else if(weekday.equals("fri")){
+        } else if (weekday.equals("fri")) {
             idQuery = oneWeekdayQuery + String.valueOf(fri);
-        }else if(weekday.equals("sat")){
-            idQuery = oneWeekdayQuery  + String.valueOf(sat);
-        }else if(weekday.equals("sun")){
+        } else if (weekday.equals("sat")) {
+            idQuery = oneWeekdayQuery + String.valueOf(sat);
+        } else if (weekday.equals("sun")) {
             idQuery = oneWeekdayQuery + String.valueOf(sun);
-        }else if(weekday.equals("fin")){
+        } else if (weekday.equals("fin")) {
             idQuery = oneWeekdayQuery + String.valueOf(finished);
         }
 
@@ -432,16 +449,16 @@ public class EpisodeParse {
                     ArrayList<Episode> episodes;
                     int count = 1;
                     try {
-                        psts[currentIndex] = connection.prepareStatement(sql);
+                        psts[currentIndex] = connection.prepareStatement(insertSQL);
                         deleteStatements[currentIndex] = connection.prepareStatement(deleteChargedWebtoon);
                         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                         for (Integer id : ids) {
-                            if(hour == 23 || hour == 0 && !isUpdateAll){
+                            if (hour == 23 || hour == 0 && !isUpdateAll) {
                                 if ((episodes = getEpisodesOnePage(id)) == null) {
                                     System.out.println("GET EPISODE ERR IN ID[" + id + "]");
                                     continue;
                                 }
-                            }else{
+                            } else {
                                 if ((episodes = getEpisodes(id)) == null) {
                                     System.out.println("GET EPISODE ERR IN ID[" + id + "]");
                                     continue;
@@ -476,8 +493,8 @@ public class EpisodeParse {
                         }
                     } catch (SQLException sqlex) {
                         sqlex.printStackTrace();
+                        System.exit(-1);
                     }
-
                     System.out.println("========Thread[" + String.valueOf(currentIndex + 1) + "] FINISHED========");
                 }
             });
@@ -505,7 +522,7 @@ public class EpisodeParse {
      * Output : 실행 결과 true - 성공, false - 실패
      */
     public boolean updateEpisodes(String weekday) {
-        try{
+        try {
             long startTime = System.currentTimeMillis();
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(DBAuthentication.url, DBAuthentication.id, DBAuthentication.password);//드라이버 로드
@@ -516,29 +533,33 @@ public class EpisodeParse {
             if (!getIds(weekday))   //웹툰 테이블에서 Id 가져와서 각 쓰레드에서 사용할 ArrayList<Integer>에 넣음
                 return false;
             initializeThreads();    //쓰레드들 초기화
-            for (int i = 0; i < numOfThreads; i++) {
+            for (int i = 0; i < numOfThreads; i++) {    //쓰레드 실행
                 updateThreads[i].start();
             }
-            for (int i = 0; i < numOfThreads; i++) {
+            for (int i = 0; i < numOfThreads; i++) {    // 모든 쓰레드가 끝날 때까지 대기
                 while (updateThreads[i].isAlive()) ;
+                System.out.println("Thread" + String.valueOf(i+1) + " 기다리는중.......");
             }
-            System.out.println("=========================SQL Batch 작성 완료.... DB Update를 시작합니다===============================");
+            System.out.println("=======================모든 쓰레드 행동 종료.. ERROR LIST HANDLING 시작===========================");
+            retryErrorList();
             for (int i = 0; i < numOfThreads; i++) {
                 psts[i].executeBatch();
                 deleteStatements[i].executeBatch();
             }
+            System.out.println("총 " + timeoutCount + "번의 TIME OUT 발생");
+            System.out.println("최종 ERR LIST : " + errorList + "\n============성인웹툰 리스트============\n");
             updateIsAdult();
-            System.out.println("=========================모든 Batch 실행 완료.... COMMIT 시작===============================");
+            System.out.println("\n=========================모든 Batch 실행 완료.... COMMIT 시작===============================");
             connection.commit();
-            System.out.println("=========================COMMIT 완료... 총" + updateCount() + "개의 회차가 DB에 업데이트 되었습니다================");
+            System.out.println("=========================COMMIT 완료... 총" + updateCount() + "개의 SQL문이 DB에 업데이트 되었습니다================");
             closeDBResources();
             long timeInMinutes = System.currentTimeMillis() - startTime;
             System.out.println("걸린 시간 : " + timeInMinutes / 1000 + "초");
-        } catch (SQLException sqlex){
+        } catch (SQLException sqlex) {
             sqlex.printStackTrace();
             closeDBResources();
             return false;
-        } catch (ClassNotFoundException cnfex){
+        } catch (ClassNotFoundException cnfex) {
             cnfex.printStackTrace();
             closeDBResources();
             return false;
@@ -557,4 +578,72 @@ public class EpisodeParse {
 
         return count;
     }
-}
+
+    /*
+        에러가 났던 ID 들의 리스트를 모아 에러가 났던 것들만 다시 받아오는 메소드.
+     */
+    private void retryErrorList() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int retryCount = 0;
+        HashSet<Integer> errorListInstance = new HashSet<>();
+        try {
+            PreparedStatement errorInsertStatement = connection.prepareStatement(insertSQL);
+            PreparedStatement errorDeleteStatement = connection.prepareStatement(deleteChargedWebtoon);
+
+            ArrayList<Episode> episodes;
+            while (!errorList.isEmpty() && retryCount < 5) {    //error List가 비면 error handling 종료.. 재시도 횟수가 5번이 되면 handling 종료
+                System.out.println("재시도 횟수 : " + String.valueOf(retryCount + 1) + "/5 현재 ERR LIST : " + errorList);
+                errorListInstance.clear();
+                errorListInstance.addAll(errorList);
+                for (Integer id : errorListInstance) {
+                    errorList.remove(id);
+                    if (hour == 23 || hour == 0 && !isUpdateAll) {
+                        if ((episodes = getEpisodesOnePage(id)) == null) {    //23~1시까지 빠른 업데이트 --> 한 페이지(최신화)만 받아옴
+                            System.out.println("ERROR OCCURRED AGAIN IN ID " + id);
+                            errorList.add(id);
+                            continue;
+                        }
+                    } else {
+                        if ((episodes = getEpisodes(id)) == null) {
+                            System.out.println("ERROR OCCURRED AGAIN IN ID " + id);
+                            errorList.add(id);
+                            continue;
+                        }
+                    }
+
+                    counts[0] += episodes.size();
+                    System.out.println("id : " + id + " " + episodes.size() + "개 업데이트");
+
+                    for (Episode episode : episodes) {
+                        errorInsertStatement.setInt(1, episode.getId_e());
+                        errorInsertStatement.setInt(2, episode.getEpisode_id());
+                        errorInsertStatement.setString(3, episode.getEpisode_title());
+                        errorInsertStatement.setFloat(4, episode.getEp_starscore());
+                        errorInsertStatement.setString(5, episode.getEp_thumburl());
+                        errorInsertStatement.setString(6, episode.getReg_date());
+                        errorInsertStatement.setString(7, episode.getEpisode_title());
+                        errorInsertStatement.setFloat(8, episode.getEp_starscore());
+                        errorInsertStatement.setString(9, episode.getEp_thumburl());
+                        errorInsertStatement.setString(10, episode.getReg_date());
+
+                        errorInsertStatement.addBatch();
+                        errorInsertStatement.clearParameters();
+                    }
+
+                    //유료화 된 웹툰은 유료화 된 회차를 삭제해줘야 함!! --> 마지막에 DB에 현재 가져온 회차보다 회차id가 큰 회차가 있으면 삭제
+                    errorDeleteStatement.setInt(1, id);
+                    errorDeleteStatement.setInt(2, episodes.size());
+                    errorDeleteStatement.addBatch();
+                    errorDeleteStatement.clearParameters();
+                }
+                retryCount++;
+            }//while
+            System.out.println("=========================SQL Batch 작성 완료.... DB Update를 시작합니다===============================");
+            errorInsertStatement.executeBatch();
+            errorDeleteStatement.executeBatch();
+        } catch (SQLException sqlex) {
+            System.out.println("SQLException OCCURRED..... EXIT PROGRAM....");
+            System.exit(-1);
+        }
+    }//function
+}//class

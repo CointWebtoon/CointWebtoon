@@ -18,12 +18,13 @@
             EpisodeParse parseInstance = new EpisodeParse();
 
             if(parseInstance.updateEpisodes(request.getParameter("update")))
-                out.print("총 " + parseInstance.updateCount() + "개의 에피소드 업데이트 완료");
+                out.print("총 " + parseInstance.updateCount() + "개의 SQL문 업데이트 완료");
             else
                 out.print("ERR OCCURRED");
         }
     }catch (Exception e){
         out.print("ERR OCCURRED, 권한이 없거나 동작 수행 중 오류가 발생했습니다.");
+        e.printStackTrace();
     }
 %>
 </body>
