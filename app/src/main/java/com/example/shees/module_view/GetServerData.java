@@ -66,7 +66,7 @@ public class GetServerData extends Observable{
 
     public void getImagesFromServer(int toonId, int episodeId){
         GetImage image = new GetImage();
-        image.execute("http://10.0.2.2:8080/Image_Client.jsp?id=" + String.valueOf(toonId) + "&ep_id=" + String.valueOf(episodeId));
+        image.execute("http://coint.iptime.org:8080/Image_Client.jsp?id=" + String.valueOf(toonId) + "&ep_id=" + String.valueOf(episodeId));
         //
     }
 
@@ -79,7 +79,7 @@ public class GetServerData extends Observable{
             StringBuilder jsonHtml = new StringBuilder();
 
             try {
-                URL url = new URL("http://10.0.2.2:8080/ToonList_Client.jsp"); //연결 url 설정 --> 추후에 서버 IP로 URL 변경하여야 함
+                URL url = new URL("http://coint.iptime.org:8080/ToonList_Client.jsp"); //연결 url 설정 --> 추후에 서버 IP로 URL 변경하여야 함
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -154,7 +154,7 @@ public class GetServerData extends Observable{
             ArrayList<Episode> episodes = new ArrayList<>();
 
             try {
-                URL url = new URL("http://10.0.2.2:8080/Episode_Client.jsp?id=" + toonIds[0].toString()); //연결 url 설정
+                URL url = new URL("http://coint.iptime.org:8080/Episode_Client.jsp?id=" + toonIds[0].toString()); //연결 url 설정
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -219,7 +219,7 @@ public class GetServerData extends Observable{
 
             try {
                 /*URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정*/
-                URL url = new URL("http://10.0.2.2:8080/Weekday.jsp"); //연결 url 설정
+                URL url = new URL("http://coint.iptime.org:8080/Weekday.jsp"); //연결 url 설정
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -286,7 +286,7 @@ public class GetServerData extends Observable{
 
             try {
                 /*URL url = new URL("http://192.168.0.49:8080/ToonList_Client.jsp"); //연결 url 설정*/
-                URL url = new URL("http://10.0.2.2:8080/Genre.jsp"); //연결 url 설정
+                URL url = new URL("http://coint.iptime.org:8080/Genre.jsp"); //연결 url 설정
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
                 if (connection != null) {
                     connection.setConnectTimeout(10000);
@@ -343,6 +343,7 @@ public class GetServerData extends Observable{
             String image_url;
             try{
                 URL url = new URL(urls[0]); //연결 url 설정
+
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection(); //커넥션 객체 생성
                 if(connection!=null){
                     connection.setConnectTimeout(10000);

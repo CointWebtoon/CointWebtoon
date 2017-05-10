@@ -1,6 +1,7 @@
 package com.example.shees.module_view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -36,7 +38,6 @@ public class ToonViewerActivity extends AppCompatActivity implements Observer {
     public int count = 0;
     private Thread myTread;
     private float x, y;
-    private boolean lastItemflag = false;
     private LinearLayout linearLayout;
 
     /**
@@ -51,11 +52,11 @@ public class ToonViewerActivity extends AppCompatActivity implements Observer {
         ToonViewerAdapter adapter = new ToonViewerAdapter(this, imageUrls);
         viewerListView.setAdapter(adapter);
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toon_viewer);
+        startActivity(new Intent(this, CutToonViewerActivity.class));
         linearLayout = (LinearLayout)findViewById(R.id.coint_layout);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         final TextView textView = (TextView) findViewById(R.id.text_view);
@@ -101,13 +102,13 @@ public class ToonViewerActivity extends AppCompatActivity implements Observer {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     private void initializeThread() {
         try {
             myTread.interrupt();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) { }
         myTread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -138,8 +139,8 @@ public class ToonViewerActivity extends AppCompatActivity implements Observer {
     public boolean onOptionsItemSelected(MenuItem item) {
         myTread.interrupt();
         int id = item.getItemId();
-        if (id == R.id.menu_button) {
-            Toast.makeText(this, "액션버튼 이벤트", Toast.LENGTH_SHORT).show();
+        if (id == R.id.back_home) {
+            Toast.makeText(this, "뒤로가기", Toast.LENGTH_SHORT).show();
             return true;
         }
         if (id == android.R.id.home) {
@@ -182,5 +183,8 @@ public class ToonViewerActivity extends AppCompatActivity implements Observer {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+    public void givingStarBtnClick(View v){
+        startActivity(new Intent(v.getContext(), StarScore.class));
     }
 }
