@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+<com.coint.webtoonlist.CircularView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="25dp"
+    android:orientation="horizontal"
+    android:gravity="center"
+    >
+    <ToggleButton
+        android:id="@+id/btn_addMy"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/icon_star"
+        android:textOn=""
+        android:textOff=""
+        android:focusable="false"
+
+        style="@style/Base.Widget.AppCompat.DrawerArrowToggle" />
+    <ImageView
+        android:id="@+id/iv_thumbnail"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="7.5dp"
+        android:layout_marginBottom="7.5dp"
+        android:layout_marginStart="2.5dp"/>
+
+    <LinearLayout
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:layout_marginLeft="5dp">
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:text="Title"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_starPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:text="★ "
+                android:textColor="@android:color/holo_red_light"
+                />
+            <ImageView
+                android:id="@+id/iv_upIcon"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_up"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Artist"
+            />
+
+    </LinearLayout>
+
+</com.coint.webtoonlist.CircularView>
+</layout>
