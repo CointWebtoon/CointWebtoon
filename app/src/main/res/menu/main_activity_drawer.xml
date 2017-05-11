@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="부가기능">
+        <menu>
+                <item
+                    android:id="@+id/webtoonRanking"
+                    android:title="웹툰 랭킹" />
+
+            <item
+                android:id="@+id/moreMyWebtoon"
+                android:title="마이웹툰 전체보기" />
+
+            <item
+                android:id="@+id/bookmark"
+                android:title="책갈피" />
+
+
+            <item
+                android:id="@+id/personalFavorite"
+                android:title="취향 분석" />
+
+            <item
+                android:id="@+id/customService"
+                android:title="코인트 고객센터" />
+
+            <item
+                android:id="@+id/error"
+                android:title="오류 신고" />
+
+            <item
+                android:id="@+id/appInfo"
+                android:title="프로그램 정보" />
+
+        </menu>
+    </item>
+
+</menu>

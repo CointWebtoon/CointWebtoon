@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp">
+
+    <ViewFlipper
+        android:background="#000000"
+        android:id="@+id/smarttoon_Flipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:longClickable="true"
+        android:onClick="flipperClick"/>
+
+    <ImageView
+        android:scaleType="fitXY"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/previous"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:onClick="previousBtnClick" />
+
+    <ImageView
+        android:scaleType="fitXY"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/menubtn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:onClick="previousBtnClick" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/topToolbar_smart"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_margin="0dp"
+        android:background="@color/D2Gray">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="0dp">
+            <!--Top Toolbar-->
+            <TextView
+                android:id="@+id/smarttoon_episodeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:gravity="center|left"
+                android:text="제목"
+                android:textColor="@android:color/white"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:background="@color/D2Gray"
+                android:onClick="runButtonClick"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/run" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+
+    <!--Bottom Toolbar-->
+    <android.support.v7.widget.Toolbar
+        android:padding="1dp"
+        android:id="@+id/bottomToolbar_smart"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/D2Gray">
+        <LinearLayout
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:paddingTop="10dp"
+                android:layout_weight="6"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+                <SeekBar
+                    android:id="@+id/cutProgressSeekbar"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_gravity="center"
+                    android:text="Loading..."
+                    android:id="@+id/cutProgressTextView"
+                    android:textColor="@android:color/white"
+                    android:textSize="10dp"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <ImageView
+                android:layout_marginRight="10dp"
+                android:onClick="commentClick"
+                android:layout_weight="2.3"
+                android:padding="5dp"
+                android:src="@drawable/view_dat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+            <Button
+                android:text="\u003C"
+                android:textSize="30dp"
+                android:textColor="#ffffff"
+                android:background="@color/D2Gray"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/smarttoon_episodeId"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text=""
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+            <Button
+                android:text="\u003E"
+                android:textSize="30dp"
+                android:textColor="#ffffff"
+                android:background="@color/D2Gray"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+</RelativeLayout>

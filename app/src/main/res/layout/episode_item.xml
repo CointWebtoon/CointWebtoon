@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="onRecyclerViewItemClick"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="10dp">
+
+        <RelativeLayout
+            android:id="@+id/backgroundRelative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp">
+
+            <com.kwu.cointwebtoon.Views.GeneralToonImageView
+                android:id="@+id/thumb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="top|center"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:id="@+id/episode_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/thumb"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="1019화 안녕하세요 저는(TEST)"
+                android:textColor="#77000000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/episode_Starscore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/episode_Title"
+                android:layout_centerInParent="true"
+                android:text="9.9"
+                android:textColor="#77000000"
+                android:textSize="15dp" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignBottom="@id/episode_Starscore"
+                android:layout_below="@id/episode_Title"
+                android:layout_marginRight="2dp"
+                android:layout_toLeftOf="@id/episode_Starscore"
+                android:scaleType="fitCenter"
+                android:src="@drawable/episode_star" />
+
+            <TextView
+                android:id="@+id/reg_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/episode_Starscore"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/episode_Title"
+                android:layout_marginRight="15dp"
+                android:gravity="center"
+                android:text="2017.06.18"
+                android:textColor="#77000000"
+                android:textSize="13dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

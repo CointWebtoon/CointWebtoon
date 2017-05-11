@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    tools:context="com.kwu.cointwebtoon.SearchActivity">
+
+    <!-- 이 xml파일은 상단에 툴바를 부착하는 곳-->
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/D2Dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <View
+                android:id="@+id/viewDummy"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <EditText
+                android:id="@+id/searchbar"
+                android:layout_width="250dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:background="@drawable/main_round"
+                android:hint="웹툰명 또는 작가명 검색"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textColorHint="#BEBEBE" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/mywebtoon_activity" />
+</android.support.design.widget.CoordinatorLayout>
