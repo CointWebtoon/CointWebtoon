@@ -9,7 +9,7 @@
         android:largeHeap="true"
         android:name=".Application_UserInfo"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -57,7 +57,7 @@
             android:theme="@style/LoginActivity">
         </activity>
         <activity android:name=".EpisodeActivity"
-            android:theme="@style/EpisodeActivity">
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".ViewerSmartActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
