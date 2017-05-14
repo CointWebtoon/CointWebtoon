@@ -196,10 +196,9 @@ public class ViewerCutActivity extends AppCompatActivity implements Observer{
             return false;
         }
     }
-
     @Override
     protected void onDestroy() {
-        getServerData.deleteObserver(this);
+        getServerData.removeObserver(this);
         super.onDestroy();
     }
 }

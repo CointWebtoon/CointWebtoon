@@ -137,7 +137,7 @@ public class ViewerGerneralActivity extends AppCompatActivity implements Observe
 
     @Override
     protected void onDestroy() {
-        serverData.deleteObserver(this);
+        serverData.removeObserver(this);
         super.onDestroy();
     }
 }
