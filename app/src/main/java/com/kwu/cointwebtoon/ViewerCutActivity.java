@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ViewerCutActivity extends AppCompatActivity implements Observer{
+public class ViewerCutActivity extends TypeKitActivity implements Observer{
     public static enum Action{
         PREVIOUS,
         NEXT,
