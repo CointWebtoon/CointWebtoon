@@ -83,9 +83,7 @@ public class WeekdayAdapter extends BaseAdapter {
                 .bitmapTransform(new CropCircleTransformation(new CustomBitmapPool()))
                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                 .into(ivThumbnail);
-        if(currentItem.getToonType() == 'S'){
-            tvTitle.setText(currentItem.getTitle() + " Smart");
-        }
+        tvTitle.setText(currentItem.getTitle() + " Smart");
         tvStarPoint.setText("★" + String.valueOf(currentItem.getStarScore()));
 
         if (currentItem.isMine())//마이 웹툰 여부에 따라 별 아이콘 다르게 설정
