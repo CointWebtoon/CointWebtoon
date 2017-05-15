@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -26,7 +28,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private ArrayList<String> imageUrls; // 웹툰 한 화에 있는 이미지 url을 순서대로 담을 ArraytList
     private ListView viewerListView; // url들을 통해 이미지들이 놓일 ListView
     private AppCompatActivity mContext; // Adapter View 에 넘겨줄 Context
+    private RatingBar ratingBar;
     private String artist;
+    private String buffer;
     private Thread myTread;
     private float x, y;
     private int count = 0;
@@ -34,7 +38,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private RelativeLayout relativeLayout;
     private GetServerData serverData;
     private Toolbar GeneralToonTopToolbar, GeneralToonBottomToolbar;
-    private TextView episodeTitleTextView, episodeIdTextView;
+    private TextView episodeTitleTextView, episodeIdTextView, starScore;
     private COINT_SQLiteManager manager;
     private Button good;
 
@@ -49,9 +53,10 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewer_general_activity);
         relativeLayout = (RelativeLayout)findViewById(R.id.coint_layout);
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
+        starScore = (TextView) findViewById(R.id.textview_starScore);
         episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
         episodeIdTextView = (TextView)findViewById(R.id.GeneralToont_current_pos);
         GeneralToonTopToolbar = (Toolbar) findViewById(R.id.GeneralToontoptoolbar);
@@ -67,6 +72,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         viewerListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(imageUrls==null){return true;}
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         x = motionEvent.getX();
@@ -96,13 +102,21 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         Intent getIntent = getIntent();
         int id = getIntent.getIntExtra("id", -1);
         int ep_id = getIntent.getIntExtra("ep_id", -1);
+        float star_score = getIntent.getFloatExtra("starScore",-1f);
+        if(star_score == -1f){
+            Toast.makeText(this, "전달된 별점이 없습니다", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         if(id == -1 | ep_id == -1){
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        //buffer = String.valueOf(star_score);
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
+       // starScore.setText(buffer);
+        //ratingBar.setRating(star_score);
     }
 
     private void initializeThread() {
@@ -166,6 +180,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     public void Previous(View v) { Toast.makeText(this, "이전화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
     public void Current(View v) {Toast.makeText(this, "현재회차 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
     public void Next(View v) {Toast.makeText(this, "다음화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
+    public void givingStarBtnClick(View v) { startActivity(new Intent(v.getContext(), ViewerStarScoreActivity.class));}
 
     @Override
     protected void onDestroy() {

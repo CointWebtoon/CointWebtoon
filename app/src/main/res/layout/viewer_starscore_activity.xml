@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="#FFFFFF"
+    android:orientation="vertical"
     android:id="@+id/dialog_of_starscore">
+    <RatingBar android:id="@+id/dialog_rating"
+        android:theme="@style/RatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:layout_below="@+id/txtView"
+        android:layout_centerHorizontal="true"
+        />
     <TextView
         android:id="@+id/txtView"
         android:layout_width="wrap_content"
@@ -11,38 +22,39 @@
         android:layout_centerHorizontal="true"
         android:textColor="#FF69B4"
         android:text="0"
+        android:layout_gravity="center"
         android:textSize="25sp" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:textColor="#000000"
         android:text="드래그하여 별점을 주세요"
         android:layout_below="@+id/dialog_rating"/>
-    <Button
-        android:id="@+id/btnConfirm"
-        android:layout_width="150dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btnCancel"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/btnCancel"
-        android:text="취소" />
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="확인" />
+        android:orientation="horizontal"
+        android:weightSum="1">
 
-    <RatingBar android:id="@+id/dialog_rating"
-        android:theme="@style/RatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:isIndicator="false"
-        android:numStars="5"
-        android:layout_below="@+id/txtView"
-        android:layout_centerHorizontal="true"
-        />
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/btnCancel"
+            android:layout_toRightOf="@+id/btnCancel"
+            android:layout_weight="0.5"
+            android:background="@drawable/view_button_state_confirm"
+            android:text="별점주기" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="0.5"
+            android:background="@drawable/view_button_state_cancle"
+            android:text="취소하기" />
+    </LinearLayout>
+</LinearLayout>
