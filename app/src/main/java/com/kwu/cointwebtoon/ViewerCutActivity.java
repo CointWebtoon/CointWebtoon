@@ -182,6 +182,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            if(imageURLs == null){return true;}
             switch (event.getAction()){
                 case MotionEvent.ACTION_DOWN:
                     downX = event.getX();

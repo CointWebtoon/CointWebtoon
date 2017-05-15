@@ -66,6 +66,7 @@ public class ViewerGeneralAdapter extends BaseAdapter{
                         .load(bitmaps.get(position))
                         .asBitmap()
                         .override(width, com.bumptech.glide.request.target.Target.SIZE_ORIGINAL)
+                        .placeholder(R.drawable.view_placeholder)
                         .into(holder.oneImage);
             }
         }

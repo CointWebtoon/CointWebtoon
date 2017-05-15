@@ -17,7 +17,7 @@
         android:id="@+id/toptoolbar"
         android:background="#333333"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="@dimen/viewer_actionbar_height"
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
@@ -46,7 +46,7 @@
         android:id="@+id/bottomtoolbar"
         android:background="#333333"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="@dimen/viewer_actionbar_height"
         android:layout_alignParentBottom="true">
         <LinearLayout
             android:orientation="horizontal"

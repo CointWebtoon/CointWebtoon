@@ -1,6 +1,7 @@
 package com.kwu.cointwebtoon;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnClickListener {
     private Button mConfirm, mCancle;
     private TextView starTextView;
+    private float number = 0.0f;
     @Override
     protected  void onCreate(Bundle saveInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -28,7 +30,7 @@ public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnC
                     rating = 0.5f;
                 }
                 starTextView.setText(String.valueOf((int)(rating * 2)));
-                float number = rating * 2;
+                number = rating * 2;
                 System.out.println(number);
             }
         });
@@ -42,6 +44,8 @@ public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnConfirm:
+                Intent intent = new Intent(this,ViewerGerneralActivity.class);
+                intent.putExtra("starScore", number);
                 this.finish();
                 break;
             case R.id.btnCancel:

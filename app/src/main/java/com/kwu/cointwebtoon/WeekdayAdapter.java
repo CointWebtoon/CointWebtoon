@@ -1,12 +1,14 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +36,10 @@ public class WeekdayAdapter extends BaseAdapter {
     private TextView tvTitle ;
     private TextView tvStarPoint;
     private TextView tvArtist;
-    private ToggleButton btnAddMy;
+
+    private LinearLayout frameMy;
+    private TextView iconMy;
+
     private COINT_SQLiteManager manager;
 
     public WeekdayAdapter(ListView listView, Weekday_ListItem listItem, Context context) {
@@ -66,15 +71,18 @@ public class WeekdayAdapter extends BaseAdapter {
             m.setParentHeight(mListView.getHeight());
             convertView = m;
         }
-        btnAddMy = (ToggleButton) convertView.findViewById(R.id.btn_addMy);
+        //btnAddMy = (ToggleButton) convertView.findViewById(R.id.btn_addMy);
         ivThumbnail = (ImageView) convertView.findViewById(R.id.iv_thumbnail);
         tvTitle = (TextView)convertView.findViewById(R.id.tv_title);
         tvStarPoint = (TextView)convertView.findViewById(R.id.tv_starPoint);
         tvArtist = (TextView)convertView.findViewById(R.id.tv_artist);
         ivUpIcon = (ImageView)convertView.findViewById(R.id.iv_upIcon);
-        btnAddMy.setTag(position);
-        btnAddMy.setOnClickListener(new btnAddMyOnClick());
-        btnAddMy.setOnCheckedChangeListener(new btnAddMyOnCheckedChange());
+
+        frameMy = (LinearLayout)convertView.findViewById(R.id.frame_my);
+        iconMy = (TextView)convertView.findViewById(R.id.icon_my);
+        //btnAddMy.setTag(position);
+        //btnAddMy.setOnClickListener(new btnAddMyOnClick());
+        //btnAddMy.setOnCheckedChangeListener(new btnAddMyOnCheckedChange());
 
         Webtoon currentItem = webtoons.get(position);   //웹툰형으로 변경해서 더 쉽게 데이터 받을 수 있어요
         Glide.with(mContext)
@@ -86,10 +94,15 @@ public class WeekdayAdapter extends BaseAdapter {
         tvTitle.setText(currentItem.getTitle());
         tvStarPoint.setText("★" + String.valueOf(currentItem.getStarScore()));
 
-        if (currentItem.isMine())//마이 웹툰 여부에 따라 별 아이콘 다르게 설정
-            btnAddMy.setBackgroundResource(R.drawable.week_icon_highlight_star);
-        else
-            btnAddMy.setBackgroundResource(R.drawable.week_icon_star);
+       if (currentItem.isMine()){
+           //마이 웹툰 여부에 따라 별 아이콘 다르게 설정
+           frameMy.setBackgroundResource(R.drawable.week_highlight_item);
+           iconMy.setText("MY");
+       }
+        else{
+           frameMy.setBackgroundResource(0);
+           iconMy.setText("");
+       }
 
         if(currentItem.isUpdated() == 1) //TODO - 최신화 조건에 맞는 up Icon 표시 작업 --> 조건 추가 완료했는데 서버에 다 is_updated로 되있는거가틈 서버 수정할게요
             ivUpIcon.setImageResource(R.drawable.week_icon_up);
