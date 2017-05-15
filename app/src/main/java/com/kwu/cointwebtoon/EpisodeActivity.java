@@ -195,6 +195,8 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
 
         @Override
         public boolean onTouch(View view, MotionEvent event) {
+            if(episodes.size() == 0)
+                return false;
             y = (int) event.getRawY();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -215,7 +217,12 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         layoutParams.topMargin = maxTopMargin;
                     }
                     scrollManually = false;
-                    recycler.scrollToPosition((episodes.size() - 1) * layoutParams.topMargin / maxTopMargin);
+                    try{
+                        recycler.scrollToPosition((episodes.size() - 1) * layoutParams.topMargin / maxTopMargin);
+                    }catch(ArithmeticException e){
+                        //Divided By Zero Excpetion 처리 --> 아직 아이템들이 로드되지 않았을 때 스크롤을 하면 이렇게 됨
+                        return true;
+                    }
                     view.setLayoutParams(layoutParams);
 
                     break;

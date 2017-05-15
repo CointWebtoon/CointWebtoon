@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,6 +94,9 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     @Override
     public void update(Observable observable, Object data) {
         imageURLs = (ArrayList<String>) data;
+        if(imageURLs == null){
+            return;
+        }
         episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
         episodeIdTextView.setText(String.valueOf(episodeId));
         if(imageURLs.size() == 0) {
@@ -108,6 +113,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
             Glide.with(this)
                     .load(imageURL)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .placeholder(getDrawable(R.drawable.view_placeholder))
                     .centerCrop()
                     .into(smartCut);
             imageFlipper.addView(smartCut);
@@ -142,6 +148,8 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
      * 2. 현재 툴바가 보이지 않는 상태이고,
      */
     public void flipperClick(View v) {
+        if(imageURLs == null)
+            return;
         if (topToolbar.getVisibility() == View.VISIBLE) {
             showToolbars(false);
             return;
@@ -208,11 +216,13 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     public void runButtonClick(View v){
         if(runMode) {
             runMode = false;
-            v.setBackgroundColor(Color.WHITE);
+            ImageButton target = (ImageButton)v;
+            target.setImageDrawable(getDrawable(R.drawable.run_inactive));
         }
         else {
             runMode = true;
-            v.setBackgroundColor(Color.RED);
+            ImageButton target = (ImageButton)v;
+            target.setImageDrawable(getDrawable(R.drawable.run_active));
         }
     }
 
