@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,17 +22,21 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ViewerGerneralActivity extends AppCompatActivity implements Observer {
+public class ViewerGerneralActivity extends TypeKitActivity implements Observer {
     private ArrayList<String> imageUrls; // 웹툰 한 화에 있는 이미지 url을 순서대로 담을 ArraytList
     private ListView viewerListView; // url들을 통해 이미지들이 놓일 ListView
     private AppCompatActivity mContext; // Adapter View 에 넘겨줄 Context
-    private String title = "COINT";
     private String artist;
-    public int count = 0;
     private Thread myTread;
     private float x, y;
+    private int count = 0;
     private LinearLayout linearLayout;
+    private RelativeLayout relativeLayout;
     private GetServerData serverData;
+    private Toolbar GeneralToonTopToolbar, GeneralToonBottomToolbar;
+    private TextView episodeTitleTextView, episodeIdTextView;
+    private COINT_SQLiteManager manager;
+    private Button good;
 
     @Override
     public void update(Observable observable, Object o) {
@@ -41,12 +48,19 @@ public class ViewerGerneralActivity extends AppCompatActivity implements Observe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewer_general_activity);
-        linearLayout = (LinearLayout)findViewById(R.id.coint_layout);
+        relativeLayout = (RelativeLayout)findViewById(R.id.coint_layout);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.rating_bar);
-        final TextView textView = (TextView) findViewById(R.id.text_view);
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
-        getSupportActionBar().show();
+        episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
+        episodeIdTextView = (TextView)findViewById(R.id.GeneralToont_current_pos);
+        GeneralToonTopToolbar = (Toolbar) findViewById(R.id.GeneralToontoptoolbar);
+        GeneralToonBottomToolbar = (Toolbar) findViewById(R.id.GeneralToontbottomtoolbar);
+        good = (Button)findViewById(R.id.GeneralToontgood);
+        setSupportActionBar(GeneralToonTopToolbar);
+        manager = COINT_SQLiteManager.getInstance(this);
+        GeneralToonTopToolbar.setVisibility(View.VISIBLE);
+        GeneralToonBottomToolbar.setVisibility(View.VISIBLE);
         initializeThread();
         viewerListView = (ListView) findViewById(R.id.list_view);
         viewerListView.setDivider(null);
@@ -62,17 +76,17 @@ public class ViewerGerneralActivity extends AppCompatActivity implements Observe
                         float xGap = x - motionEvent.getX();
                         float yGap = y - motionEvent.getY();
                         if ((xGap < 10 && xGap > -10) && (yGap < 10 && yGap > -10)) {
-                            count++;
-                            if (count % 2 != 0) {
-                                getSupportActionBar().hide();
+
+                            if(GeneralToonTopToolbar.getVisibility() == View.VISIBLE) {
+                                showToolbars(false);
                                 try {
                                     myTread.interrupt();
-                                } catch (Exception e) {
-                                }
-                            } else {
-                                getSupportActionBar().show();
-                                initializeThread();
+                                } catch (Exception e) {}
                             }
+                            else if(GeneralToonTopToolbar.getVisibility() == View.GONE) {
+                                showToolbars(true);
+                            }
+                            initializeThread();
                         }
                         break;
                 }
@@ -87,8 +101,8 @@ public class ViewerGerneralActivity extends AppCompatActivity implements Observe
             finish();
         }
         serverData.getImagesFromServer(id, ep_id);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(title);
+        episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
+        episodeIdTextView.setText(String.valueOf(ep_id));
     }
 
     private void initializeThread() {
@@ -98,13 +112,18 @@ public class ViewerGerneralActivity extends AppCompatActivity implements Observe
         myTread = new Thread(new Runnable() {
             @Override
             public void run() {
-                final ActionBar myActionBar = getSupportActionBar();
                 try {
                     Thread.sleep(3000);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            myActionBar.hide();
+                            System.out.println("i'm here1");
+                            if(GeneralToonTopToolbar.getVisibility() == View.VISIBLE) {
+                                System.out.println("i'm here2");
+                                showToolbars(false);
+                            }
+                            else{System.out.println("i'm here3");}
+
                         }
                     });
                 } catch (InterruptedException intex) {
@@ -114,26 +133,39 @@ public class ViewerGerneralActivity extends AppCompatActivity implements Observe
         });
         myTread.start();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.viewer_back_menu, menu);
-        return true;
+    private void showToolbars(boolean show){
+        if(show){
+            GeneralToonTopToolbar.setVisibility(View.VISIBLE);
+            GeneralToonBottomToolbar.setVisibility(View.VISIBLE);
+            GeneralToonTopToolbar.animate().translationY(0).withLayer();
+            GeneralToonBottomToolbar.animate().translationY(0).withLayer();
+        }else{
+            GeneralToonTopToolbar.setVisibility(View.GONE);
+            GeneralToonBottomToolbar.setVisibility(View.GONE);
+            GeneralToonTopToolbar.animate().translationY(-60).withLayer();
+            GeneralToonBottomToolbar.animate().translationY(60).withLayer();
+        }
+    }
+    public void BackBtn(View v) {
+        Toast.makeText(this, "뒤로가기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+    }
+    public void HeartBtn(View v){
+        Toast.makeText(this, "좋아요 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+        count++;
+        if(count % 2 != 0) {
+            good.setBackgroundResource(R.drawable.view_heartcolor);
+        }
+        else{
+            good.setBackgroundResource(R.drawable.view_heartempty);
+        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        myTread.interrupt();
-        int id = item.getItemId();
-        if (id == R.id.back_home) {
-            Toast.makeText(this, "뒤로가기", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        if (id == android.R.id.home) {
-            Toast.makeText(this, "홈 아이콘 이벤트", Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
+    public void Dat(View v){
+        Toast.makeText(this, "댓글 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
     }
+    public void Previous(View v) { Toast.makeText(this, "이전화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
+    public void Current(View v) {Toast.makeText(this, "현재회차 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
+    public void Next(View v) {Toast.makeText(this, "다음화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
 
     @Override
     protected void onDestroy() {

@@ -11,17 +11,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ViewerCutActivity extends AppCompatActivity implements Observer{
+public class ViewerCutActivity extends TypeKitActivity implements Observer{
     public static enum Action{
         PREVIOUS,
         NEXT,
@@ -35,6 +38,8 @@ public class ViewerCutActivity extends AppCompatActivity implements Observer{
     private int toonId, episodeId;
     private Button good;
     private Toolbar topToolbar, bottomToolbar;
+    private COINT_SQLiteManager manager;
+    private TextView episodeTitleTextView, episodeIdTextView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +47,9 @@ public class ViewerCutActivity extends AppCompatActivity implements Observer{
         good = (Button)findViewById(R.id.good);
         topToolbar = (Toolbar)findViewById(R.id.toptoolbar);
         bottomToolbar = (Toolbar)findViewById(R.id.bottomtoolbar);
+        episodeTitleTextView = (TextView) findViewById(R.id.CutToonTitle);
+        episodeIdTextView = (TextView) findViewById(R.id.current_pos);
+        manager = COINT_SQLiteManager.getInstance(this);
         setSupportActionBar(topToolbar);
         flipper = (ViewFlipper)findViewById(R.id.viewflipper);
 
@@ -76,7 +84,6 @@ public class ViewerCutActivity extends AppCompatActivity implements Observer{
         });
 
         flipper.setBackgroundColor(Color.WHITE);
-
         Intent getIntent = getIntent();
         toonId = getIntent.getIntExtra("id", -1);
         episodeId = getIntent.getIntExtra("ep_id", -1);
@@ -92,6 +99,8 @@ public class ViewerCutActivity extends AppCompatActivity implements Observer{
     @Override
     public void update(Observable observable, Object o) {
         Log.i("update", "되냐?");
+        episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
+        episodeIdTextView.setText(String.valueOf(episodeId));
         this.imageURLs = (ArrayList<String>) o;
         if(imageURLs != null){
             for(String imageURL : imageURLs){
@@ -151,7 +160,6 @@ public class ViewerCutActivity extends AppCompatActivity implements Observer{
             good.setBackgroundResource(R.drawable.view_heartempty);
         }
     }
-
     public void Dat(View v){
         Toast.makeText(this, "댓글 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
     }

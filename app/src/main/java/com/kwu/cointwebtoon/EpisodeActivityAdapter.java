@@ -42,14 +42,17 @@ public  class EpisodeActivityAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder myHolder = (ViewHolder)holder;
         Episode currentItem = episodes.get(position);
-        myHolder.background.setBackgroundColor(Color.parseColor("#FFFFFF"));
         if(currentItem.getIs_read() == 1) {
-            myHolder.background.setBackgroundColor(mContext.getResources().getColor(R.color.D2Original));
+            myHolder.background.setBackgroundColor(Color.parseColor("#D3D3D3"));
+            myHolder.thumb.setColorFilter(Color.argb(100,100,100,100));
+        }else{
+            myHolder.background.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            myHolder.thumb.setColorFilter(null);
         }
         Glide.with(mContext)
                 .load(currentItem.getEp_thumbURL())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .override(202, 120)
                 .fitCenter()
                 .placeholder(R.drawable.episode_placeholder)
                 .into(myHolder.thumb);

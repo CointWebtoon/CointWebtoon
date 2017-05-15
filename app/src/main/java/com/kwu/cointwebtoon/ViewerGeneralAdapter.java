@@ -33,14 +33,12 @@ public class ViewerGeneralAdapter extends BaseAdapter{
             return bitmaps.size() + 1;
         }catch (Exception e){ return 0;}
     }
-
     @Override
     public Object getItem(int position) {
         if(position < bitmaps.size())
             return bitmaps.get(position);
         return null;
     }
-
     @Override
     public long getItemId(int position) {
         return position;

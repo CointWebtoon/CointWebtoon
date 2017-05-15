@@ -17,7 +17,7 @@
         android:id="@+id/toptoolbar"
         android:background="#333333"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
+        android:layout_height="42dp"
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/view_button_state_bback"
                 android:onClick="BackBtn"/>
-            <TextView
+            <TextView android:id="@+id/CutToonTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
@@ -46,7 +46,7 @@
         android:id="@+id/bottomtoolbar"
         android:background="#333333"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
+        android:layout_height="42dp"
         android:layout_alignParentBottom="true">
         <LinearLayout
             android:orientation="horizontal"
@@ -57,7 +57,7 @@
             <Button android:id="@+id/good"
                 android:gravity="center"
                 android:layout_width="32dp"
-                android:layout_height="25dp"
+                android:layout_height="32dp"
                 android:background="@drawable/view_button_state_good"
                 android:layout_weight="0.01"
                 android:onClick="HeartBtn"/>
@@ -72,8 +72,8 @@
                 android:layout_weight="0.09"/>
             <Button android:id="@+id/datgule"
                 android:gravity="center"
-                android:layout_width="35dp"
-                android:layout_height="25dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:background="@drawable/view_button_state_dat"
                 android:onClick="Dat"
                 android:layout_weight="0.02"/>

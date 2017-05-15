@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-public class ViewerStarScoreActivity extends Activity implements View.OnClickListener {
+public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnClickListener {
     private Button mConfirm, mCancle;
     private TextView starTextView;
     @Override

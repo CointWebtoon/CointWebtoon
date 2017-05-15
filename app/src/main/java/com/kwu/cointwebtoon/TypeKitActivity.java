@@ -14,7 +14,8 @@ public class TypeKitActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         //폰트 적용
         Typekit.getInstance()
-                .addNormal(Typekit.createFromAsset(this, "JejuGothic.ttf"));
+                .addNormal(Typekit.createFromAsset(this, "SourceHanSansKR-Bold.ttf"))
+                .addBold(Typekit.createFromAsset(this, "SourceHanSansKR-Heavy.ttf"));
     }
 
     @Override
