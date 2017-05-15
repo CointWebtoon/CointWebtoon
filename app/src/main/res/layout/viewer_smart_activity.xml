@@ -88,7 +88,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <LinearLayout
-                android:paddingTop="10dp"
                 android:layout_weight="6"
                 android:orientation="vertical"
                 android:layout_width="0dp"

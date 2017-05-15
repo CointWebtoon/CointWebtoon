@@ -81,11 +81,11 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginLeft="5dp"
-                        android:background="@drawable/week_round_button2"
+                        android:background="@drawable/week_round_button1"
                         android:onClick="btnWeekdaysOnClick"
                         android:text="월"
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                        android:textColor="@android:color/white" />
+                        android:textColor="@android:color/black" />
                 </LinearLayout>
             </LinearLayout>
 

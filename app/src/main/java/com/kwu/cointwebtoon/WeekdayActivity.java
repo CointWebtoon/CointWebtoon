@@ -1,12 +1,16 @@
 package com.kwu.cointwebtoon;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.CompoundButtonCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -15,8 +19,8 @@ import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
 import com.kwu.cointwebtoon.databinding.WeekdayActivityBinding;
 
 public class WeekdayActivity extends TypeKitActivity {
-    WeekdayActivityBinding binding;
-    int selectedDay = 0;
+    private WeekdayActivityBinding binding;
+    private int selectedDay = 0;
     static public Weekday_ListItem[] listItems = new Weekday_ListItem[8];
     private Button[] btnWeekdays = new Button[8];
 
@@ -32,6 +36,9 @@ public class WeekdayActivity extends TypeKitActivity {
         btnWeekdays[5] = binding.btnSat;
         btnWeekdays[6] = binding.btnSun;
         btnWeekdays[7] = binding.btnNew;
+        //현재 요일 설정
+        selectedDay = 0;
+        changeBtnDayState(btnWeekdays[selectedDay], true);
 
         //dayButtons(요일별 버튼) 태그 설정
         for(int i = 0; i < 8; i++){
@@ -53,15 +60,9 @@ public class WeekdayActivity extends TypeKitActivity {
     private class OPCListener implements ViewPager.OnPageChangeListener{
         @Override
         public void onPageSelected(int position) {
-            btnWeekdays[selectedDay].setBackgroundResource(R.drawable.week_round_button1);
-            btnWeekdays[selectedDay].setTextAppearance(WeekdayActivity.this, android.R.style.TextAppearance_DeviceDefault_Small);
-            btnWeekdays[selectedDay].setTextColor(Color.parseColor("#000000"));
-
+            changeBtnDayState(btnWeekdays[selectedDay], false);
             selectedDay = position;
-
-            btnWeekdays[selectedDay].setBackgroundResource(R.drawable.week_round_button2);
-            btnWeekdays[selectedDay].setTextAppearance(WeekdayActivity.this, android.R.style.TextAppearance_DeviceDefault_Medium);
-            btnWeekdays[selectedDay].setTextColor(Color.parseColor("#ffffff"));
+            changeBtnDayState(btnWeekdays[selectedDay], true);
         }
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -78,7 +79,26 @@ public class WeekdayActivity extends TypeKitActivity {
         //TODO-MY 메뉴로 이동
     }
 
+    public void setButtonTextAppearance(Context context, Button button,  int resId){
+        if (Build.VERSION.SDK_INT < 23) {
+            button.setTextAppearance(context, resId);
+        } else {
+            button.setTextAppearance(resId);
+        }
+    }
 
+    public void changeBtnDayState(Button button, boolean state){
+        if(state){
+            button.setBackgroundResource(R.drawable.week_round_button2);
+            setButtonTextAppearance(WeekdayActivity.this, button, android.R.style.TextAppearance_DeviceDefault_Medium);
+            button.setTextColor(Color.parseColor("#ffffff"));
+        }
+        else {
+            button.setBackgroundResource(R.drawable.week_round_button1);
+            setButtonTextAppearance(WeekdayActivity.this, button, android.R.style.TextAppearance_DeviceDefault_Small);
+            button.setTextColor(Color.parseColor("#000000"));
+        }
+    }
     private class FSPagerAdapter extends FragmentStatePagerAdapter {
         public FSPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -97,5 +117,4 @@ public class WeekdayActivity extends TypeKitActivity {
             return 8;
         }
     }
-
 }
