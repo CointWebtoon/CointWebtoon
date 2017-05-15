@@ -102,11 +102,11 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         Intent getIntent = getIntent();
         int id = getIntent.getIntExtra("id", -1);
         int ep_id = getIntent.getIntExtra("ep_id", -1);
-        float star_score = getIntent.getFloatExtra("starScore",-1f);
-        if(star_score == -1f){
-            Toast.makeText(this, "전달된 별점이 없습니다", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+       // float star_score = getIntent.getFloatExtra("starScore",-1f);
+       // if(star_score == -1f){
+        //    Toast.makeText(this, "전달된 별점이 없습니다", Toast.LENGTH_SHORT).show();
+        //    finish();
+       // }
         if(id == -1 | ep_id == -1){
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
