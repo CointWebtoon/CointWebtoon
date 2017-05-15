@@ -44,7 +44,7 @@ public  class EpisodeActivityAdapter extends RecyclerView.Adapter{
         Episode currentItem = episodes.get(position);
         myHolder.background.setBackgroundColor(Color.parseColor("#FFFFFF"));
         if(currentItem.getIs_read() == 1) {
-            myHolder.background.setBackgroundColor(mContext.getResources().getColor(R.color.D2Original));
+            myHolder.background.setBackgroundColor(Color.parseColor("#708090"));
         }
         Glide.with(mContext)
                 .load(currentItem.getEp_thumbURL())

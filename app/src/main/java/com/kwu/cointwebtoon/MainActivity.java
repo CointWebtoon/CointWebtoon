@@ -38,6 +38,7 @@ public class MainActivity extends TypeKitActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+                 /*안드로이드 데이터베이스에 데이터를 넣음*/
         setContentView(R.layout.main_activity);
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,10 +55,6 @@ public class MainActivity extends TypeKitActivity
 
         search = (EditText)findViewById(R.id.searchbar);
         search.setOnKeyListener(this);
-
-         /*안드로이드 데이터베이스에 데이터를 넣음*/
-        GetServerData getServerData = new GetServerData(this);
-        getServerData.getWebtoonFromServer();
 
         pager = (ViewPager)findViewById(R.id.viewpager);                        //뷰페이저에 어댑터를 연결하는 부분
         top15Adapter = new Main_Top15Adapter(this);
