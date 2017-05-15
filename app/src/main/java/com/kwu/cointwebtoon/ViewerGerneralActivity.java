@@ -26,7 +26,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private ArrayList<String> imageUrls; // 웹툰 한 화에 있는 이미지 url을 순서대로 담을 ArraytList
     private ListView viewerListView; // url들을 통해 이미지들이 놓일 ListView
     private AppCompatActivity mContext; // Adapter View 에 넘겨줄 Context
-    private String title = "COINT";
     private String artist;
     private Thread myTread;
     private float x, y;
@@ -51,7 +50,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         setContentView(R.layout.viewer_general_activity);
         relativeLayout = (RelativeLayout)findViewById(R.id.coint_layout);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.rating_bar);
-        final TextView textView = (TextView) findViewById(R.id.text_view);
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
         episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
@@ -60,6 +58,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         GeneralToonBottomToolbar = (Toolbar) findViewById(R.id.GeneralToontbottomtoolbar);
         good = (Button)findViewById(R.id.GeneralToontgood);
         setSupportActionBar(GeneralToonTopToolbar);
+        manager = COINT_SQLiteManager.getInstance(this);
         GeneralToonTopToolbar.setVisibility(View.VISIBLE);
         GeneralToonBottomToolbar.setVisibility(View.VISIBLE);
         initializeThread();
