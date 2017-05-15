@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Episode;
@@ -23,13 +25,15 @@ import java.util.Observer;
  * 회차 정보 Activity
  */
 public class EpisodeActivity extends TypeKitActivity implements Observer {
-    private static final int ERR_CODE  = -1;
+    private static final int ERR_CODE = -1;
     /**
      * Views
      */
     private RecyclerView recycler;
     private RelativeLayout scrollSection;
     private ImageView scrollbar;
+    private TextView title;
+    private Toolbar toolbar;
 
     /**
      * Data
@@ -56,33 +60,35 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         scrollSection = (RelativeLayout) findViewById(R.id.scrollSection);
         scrollbar = (ImageView) findViewById(R.id.scrollbar);
         scrollbar.setOnTouchListener(new ScrollBarOnTouchListener());
         recycler = (RecyclerView) findViewById(R.id.episode_recycler);
         recycler.setVerticalScrollBarEnabled(false);
         recycler.setOnScrollListener(new ActionbarShowHideListener());
-        getSupportActionBar().setTitle(manager.getWebtoonTitleById(currentToonId));
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        title = (TextView) findViewById(R.id.episodeActivity_Title);
+        toolbar = (Toolbar) findViewById(R.id.episode_toolbar);
+        toolbar.bringToFront();
+        setSupportActionBar(toolbar);
+        title.setText(manager.getWebtoonTitleById(currentToonId));
     }
 
-    private void initData(){
+    private void initData() {
         Intent getIntent = getIntent();
         currentToonId = getIntent.getIntExtra("id", ERR_CODE);
-        if(currentToonId == ERR_CODE){
+        if (currentToonId == ERR_CODE) {
             Toast.makeText(this, "존재하지 않는 타이틀입니다.", Toast.LENGTH_LONG);
             this.finish();
         }
         currentToonType = getIntent.getCharExtra("toontype", 'U');
-        if(currentToonType == 'U'){
+        if (currentToonType == 'U') {
             Toast.makeText(this, "존재하지 않는 타이틀입니다.", Toast.LENGTH_LONG);
             this.finish();
         }
         manager = COINT_SQLiteManager.getInstance(this);
         getServerData = new GetServerData(this);
         getServerData.registerObserver(this);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         new Thread() {
             public void run() {
                 Cursor episodeCursor = manager.getEpisodes(currentToonId);
@@ -156,23 +162,26 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     }
 
     public void onRecyclerViewItemClick(View v) {
-        Episode target  = (Episode)v.findViewById(R.id.reg_date).getTag();
-        switch (currentToonType){
-            case 'G':{//일반툰
+        Episode target = (Episode) v.findViewById(R.id.reg_date).getTag();
+        switch (currentToonType) {
+            case 'G': {//일반툰
+                manager.updateEpisodeRead(target.getId(), target.getEpisode_id());
                 Intent generalIntent = new Intent(this, ViewerGerneralActivity.class);
                 generalIntent.putExtra("id", target.getId());
                 generalIntent.putExtra("ep_id", target.getEpisode_id());
                 startActivity(generalIntent);
                 break;
             }
-            case 'C':{//컷툰
+            case 'C': {//컷툰
+                manager.updateEpisodeRead(target.getId(), target.getEpisode_id());
                 Intent cutIntent = new Intent(this, ViewerCutActivity.class);
                 cutIntent.putExtra("id", target.getId());
                 cutIntent.putExtra("ep_id", target.getEpisode_id());
                 startActivity(cutIntent);
                 break;
             }
-            case 'S':{//스마트툰
+            case 'S': {//스마트툰
+                manager.updateEpisodeRead(target.getId(), target.getEpisode_id());
                 Intent smartIntent = new Intent(this, ViewerSmartActivity.class);
                 smartIntent.putExtra("id", target.getId());
                 smartIntent.putExtra("ep_id", target.getEpisode_id());
@@ -218,6 +227,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
 
     /**
      * 스크롤 시 상단바와 스크롤바를 보이도록, 안보이도록 한다.
+     *
      * @param show - true : 보임 false : 안보임
      */
     private void showUIs(boolean show) {
@@ -248,13 +258,13 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             super.onScrolled(recyclerView, dx, dy);
             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             final int currentFirstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-            if (currentFirstVisibleItem < this.mLastFirstVisibleItem) {
+            if (currentFirstVisibleItem < this.mLastFirstVisibleItem && toolbar.getVisibility() == View.GONE) {
                 showUIs(true);
-            } else if (currentFirstVisibleItem > this.mLastFirstVisibleItem) {
+            } else if (currentFirstVisibleItem > this.mLastFirstVisibleItem && toolbar.getVisibility() == View.VISIBLE) {
                 if (scrollManually)
                     showUIs(false);
             }
-            if(scrollManually){
+            if (scrollManually) {
                 //스크롤바를 통한 스크롤이 아닐 때
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) scrollbar.getLayoutParams();
                 layoutParams.topMargin = maxTopMargin * currentFirstVisibleItem / (episodes.size() - 1);
