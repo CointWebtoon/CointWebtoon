@@ -63,6 +63,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     private int maxTopMargin = 0;               //스크롤바 좌표 계산
     private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
     private boolean isFloatingShown = false;
+    private Thread timeOutThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,6 +112,26 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         new GetCurrentToonInfo().execute();
         getServerData = new GetServerData(this);
         getServerData.registerObserver(this);
+        timeOutThread = new Thread(){
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(1000 * 10);
+                }catch (InterruptedException e){
+                    Log.i("coint", "No Time Out");
+                    return;
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("coint", "Time Out");
+                        Toast.makeText(EpisodeActivity.this, "에피소드 목록을 가져오지 못했습니다.", Toast.LENGTH_LONG).show();
+                        EpisodeActivity.this.finish();
+                    }
+                });
+            }
+        };
+        timeOutThread.start();
         new Thread() {
             public void run() {
                 Cursor episodeCursor = manager.getEpisodes(currentToonId);
@@ -159,6 +180,9 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     @Override
     public void update(Observable observable, Object data) {
         hideFloatingButtons();
+        try{
+            timeOutThread.interrupt();
+        }catch (Exception e){}
         Cursor episodeCursor = manager.getEpisodes(currentToonId);
         updateCursorFromSQLite(episodeCursor);
         if (isFirst) {

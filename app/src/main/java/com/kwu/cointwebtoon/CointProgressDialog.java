@@ -9,5 +9,6 @@ public class CointProgressDialog extends Dialog {
         super(mContext);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.coint_progressbar_dialog);
+        this.setCancelable(false);
     }
 }
