@@ -42,7 +42,7 @@
                 android:background="#333333"
                 android:onClick="runButtonClick"
                 android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_height="38dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"

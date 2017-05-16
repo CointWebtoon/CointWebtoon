@@ -24,13 +24,15 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Handler;
 
-public class ViewerCutActivity extends TypeKitActivity implements Observer{
-    public static enum Action{
+public class ViewerCutActivity extends TypeKitActivity implements Observer {
+    public static enum Action {
         PREVIOUS,
         NEXT,
         None // when no action was detected
     }
+
     private ArrayList<String> imageURLs;//imageURL 담을 ArrayList
     private ViewFlipper flipper;//이미지를 넘기면서 볼 수 있는 뷰
     private int imageIndex = 0;//현재 보고 있는 컷이 몇 번째 컷인가?
@@ -41,44 +43,46 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
     private Toolbar topToolbar, bottomToolbar;
     private COINT_SQLiteManager manager;
     private TextView episodeTitleTextView, episodeIdTextView;
-    private boolean runMode;
+    private boolean runMode, autoMode;
+    private Thread autoThread;
+    private int sleepTime = -1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewer_cut_activity);
-        good = (Button)findViewById(R.id.good);
-        topToolbar = (Toolbar)findViewById(R.id.toptoolbar);
-        bottomToolbar = (Toolbar)findViewById(R.id.bottomtoolbar);
+        good = (Button) findViewById(R.id.good);
+        topToolbar = (Toolbar) findViewById(R.id.toptoolbar);
+        bottomToolbar = (Toolbar) findViewById(R.id.bottomtoolbar);
         episodeTitleTextView = (TextView) findViewById(R.id.CutToonTitle);
         episodeIdTextView = (TextView) findViewById(R.id.current_pos);
         manager = COINT_SQLiteManager.getInstance(this);
         runMode = false;
+        autoMode = false;
         setSupportActionBar(topToolbar);
-        flipper = (ViewFlipper)findViewById(R.id.viewflipper);
+        flipper = (ViewFlipper) findViewById(R.id.viewflipper);
 
         ///Flipper 리스너 추가 + SwipeDetector Class를 추가하여 Swipe과 touch 동작을 구분
         final SwipeDetector swipeDetector = new SwipeDetector();
         flipper.setOnTouchListener(swipeDetector);
 
-        flipper.setOnClickListener(new View.OnClickListener(){
+        flipper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(swipeDetector.swipeDetected()){
-                    switch (swipeDetector.getAction()){
+                if (swipeDetector.swipeDetected()) {
+                    switch (swipeDetector.getAction()) {
                         case PREVIOUS:
-                            MovewPreviousView(); break;
+                            MovewPreviousView();
+                            break;
                         case NEXT:
-                            MoveNextView(); break;
+                            MoveNextView();
+                            break;
                     }
-                }
-                else{
+                } else {
                     //클릭 처리
-                    if(topToolbar.getVisibility() == View.VISIBLE){
-                        System.out.println("toolbar is visible, than unvisible");
+                    if (topToolbar.getVisibility() == View.VISIBLE) {
                         showToolbars(false);
-                    }
-                    else if(topToolbar.getVisibility() == View.GONE) {
-                        System.out.println("toolbar is unvisible, than visible");
+                    } else if (topToolbar.getVisibility() == View.GONE) {
                         showToolbars(true);
                     }
                 }
@@ -91,7 +95,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
         toonId = getIntent.getIntExtra("id", -1);
         episodeId = getIntent.getIntExtra("ep_id", -1);
 
-        if(toonId == -1 || episodeId == -1){
+        if (toonId == -1 || episodeId == -1) {
             Toast.makeText(this, "이미지 로드를 실패하였습니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -99,14 +103,16 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
         getServerData.registerObserver(this);
         getServerData.getImagesFromServer(toonId, episodeId);
     }
+
     @Override
     public void update(Observable observable, Object o) {
         Log.i("update", "되냐?");
         episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
         episodeIdTextView.setText(String.valueOf(episodeId));
         this.imageURLs = (ArrayList<String>) o;
-        if(imageURLs != null){
-            for(String imageURL : imageURLs){
+        imageIndex = 0;
+        if (imageURLs != null) {
+            for (String imageURL : imageURLs) {
                 Smart_Cut_ImageView newImageView = new Smart_Cut_ImageView(this);
                 Glide.with(this)
                         .load(imageURL)
@@ -118,35 +124,33 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
             System.out.println(imageURLs.size());
         }
     }
-    private void MoveNextView()
-   {
-       if (imageIndex < imageURLs.size() - 1 ) {
-           flipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.appear_from_right));
-           flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.disappear_to_left));
-           flipper.showNext();
-           imageIndex++;
-       }
-       else {
-           if (runMode && (episodeId < manager.maxEpisodeId(toonId))) {
-               //정주행 모드일 때, 마지막 컷에서 Flipper 를 클릭했을 경우 다음 회차가 존재할 경우에 다음 회차로 넘어감
-               flipper.removeAllViews();
-               imageURLs.clear();
-               episodeId += 1;
-               getServerData.getImagesFromServer(toonId, episodeId);
-               manager.updateEpisodeRead(toonId, episodeId);
-           }
-       }
-   }
-    private void MovewPreviousView()
-    {
+
+    private void MoveNextView() {
+        if (imageIndex < imageURLs.size() - 1) {
+            flipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.appear_from_right));
+            flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.disappear_to_left));
+            flipper.showNext();
+            imageIndex++;
+        } else {
+            if (runMode && (episodeId < manager.maxEpisodeId(toonId))) {
+                //정주행 모드일 때, 마지막 컷에서 Flipper 를 클릭했을 경우 다음 회차가 존재할 경우에 다음 회차로 넘어감
+                flipper.removeAllViews();
+                imageURLs.clear();
+                episodeId += 1;
+                getServerData.getImagesFromServer(toonId, episodeId);
+                manager.updateEpisodeRead(toonId, episodeId);
+            }
+        }
+    }
+
+    private void MovewPreviousView() {
         if (imageIndex > 0) {
             flipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.appear_from_left));
             flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.disappear_to_right));
             flipper.showPrevious();
             imageIndex--;
-        }
-        else {
-            if(runMode && episodeId > 1){   //정주행 모드 일 때, 첫 컷에서 이전 버튼을 클릭하면 이전 회차로 넘어감
+        } else {
+            if (runMode && episodeId > 1) {   //정주행 모드 일 때, 첫 컷에서 이전 버튼을 클릭하면 이전 회차로 넘어감
                 flipper.removeAllViews();
                 imageURLs.clear();
                 episodeId -= 1;
@@ -155,51 +159,110 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
             }
         }
     }
-    private void showToolbars(boolean show){
-        if(show){
+
+    private void showToolbars(boolean show) {
+        if (show) {
             topToolbar.setVisibility(View.VISIBLE);
             bottomToolbar.setVisibility(View.VISIBLE);
             topToolbar.animate().translationY(0).withLayer();
             bottomToolbar.animate().translationY(0).withLayer();
-        }else{
+        } else {
             topToolbar.setVisibility(View.GONE);
             bottomToolbar.setVisibility(View.GONE);
             topToolbar.animate().translationY(-60).withLayer();
             bottomToolbar.animate().translationY(60).withLayer();
         }
     }
-    public void runButtonClick(View v){
-        if(runMode) {
+
+    public void runButtonClick(View v) {
+        if (runMode) {
             runMode = false;
-            ImageButton target = (ImageButton)v;
+            ImageButton target = (ImageButton) v;
             target.setImageDrawable(getDrawable(R.drawable.run_inactive));
-        }
-        else {
+        } else {
             runMode = true;
-            ImageButton target = (ImageButton)v;
+            ImageButton target = (ImageButton) v;
             target.setImageDrawable(getDrawable(R.drawable.run_active));
         }
     }
+
     public void BackBtn(View v) {
         this.finish();
     }
-    public void HeartBtn(View v){
+
+    public void HeartBtn(View v) {
         Toast.makeText(this, "좋아요 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
         count++;
-        if(count % 2 != 0) {
+        if (count % 2 != 0) {
             good.setBackgroundResource(R.drawable.view_heartcolor);
-        }
-        else{
+        } else {
             good.setBackgroundResource(R.drawable.view_heartempty);
         }
     }
-    public void Dat(View v){
+
+    public void Dat(View v) {
         Toast.makeText(this, "댓글 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
     }
-    public void Previous(View v) { Toast.makeText(this, "이전화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
-    public void Current(View v) {Toast.makeText(this, "현재회차 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
-    public void Next(View v) {Toast.makeText(this, "다음화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
 
+    public void Previous(View v) {
+        Toast.makeText(this, "이전화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void Current(View v) {
+        Toast.makeText(this, "현재회차 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void Next(View v) {
+        Toast.makeText(this, "다음화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void timerClick(View v) {
+        ImageButton my = (ImageButton) v;
+        if(sleepTime == -1) {
+            my.setImageDrawable(getDrawable(R.drawable.viewer_2sec));
+            sleepTime = 2000;
+        }
+        else if(sleepTime == 2000) {
+            my.setImageDrawable(getDrawable(R.drawable.viewer_3sec));
+            sleepTime = 3000;
+        }
+        else if(sleepTime == 3000) {
+            my.setImageDrawable(getDrawable(R.drawable.viewer_4sec));
+            sleepTime = 4000;
+        }
+        else if(sleepTime == 4000) {
+            my.setImageDrawable(getDrawable(R.drawable.viewer_defaultset));
+            sleepTime = -1;
+            try {
+                autoThread.interrupt();
+            } catch (Exception e) {
+            }
+            return;
+        }
+        try {
+            autoThread.interrupt();
+        } catch (Exception e) {
+        }
+        autoThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(sleepTime);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                MoveNextView();
+                            }
+                        });
+                    } catch (InterruptedException intex) {
+                        break;
+                    }
+                }
+            }
+        });
+        autoThread.start();
+    }
     private class SwipeDetector implements View.OnTouchListener {
         public final int HORIZONTAL_MIN_DISTANCE = 40;
         private float downX, upX;
@@ -209,14 +272,16 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
             return mSwipeDetected != Action.None;
         }
 
-        public Action getAction(){
+        public Action getAction() {
             return mSwipeDetected;
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if(imageURLs == null){return true;}
-            switch (event.getAction()){
+            if (imageURLs == null) {
+                return true;
+            }
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     downX = event.getX();
                     mSwipeDetected = Action.None;
@@ -224,12 +289,12 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
                 case MotionEvent.ACTION_MOVE:
                     upX = event.getX();
                     float deltaX = downX - upX;
-                    if (Math.abs(deltaX) > HORIZONTAL_MIN_DISTANCE){
+                    if (Math.abs(deltaX) > HORIZONTAL_MIN_DISTANCE) {
                         if (deltaX < 0) {
                             mSwipeDetected = Action.PREVIOUS;
                             return true;
                         }
-                        if(deltaX > 0){
+                        if (deltaX > 0) {
                             mSwipeDetected = Action.NEXT;
                             return true;
                         }
@@ -238,6 +303,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
             return false;
         }
     }
+
     @Override
     protected void onDestroy() {
         getServerData.removeObserver(this);

@@ -66,8 +66,8 @@
             <ImageButton
                 android:background="#333333"
                 android:onClick="runButtonClick"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
@@ -83,8 +83,9 @@
         android:id="@+id/bottomToolbar_smart"
         android:layout_width="match_parent"
         android:layout_height="@dimen/viewer_actionbar_height"
+        android:background="#333333"
         android:layout_alignParentBottom="true"
-        android:background="#333333">
+        android:layout_alignParentStart="true">
         <LinearLayout
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
@@ -128,16 +129,18 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
+
             <TextView
                 android:id="@+id/smarttoon_episodeId"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textSize="20dp"
-                android:text=""
-                android:layout_weight="2"
                 android:layout_width="0dp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
             <Button
                 android:text="\u003E"
                 android:textSize="30dp"

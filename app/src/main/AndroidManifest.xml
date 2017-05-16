@@ -45,7 +45,7 @@
         <activity android:name=".ViewerCutActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ViewerGerneralActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ViewerStarScoreActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--석희 end-->

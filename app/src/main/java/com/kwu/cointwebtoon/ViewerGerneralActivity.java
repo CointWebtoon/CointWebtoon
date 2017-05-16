@@ -211,6 +211,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     public void Current(View v) {Toast.makeText(this, "현재회차 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
     public void Next(View v) {Toast.makeText(this, "다음화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
     public void givingStarBtnClick(View v) { startActivity(new Intent(v.getContext(), ViewerStarScoreActivity.class));}
+
     private class ScrollBarOnTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
