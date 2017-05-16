@@ -26,6 +26,7 @@ public class WebtoonParse {
 
     private ArrayList<String> genreType;//장르의 종류가 들어갈 ArrayList
     private ArrayList<Webtoon> webtoons; //웹툰의 목록이 들어갈 ArrayList
+    private ArrayList<Integer> motionToonList = new ArrayList<>();
 
     //DB에 사용될 변수들
     private Connection con = null;
@@ -229,9 +230,6 @@ public class WebtoonParse {
             return false;
         }
     }
-
-
-
     /*
     위 파싱 메소드들을 이용하여 ArrayList에 집어넣는 코드
      Input Parameter : 가져올 요일의 정보(int --> 선언부 윗부분 final 변수 참고)
@@ -399,6 +397,14 @@ public class WebtoonParse {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(DBAuthentication.url, DBAuthentication.id, DBAuthentication.password);//드라이버 로드
 
+            Statement st = con.createStatement();
+            ResultSet motionRS = st.executeQuery("SELECT Id FROM WEBTOON WHERE Toontype=\'M\'");
+            System.out.println("====MotionToonList====");
+            while(motionRS.next()) {
+                motionToonList.add(motionRS.getInt("Id"));
+                System.out.print(motionRS.getInt("Id"));
+            }
+            System.out.println("====MotionToonList====");
             con.setAutoCommit(false);               //쿼리들을 모았다가 한번에 수행하기 위해서 수동 커밋 --> Transaction All or Nothing
             pst = con.prepareStatement(webtoonInsertSQL);
             PreparedStatement finishedPst = con.prepareStatement("DELETE FROM WEEKDAY WHERE Weekday>0 AND Id_W=?");
@@ -433,8 +439,13 @@ public class WebtoonParse {
                     pst.setString(13,"C");
                 else if(webtoon.isSmarttoon())
                     pst.setString(13, "S");
-                else
-                    pst.setString(13, "G");
+                else {
+                    if(motionToonList.contains(webtoon.getId())){
+                        pst.setString(13, "M");
+                    }else{
+                        pst.setString(13, "G");
+                    }
+                }
                 if(webtoon.isCharged())
                     pst.setInt(14, 1);
                 else

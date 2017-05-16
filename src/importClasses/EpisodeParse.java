@@ -454,7 +454,7 @@ public class EpisodeParse {
                         deleteStatements[currentIndex] = connection.prepareStatement(deleteChargedWebtoon);
                         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                         for (Integer id : ids) {
-                            if (hour == 23 || hour == 0 && !isUpdateAll) {
+                            if ((hour == 23 || hour == 0) && !isUpdateAll) {
                                 doNotDeleteChargedEpisode = true;
                                 if ((episodes = getEpisodesOnePage(id)) == null) {
                                     System.out.println("GET EPISODE ERR IN ID[" + id + "]");
