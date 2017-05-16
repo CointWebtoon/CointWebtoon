@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -40,6 +41,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
     private Toolbar topToolbar, bottomToolbar;
     private COINT_SQLiteManager manager;
     private TextView episodeTitleTextView, episodeIdTextView;
+    private boolean runMode;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
         episodeTitleTextView = (TextView) findViewById(R.id.CutToonTitle);
         episodeIdTextView = (TextView) findViewById(R.id.current_pos);
         manager = COINT_SQLiteManager.getInstance(this);
+        runMode = false;
         setSupportActionBar(topToolbar);
         flipper = (ViewFlipper)findViewById(R.id.viewflipper);
 
@@ -117,12 +120,21 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
     }
     private void MoveNextView()
    {
-       if(imageIndex == imageURLs.size() - 1){System.out.println("final");} //여기에 starScore를 inflate하고싶다.
        if (imageIndex < imageURLs.size() - 1 ) {
            flipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.appear_from_right));
            flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.disappear_to_left));
            flipper.showNext();
            imageIndex++;
+       }
+       else {
+           if (runMode && (episodeId < manager.maxEpisodeId(toonId))) {
+               //정주행 모드일 때, 마지막 컷에서 Flipper 를 클릭했을 경우 다음 회차가 존재할 경우에 다음 회차로 넘어감
+               flipper.removeAllViews();
+               imageURLs.clear();
+               episodeId += 1;
+               getServerData.getImagesFromServer(toonId, episodeId);
+               manager.updateEpisodeRead(toonId, episodeId);
+           }
        }
    }
     private void MovewPreviousView()
@@ -132,6 +144,15 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
             flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.disappear_to_right));
             flipper.showPrevious();
             imageIndex--;
+        }
+        else {
+            if(runMode && episodeId > 1){   //정주행 모드 일 때, 첫 컷에서 이전 버튼을 클릭하면 이전 회차로 넘어감
+                flipper.removeAllViews();
+                imageURLs.clear();
+                episodeId -= 1;
+                getServerData.getImagesFromServer(toonId, episodeId);
+                manager.updateEpisodeRead(toonId, episodeId);
+            }
         }
     }
     private void showToolbars(boolean show){
@@ -147,8 +168,20 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer{
             bottomToolbar.animate().translationY(60).withLayer();
         }
     }
+    public void runButtonClick(View v){
+        if(runMode) {
+            runMode = false;
+            ImageButton target = (ImageButton)v;
+            target.setImageDrawable(getDrawable(R.drawable.run_inactive));
+        }
+        else {
+            runMode = true;
+            ImageButton target = (ImageButton)v;
+            target.setImageDrawable(getDrawable(R.drawable.run_active));
+        }
+    }
     public void BackBtn(View v) {
-        Toast.makeText(this, "뒤로가기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+        this.finish();
     }
     public void HeartBtn(View v){
         Toast.makeText(this, "좋아요 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();

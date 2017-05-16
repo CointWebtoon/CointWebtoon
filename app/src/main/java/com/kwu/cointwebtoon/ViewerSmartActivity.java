@@ -56,7 +56,6 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         topToolbar = (Toolbar) findViewById(R.id.topToolbar_smart);
         bottomToolbar = (Toolbar) findViewById(R.id.bottomToolbar_smart);
         setSupportActionBar(topToolbar);    //현재 Activity의 ActionBar를 Toolbar로 설정
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getWindow().setStatusBarColor(Color.BLACK);
         //애니메이션 in, out 세트 설정
         animations.put(R.anim.push_down_in, R.anim.push_down_out);
@@ -121,15 +120,12 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        this.finish();
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onDestroy() {
         serverData.removeObserver(this);
         super.onDestroy();
+    }
+    public void BackBtn(View v){
+        this.finish();
     }
 
     private void showToolbars(boolean show) {
