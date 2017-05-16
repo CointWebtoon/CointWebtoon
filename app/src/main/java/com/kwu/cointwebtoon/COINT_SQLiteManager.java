@@ -334,5 +334,13 @@ public class COINT_SQLiteManager {
     /**
      * 1차 통합 원형 부분 추가 메소드 end
      */
+
+    public Webtoon getWebtoonInstance(int id){
+        Cursor cursor = db.rawQuery("SELECT * FROM WEBTOON WHERE ID=" + id, null);
+        cursor.moveToNext();
+        return new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
+                cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
+                cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11));
+    }
 }
 
