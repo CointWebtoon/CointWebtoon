@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <WebView
+        android:id="@+id/motion_viewer_webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/MotionToontoptoolbar"
+        android:background="#333333"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/viewer_actionbar_height"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button android:id="@+id/MotionToontgotoepi"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/view_button_state_bback"
+                android:onClick="BackBtn"/>
+            <TextView android:id="@+id/MotionToontEpisodeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="웹툰 제목"
+                android:layout_marginLeft="5dp"
+                android:gravity="center|left"
+                android:layout_toRightOf="@+id/MotionToontgotoepi"
+                android:textColor="#FFFFFF"
+                android:onClick="BackBtn"
+                />
+            <ImageButton
+                android:background="#333333"
+                android:onClick="runButtonClick"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/run_inactive" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/MotionToontbottomtoolbar"
+        android:background="#333333"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/viewer_actionbar_height"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true">
+            <Button android:id="@+id/MotionToontgood"
+                android:gravity="center"
+                android:layout_width="32dp"
+                android:layout_height="25dp"
+                android:background="@drawable/view_button_state_good"
+                android:layout_weight="0.01"
+                android:onClick="HeartBtn"/>
+            <TextView android:id="@+id/MotionToont_count_txt"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=" 좋아요수  "
+                android:onClick="HeartBtn"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/textview_color"
+                android:layout_weight="0.09"/>
+            <Button android:id="@+id/MotionToont_datgule"
+                android:gravity="center"
+                android:layout_width="35dp"
+                android:layout_height="25dp"
+                android:background="@drawable/view_button_state_dat"
+                android:onClick="Dat"
+                android:layout_weight="0.02"/>
+            <TextView android:id="@+id/MotionToont_count_txt2"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="  댓글 수  "
+                android:background="@drawable/textview_color"
+                android:onClick="Dat"
+                android:textColor="#FFFFFF"
+                android:layout_weight="0.08"/>
+            <Button android:id="@+id/MotionToont_before"
+                android:gravity="center"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/view_button_state_previous"
+                android:onClick="Previous"
+                android:layout_weight="0.2"/>
+            <TextView android:id="@+id/MotionToont_current_pos"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="현재회차"
+                android:background="@drawable/textview_color"
+                android:textColor="#FFFFFF"
+                android:onClick="Current"
+                android:layout_weight="0.2"/>
+            <Button android:id="@+id/MotionToont_next"
+                android:gravity="center"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/view_button_state_nnext"
+                android:onClick="Next"
+                android:layout_weight="0.2"/>
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+</RelativeLayout>
