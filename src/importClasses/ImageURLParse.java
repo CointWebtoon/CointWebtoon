@@ -22,6 +22,7 @@ public class ImageURLParse {
     private int[] countsUpdateImage = new int[numOfThreads];     //각 쓰레드 별로 몇 개의 이미지 업데이트문을 작성했는지 모니터하기 위해 만든 배열
     private int[] countsUpdateMention = new int[numOfThreads];  //각 쓰레드 별로 몇 개의 작가의 말 업데이트문을 작성했는지 모니터하기 위해 만든 배열
     private Map<String, String> loginCookie;                                    //성인 웹툰을 받아오기 위해 로그인을 하고 그 쿠키를 저장
+    private HashSet<Integer> motionToonList = new HashSet<>();   //모션툰 리스트
     private HashSet<Integer> mobileUnsupportedList = new HashSet<>();   //모바일 미지원 웹툰
     private HashSet<ImagesInEpisode> errorList = new HashSet<>();   //Timeout Exception 발생한 것들 재시도
     private int timeoutExceptionCount = 0;
@@ -56,6 +57,7 @@ public class ImageURLParse {
             " VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE Image_url=?"; //업데이트 시 사용할 SQL. 해당 회차가 이미 존재할 경우 INSERT 대신 업데이트
     private static final String updateMentionSQL = "UPDATE EPISODE SET Mention=? WHERE Id_E=? AND Episode_id=?"; //작가의 말을 업데이트 하는 SQL
     private static final String updateBlackListSQL = "UPDATE WEBTOON SET Mobile_unsupported=1 WHERE Id=?";
+    private static final String updateMotionToonSQL = "UPDATE WEBTOON SET Toontype=? WHERE Id=?";
 
     private Connection connection;  //DB 업데이트에 사용할 Connection 객체
     private PreparedStatement[] psts = new PreparedStatement[numOfThreads]; //각 쓰레드에서 사용할 이미지 업데이트 PreparedStatement 객체 -> 동기화 문제때문에 배열 사용
@@ -137,6 +139,14 @@ public class ImageURLParse {
                 insertBlackListStatement.addBatch();
                 insertBlackListStatement.clearParameters();
             }
+            PreparedStatement motionToonTypeStatement = connection.prepareStatement(updateMotionToonSQL);
+            for (Integer motionToonId : motionToonList) {
+                motionToonTypeStatement.setString(1,  "M");
+                motionToonTypeStatement.setInt(2, motionToonId);
+                motionToonTypeStatement.addBatch();
+                motionToonTypeStatement.clearParameters();
+            }
+            motionToonTypeStatement.executeBatch();
             insertBlackListStatement.executeBatch();
             connection.commit();                                        //모두 실행 후 Commit
             System.out.println("DB 업데이트 완료");
@@ -148,6 +158,7 @@ public class ImageURLParse {
             System.out.println("총 " + timeoutExceptionCount + "번의 TIME OUT 발생");
             System.out.println("최종 ERR LIST : " + errorList);
             System.out.println("모바일 미지원 웹툰 목록 : " + mobileUnsupportedList);
+            System.out.println("모션툰 목록 : " + motionToonList);
         } catch (SQLException sqlex) {  //에러시 에러 출력 후 false return
             sqlex.printStackTrace();
             return false;
@@ -312,7 +323,7 @@ public class ImageURLParse {
                             continue;//이미지를 받아올 수 없는 웹툰이라면 하나만 진행하고, 나머지는 진행하지 않는다.
                         }
 
-                        if (instance.getToonType() == 'G') {  //일반툰
+                        if (instance.getToonType() == 'G' || instance.getToonType() == 'M') {  //일반툰, 모션툰
                             instance.setImages(getImages_GeneralToon(instance.getId_i(), instance.getEp_id(), instance));
                         } else if (instance.getToonType() == 'C') {    //컷툰
                             instance.setImages(getImages_CutToon(instance.getId_i(), instance.getEp_id(), instance));
@@ -398,10 +409,23 @@ public class ImageURLParse {
     private ArrayList<String> getImages_GeneralToon(int id_i, int listNum, ImagesInEpisode instance) {
         ArrayList<String> imageURLs = new ArrayList<>();
         try {
-            String url;
+            String url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id_i + "&no=" + listNum;
             Thread.sleep(threadSleepTime);   //도스 공격처럼 보이지 않게 하기 위한 Sleep
-            Document doc = Jsoup.connect("http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id_i + "&no=" + listNum)
+            Document doc = Jsoup.connect(url)
                     .timeout(timeout).cookies(loginCookie).get();
+            String html = doc.html();
+            if(html.contains("모바일로 제공하지 않는 웹툰입니다.")){
+                System.out.println("ID : " + id_i + " Mobile_Unsupported");
+                mobileUnsupportedList.add(id_i);
+                return null;
+            }else if(html.contains("motiontoon")){
+                System.out.println("ID : " + id_i + " 모션툰");
+                motionToonList.add(id_i);
+                instance.setMention(doc.select(".desc").first().text());   //작가의말 설정
+                imageURLs.add("Motion");
+                imageURLs.add(url);
+                return imageURLs;
+            }
             instance.setMention(doc.select(".desc").first().text());   //작가의말 설정
             Elements imgs = doc.select(".toon_view_lst > ul > li > p > img");
             for (int i = 1; i <= imgs.size(); i++) {
@@ -421,11 +445,7 @@ public class ImageURLParse {
             return null;
         } catch (Exception e) {
             System.out.println("ERROR OCCURRED IN ID : " + id_i + " EP : " + listNum + " --- " + e.getMessage());
-            mobileUnsupportedList.add(id_i);
-            return null;
-        }
-        if (imageURLs.size()==0){
-            mobileUnsupportedList.add(id_i);
+            e.printStackTrace();
             return null;
         }
         return imageURLs;
@@ -482,12 +502,9 @@ public class ImageURLParse {
             return null;
         } catch (Exception e) {
             System.out.println("ERROR OCCURRED IN ID : " + id_i + " EP : " + listNum + " --- " + e.getMessage());
-            mobileUnsupportedList.add(id_i);
             return null;
         }
-
         if (cutImages.size()==0){
-            mobileUnsupportedList.add(id_i);
             return null;
         }
         return cutImages;   //작업 완료 후 생성된 imageURL 들의 목록을 return 한다.
@@ -536,11 +553,9 @@ public class ImageURLParse {
             return null;
         } catch (Exception e) {
             System.out.println("ERROR OCCURRED IN ID : " + id_i + " EP : " + listNum + " --- " + e.getMessage());
-            mobileUnsupportedList.add(id_i);
             return null;
         }
         if (smartImages.size()==0){
-            mobileUnsupportedList.add(id_i);
             return null;
         }
         return smartImages;

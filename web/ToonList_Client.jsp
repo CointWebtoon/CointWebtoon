@@ -20,7 +20,6 @@
         /* Corresponding development environment is required for DB access */
         Class.forName(DBAuthentication.driverName);
         conn = DriverManager.getConnection(DBAuthentication.url, DBAuthentication.id, DBAuthentication.password);
-        System.out.println("Connection successful");
 
         if(conn != null){
             /* Query statement (Need to modify as needed) */
@@ -55,6 +54,7 @@
 
             out.println(jsonResult);
             out.flush();
+            System.out.println("[Weboon List Page] Connection successful");
         }
     } catch (Exception e) {
         e.printStackTrace();

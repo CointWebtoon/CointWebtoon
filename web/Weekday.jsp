@@ -43,6 +43,7 @@
       }
       out.println(jsonObject);
       out.flush();
+      System.out.println("[Weekday Page] Connection successful");
     }
   }catch (SQLException ex){
     System.out.println("SQL Exception "+ex);

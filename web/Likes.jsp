@@ -23,27 +23,31 @@
 
       String type = request.getParameter("type");
       String id = request.getParameter("id");
+      String value = request.getParameter("value");
       String ep_id;
 
       PreparedStatement statement;
       ResultSet resultSet = null;
+      int plusValue = Integer.parseInt(value);
 
       if(type.equals("webtoon")){                               //요청 형식이 webtoon인 경우 Likes를 1 올리고 결과물을 resultSet에 저장한다
 
-          String sql = "UPDATE webtoon SET Likes=Likes+1 WHERE Id=?";
+          String sql = "UPDATE webtoon SET Likes=Likes+" + plusValue + " WHERE Id=?";
           statement = connection.prepareStatement(sql);
 
           statement.setString(1,id);
           statement.executeUpdate();
+          System.out.println("[Like Page] ID : " + id + " + " + String.valueOf(plusValue) + " Successful");
       }
       else if(type.equals("episode")){                           //요청 형식이 episode인 경우 Likes_E를 1 올리고 결과물을 resultSet에 저장한다
           ep_id = request.getParameter("ep_id");
-          String sql = "UPDATE episode SET Likes_E=Likes_E+1 WHERE Id_E=? AND Episode_id=?";
+          String sql = "UPDATE episode SET Likes_E=Likes_E"+ plusValue + " WHERE Id_E=? AND Episode_id=?";
           statement = connection.prepareStatement(sql);
 
           statement.setString(1,id);
           statement.setString(2,ep_id);
           statement.executeUpdate();
+          System.out.println("[Like Page] ID : " + id + " + Episode ID : " + ep_id + " + " + String.valueOf(plusValue) + " Successful");
       }
    }
   }catch (SQLException ex){

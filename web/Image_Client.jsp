@@ -46,6 +46,7 @@
       }
       out.println(jsonObject);
       out.flush();
+      System.out.println("[Image Page] ID : " + id  + "Episode ID : " + ep_id +  " Connection successful");
     }
   }catch (SQLException ex){
     System.out.println("SQL Exception "+ex);

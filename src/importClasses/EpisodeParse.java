@@ -38,6 +38,7 @@ public class EpisodeParse {
     private HashMap<Integer, Integer> adultMap = new HashMap<>();
     private HashSet<Integer> errorList = new HashSet<>();
     private int timeoutCount = 0;
+    boolean doNotDeleteChargedEpisode = false;
 
     //DB에서 사용할 인증 정보, SQL
     private static final String query = "SELECT Id FROM WEBTOON WHERE Mobile_unsupported=0";   //모든 웹툰 Id를 가져오는 질의(모바일 지원 웹툰만)
@@ -351,7 +352,7 @@ public class EpisodeParse {
             adultStatement.setInt(2, toonId);
             adultStatement.addBatch();
             adultStatement.clearParameters();
-            if(booleanValue == 1)
+            if (booleanValue == 1)
                 System.out.print(toonId + " ");
         }
         adultStatement.executeBatch();
@@ -454,6 +455,7 @@ public class EpisodeParse {
                         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                         for (Integer id : ids) {
                             if (hour == 23 || hour == 0 && !isUpdateAll) {
+                                doNotDeleteChargedEpisode = true;
                                 if ((episodes = getEpisodesOnePage(id)) == null) {
                                     System.out.println("GET EPISODE ERR IN ID[" + id + "]");
                                     continue;
@@ -538,13 +540,14 @@ public class EpisodeParse {
             }
             for (int i = 0; i < numOfThreads; i++) {    // 모든 쓰레드가 끝날 때까지 대기
                 while (updateThreads[i].isAlive()) ;
-                System.out.println("Thread" + String.valueOf(i+1) + " 기다리는중.......");
+                System.out.println("Thread" + String.valueOf(i + 1) + " 기다리는중.......");
             }
             System.out.println("=======================모든 쓰레드 행동 종료.. ERROR LIST HANDLING 시작===========================");
             retryErrorList();
             for (int i = 0; i < numOfThreads; i++) {
                 psts[i].executeBatch();
-                deleteStatements[i].executeBatch();
+                if(!doNotDeleteChargedEpisode)
+                    deleteStatements[i].executeBatch();
             }
             System.out.println("총 " + timeoutCount + "번의 TIME OUT 발생");
             System.out.println("최종 ERR LIST : " + errorList + "\n============성인웹툰 리스트============\n");
@@ -589,7 +592,6 @@ public class EpisodeParse {
         try {
             PreparedStatement errorInsertStatement = connection.prepareStatement(insertSQL);
             PreparedStatement errorDeleteStatement = connection.prepareStatement(deleteChargedWebtoon);
-
             ArrayList<Episode> episodes;
             while (!errorList.isEmpty() && retryCount < 5) {    //error List가 비면 error handling 종료.. 재시도 횟수가 5번이 되면 handling 종료
                 System.out.println("재시도 횟수 : " + String.valueOf(retryCount + 1) + "/5 현재 ERR LIST : " + errorList);
@@ -598,6 +600,7 @@ public class EpisodeParse {
                 for (Integer id : errorListInstance) {
                     errorList.remove(id);
                     if (hour == 23 || hour == 0 && !isUpdateAll) {
+                        doNotDeleteChargedEpisode = true;
                         if ((episodes = getEpisodesOnePage(id)) == null) {    //23~1시까지 빠른 업데이트 --> 한 페이지(최신화)만 받아옴
                             System.out.println("ERROR OCCURRED AGAIN IN ID " + id);
                             errorList.add(id);
@@ -640,7 +643,8 @@ public class EpisodeParse {
             }//while
             System.out.println("=========================SQL Batch 작성 완료.... DB Update를 시작합니다===============================");
             errorInsertStatement.executeBatch();
-            errorDeleteStatement.executeBatch();
+            if(!doNotDeleteChargedEpisode)
+                errorDeleteStatement.executeBatch();
         } catch (SQLException sqlex) {
             System.out.println("SQLException OCCURRED..... EXIT PROGRAM....");
             System.exit(-1);

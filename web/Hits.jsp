@@ -26,6 +26,7 @@
 
       statement.setString(1,id);            //  where절의 조건을 설정
       statement.executeUpdate();                      //쿼리 실행
+      System.out.println("[Hits Page] ID : " + id  + " Connection successful");
    }
   }catch (SQLException ex){
     System.out.println("SQL Exception "+ex);

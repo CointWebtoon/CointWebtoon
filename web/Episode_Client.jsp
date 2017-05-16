@@ -20,7 +20,6 @@
         /* Corresponding development environment is required for DB access */
         Class.forName(DBAuthentication.driverName);
         conn = DriverManager.getConnection(DBAuthentication.url , DBAuthentication.id, DBAuthentication.password);
-        System.out.println("Connection successful");
 
         if(conn != null){
             String id = request.getParameter("id");
@@ -53,6 +52,7 @@
 
             out.println(jsonResult);
             out.flush();
+            System.out.println("[Episode Page] ID : " + id  + " Connection successful");
         }
     } catch (Exception e) {
         e.printStackTrace();
