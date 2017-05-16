@@ -4,34 +4,108 @@
     android:id="@+id/parentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="0dp"
     android:background="@drawable/background_bricks"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="0dp">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/episode_toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/D2Dark">
 
-        <RelativeLayout
+        <ImageView
+            android:onClick="episodeToolbarClick"
+            android:id="@+id/episode_finish"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/view_bback" />
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/episodeActivity_Title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:layout_weight="1.3"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="5"
+                android:onClick="episodeToolbarClick"
+                android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textSize="20dp" />
-        </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/episode_my_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:onClick="episodeToolbarClick"
+                    android:text="My"
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp" />
+
+                <ImageButton
+                    android:id="@+id/episode_my"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="3dp"
+                    android:layout_toLeftOf="@id/episode_my_text"
+                    android:background="@color/D2Dark"
+                    android:onClick="episodeToolbarClick"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/my_release" />
+
+                <TextView
+                    android:id="@+id/episode_like_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/episode_my"
+                    android:gravity="center"
+                    android:onClick="episodeToolbarClick"
+                    android:text="좋아요"
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp" />
+
+                <ImageButton
+                    android:id="@+id/episode_like"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="3dp"
+                    android:layout_toLeftOf="@id/episode_like_text"
+                    android:background="@color/D2Dark"
+                    android:onClick="episodeToolbarClick"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/episode_heart_inactive" />
+            </RelativeLayout>
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/episode_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/episode_toolbar"
         app:layoutManager="LinearLayoutManager" />
 
     <RelativeLayout
@@ -40,6 +114,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_below="@id/episode_toolbar"
+        android:layout_marginTop="1dp"
         android:background="#22000000"
         android:padding="0dp">
 
@@ -48,7 +123,72 @@
             android:layout_width="25dp"
             android:layout_height="50dp"
             android:layout_margin="0dp"
+            android:layout_marginTop="1dp"
             android:scaleType="fitXY"
             android:src="@drawable/episode_scrollbar" />
     </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/episode_floating_first"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/floating_sub1_button_bottom_margin"
+        android:layout_marginLeft="24dp"
+        android:clickable="true"
+        android:onClick="episodeFloatingClick"
+        android:src="@drawable/floating_first"
+        app:backgroundTint="@color/episode_sub_floating_color"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="mini" />
+
+    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/episode_floating_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/floating_sub2_button_bottom_margin"
+        android:layout_marginLeft="24dp"
+        android:clickable="true"
+        android:onClick="episodeFloatingClick"
+        android:src="@drawable/floating_top"
+        app:backgroundTint="@color/episode_sub_floating_color"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="mini" />
+
+    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/episode_floating_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/floating_sub3_button_bottom_margin"
+        android:layout_marginLeft="24dp"
+        android:clickable="true"
+        android:onClick="episodeFloatingClick"
+        android:src="@drawable/floating_home"
+        app:backgroundTint="@color/episode_sub_floating_color"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="mini" />
+
+    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/episode_floating_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/floating_main_button_bottom_margin"
+        android:layout_marginLeft="16dp"
+        android:clickable="true"
+        android:onClick="episodeFloatingClick"
+        android:src="@drawable/floating_more"
+        app:backgroundTint="@color/D2Dark"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal" />
 </RelativeLayout>

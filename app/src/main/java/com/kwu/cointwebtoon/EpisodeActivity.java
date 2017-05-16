@@ -1,21 +1,28 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Episode;
+import com.kwu.cointwebtoon.DataStructure.Webtoon;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -31,9 +38,11 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
      */
     private RecyclerView recycler;
     private RelativeLayout scrollSection;
-    private ImageView scrollbar;
+    private ImageView scrollbar, likeImageButton, myImageButton;
     private TextView title;
     private Toolbar toolbar;
+    private FloatingActionButton main, top, first, home;
+    private CointProgressDialog progressDialog;
 
     /**
      * Data
@@ -43,6 +52,8 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     private GetServerData getServerData;
     private int currentToonId;
     private char currentToonType;
+    private Webtoon currentWebtoon;
+    private SharedPreferences likePreference;
 
     /**
      * Members
@@ -51,6 +62,8 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     private int yDelta, y = 0;                          //스크롤바 좌표 계산
     private int maxTopMargin = 0;               //스크롤바 좌표 계산
     private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
+    private boolean isFloatingShown = false;
+    private Thread timeOutThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,10 +84,19 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         toolbar = (Toolbar) findViewById(R.id.episode_toolbar);
         toolbar.bringToFront();
         setSupportActionBar(toolbar);
-        title.setText(manager.getWebtoonTitleById(currentToonId));
+        title.setSelected(true);
+        main = (FloatingActionButton)findViewById(R.id.episode_floating_more);
+        top = (FloatingActionButton)findViewById(R.id.episode_floating_top);
+        first = (FloatingActionButton)findViewById(R.id.episode_floating_first);
+        home = (FloatingActionButton)findViewById(R.id.episode_floating_home);
+        likeImageButton = (ImageButton)findViewById(R.id.episode_like);
+        myImageButton = (ImageButton)findViewById(R.id.episode_my);
+        progressDialog = new CointProgressDialog(this);
+        progressDialog.show();
     }
 
     private void initData() {
+        likePreference = getSharedPreferences("episode_like", MODE_PRIVATE);
         Intent getIntent = getIntent();
         currentToonId = getIntent.getIntExtra("id", ERR_CODE);
         if (currentToonId == ERR_CODE) {
@@ -87,8 +109,29 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             this.finish();
         }
         manager = COINT_SQLiteManager.getInstance(this);
+        new GetCurrentToonInfo().execute();
         getServerData = new GetServerData(this);
         getServerData.registerObserver(this);
+        timeOutThread = new Thread(){
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(1000 * 10);
+                }catch (InterruptedException e){
+                    Log.i("coint", "No Time Out");
+                    return;
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("coint", "Time Out");
+                        Toast.makeText(EpisodeActivity.this, "에피소드 목록을 가져오지 못했습니다.", Toast.LENGTH_LONG).show();
+                        EpisodeActivity.this.finish();
+                    }
+                });
+            }
+        };
+        timeOutThread.start();
         new Thread() {
             public void run() {
                 Cursor episodeCursor = manager.getEpisodes(currentToonId);
@@ -129,12 +172,17 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             @Override
             public void run() {
                 recycler.setAdapter(new EpisodeActivityAdapter(EpisodeActivity.this, episodes));
+                progressDialog.dismiss();
             }
         });
     }
 
     @Override
     public void update(Observable observable, Object data) {
+        hideFloatingButtons();
+        try{
+            timeOutThread.interrupt();
+        }catch (Exception e){}
         Cursor episodeCursor = manager.getEpisodes(currentToonId);
         updateCursorFromSQLite(episodeCursor);
         if (isFirst) {
@@ -157,6 +205,9 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
 
     @Override
     protected void onDestroy() {
+        try{
+            progressDialog.dismiss();
+        }catch (Exception e){}
         getServerData.removeObserver(this);
         super.onDestroy();
     }
@@ -190,7 +241,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             }
         }
     }
-
     private class ScrollBarOnTouchListener implements View.OnTouchListener {
 
         @Override
@@ -233,20 +283,133 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     }
 
     /**
-     * 스크롤 시 상단바와 스크롤바를 보이도록, 안보이도록 한다.
+     * 스크롤 시 스크롤바를 보이도록, 안보이도록 한다.
      *
      * @param show - true : 보임 false : 안보임
      */
     private void showUIs(boolean show) {
         if (show) {
-            getSupportActionBar().show();
+            /**
+             * 상단바 고정인게 좋을 것 같다는 의견 반영해서 주석!
+             */
+            //getSupportActionBar().show();
             scrollbar.setVisibility(View.VISIBLE);
             scrollSection.setVisibility(View.VISIBLE);
         } else {
-            getSupportActionBar().hide();
+            //getSupportActionBar().hide();
             scrollbar.setVisibility(View.GONE);
             scrollSection.setVisibility(View.GONE);
         }
+    }
+
+    public void episodeFloatingClick(View v){
+        switch (v.getId()){
+            case R.id.episode_floating_more:
+                if(isFloatingShown){
+                    hideFloatingButtons();
+                }else{
+                    showFloatingButtons();
+                }
+                break;
+            case R.id.episode_floating_first:
+                recycler.scrollToPosition(recycler.getChildCount() - 1);
+                switch (currentToonType) {
+                    case 'G': {//일반툰
+                        manager.updateEpisodeRead(currentToonId, 1);
+                        Intent generalIntent = new Intent(this, ViewerGerneralActivity.class);
+                        generalIntent.putExtra("id", currentToonId);
+                        generalIntent.putExtra("ep_id", 1);
+                        startActivity(generalIntent);
+                        break;
+                    }
+                    case 'C': {//컷툰
+                        manager.updateEpisodeRead(currentToonId, 1);
+                        Intent cutIntent = new Intent(this, ViewerCutActivity.class);
+                        cutIntent.putExtra("id", currentToonId);
+                        cutIntent.putExtra("ep_id", 1);
+                        startActivity(cutIntent);
+                        break;
+                    }
+                    case 'S': {//스마트툰
+                        manager.updateEpisodeRead(currentToonId, 1);
+                        Intent smartIntent = new Intent(this, ViewerSmartActivity.class);
+                        smartIntent.putExtra("id", currentToonId);
+                        smartIntent.putExtra("ep_id", 1);
+                        startActivity(smartIntent);
+                        break;
+                    }
+                }
+                break;
+            case R.id.episode_floating_top:
+                try{
+                    recycler.scrollToPosition(0);
+                }catch (Exception e){
+                    //index outofbound exception 방지
+                }
+                break;
+            case R.id.episode_floating_home:
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finishAffinity();
+                break;
+        }
+    }
+
+    public void episodeToolbarClick(View v){
+        switch (v.getId()){
+            case R.id.episode_like :
+            case R.id.episode_like_text:
+                SharedPreferences.Editor editor = likePreference.edit();
+                if(likePreference.getBoolean(String.valueOf(currentToonId), false)){//좋아요 취소
+                    editor.putBoolean(String.valueOf(currentToonId), false);
+                    likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
+                }else{//좋아요
+                    editor.putBoolean(String.valueOf(currentToonId), true);
+                    likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
+                }
+                editor.commit();
+                break;
+            case R.id.episode_my:
+            case R.id.episode_my_text:
+                //마이웹툰작업
+                String result = manager.updateMyWebtoon(String.valueOf(currentWebtoon.getId()));
+                if(result.equals("마이 웹툰 설정")){
+                    currentWebtoon.setIs_mine(true);
+                    myImageButton.setImageDrawable(getDrawable(R.drawable.my_set));
+                }else if(result.equals("마이 웹툰 해제")){
+                    currentWebtoon.setIs_mine(false);
+                    myImageButton.setImageDrawable(getDrawable(R.drawable.my_release));
+                }
+                Toast.makeText(this, currentWebtoon.getTitle() + " " + result , Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.episodeActivity_Title:
+            case R.id.episode_finish:
+                finish();
+                break;
+        }
+    }
+
+    /**
+     * 메인 플로팅 버튼 클릭시 다른 플로팅 버튼 띄우는 함수
+     */
+    private void showFloatingButtons(){
+        isFloatingShown = true;
+        main.setImageDrawable(getDrawable(R.drawable.floating_close));
+        first.animate().translationY(0).setInterpolator(new DecelerateInterpolator(1)).start();
+        top.animate().translationY(0).setInterpolator(new DecelerateInterpolator(1)).start();
+        home.animate().translationY(0).setInterpolator(new DecelerateInterpolator(1)).start();
+    }
+
+    /**
+     * 메인 플로팅 버튼 클릭시 다른 플로팅 버튼 없애는 함수
+     */
+    private void hideFloatingButtons(){
+        isFloatingShown = false;
+        main.setImageDrawable(getDrawable(R.drawable.floating_more));
+        first.animate().translationY(first.getHeight() + 19).setInterpolator(new AccelerateInterpolator(1)).start();
+        top.animate().translationY((top.getHeight() + 19) * 2).setInterpolator(new AccelerateInterpolator(1)).start();
+        home.animate().translationY((home.getHeight() + 19) * 3).setInterpolator(new AccelerateInterpolator(1)).start();
     }
 
     /**
@@ -265,11 +428,12 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             super.onScrolled(recyclerView, dx, dy);
             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             final int currentFirstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-            if (currentFirstVisibleItem < this.mLastFirstVisibleItem && toolbar.getVisibility() == View.GONE) {
+            if (currentFirstVisibleItem < this.mLastFirstVisibleItem && !scrollSection.isShown()) {
                 showUIs(true);
-            } else if (currentFirstVisibleItem > this.mLastFirstVisibleItem && toolbar.getVisibility() == View.VISIBLE) {
-                if (scrollManually)
+            } else if (currentFirstVisibleItem > this.mLastFirstVisibleItem && scrollSection.isShown()) {
+                if (scrollManually) {
                     showUIs(false);
+                }
             }
             if (scrollManually) {
                 //스크롤바를 통한 스크롤이 아닐 때
@@ -279,6 +443,26 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 scrollSection.invalidate();
             }
             this.mLastFirstVisibleItem = currentFirstVisibleItem;
+        }
+    }
+
+    private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... params) {
+            currentWebtoon = manager.getWebtoonInstance(currentToonId);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            title.setText(currentWebtoon.getTitle());
+            if(currentWebtoon.isMine()){
+                myImageButton.setImageDrawable(getDrawable(R.drawable.my_set));
+            }
+            if(likePreference.getBoolean(String.valueOf(currentToonId), false)){
+                likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
+            }
         }
     }
 }
