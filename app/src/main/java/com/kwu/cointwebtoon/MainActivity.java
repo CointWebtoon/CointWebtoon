@@ -65,7 +65,7 @@ public class MainActivity extends TypeKitActivity
         recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,2, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter = new Main_MyToonAdapter(this);
