@@ -74,7 +74,7 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
 
         public boolean parse(String xmlData){
             try{
-                String nickname, age, gender;
+                String id,nickname, age, gender;
                 doc = builder.parse(new InputSource(new StringReader(xmlData)));
                 doc.getDocumentElement().normalize();
                 Element root = doc.getDocumentElement();
@@ -84,11 +84,12 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
                     throw new ResultCodeNotSuccessException("ResultCode : " + resultElement);
 
                 Element responseElement = (Element)root.getElementsByTagName("response").item(0);
+                id = responseElement.getElementsByTagName("id").item(0).getTextContent();
                 nickname = responseElement.getElementsByTagName("nickname").item(0).getTextContent();
                 age = responseElement.getElementsByTagName("age").item(0).getTextContent();
                 gender = responseElement.getElementsByTagName("gender").item(0).getTextContent();
                 int startAge = Integer.parseInt(age.split("-")[0]);
-                Application_UserInfo.onLogIn(nickname, startAge > 19 ? true : false, gender.charAt(0));
+                Application_UserInfo.onLogIn(id, nickname, startAge > 19 ? true : false, gender.charAt(0));
 
                 Log.i("coint", Application_UserInfo.getUserName() + " " + Application_UserInfo.isUserAdult() + " " + Application_UserInfo.getUserGender());
                 return true;

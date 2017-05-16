@@ -191,4 +191,11 @@ public class Main_Top15Adapter extends PagerAdapter {
     public int getReturnPosition(){
         return returnPosition;
     }
+
+    /*
+    *  지니처럼 옆 화면이 보이는 뷰 페이저 구현을 위해 추가
+    * */
+    public float getPageWidth(int position){
+        return (0.9f);
+    }
 }

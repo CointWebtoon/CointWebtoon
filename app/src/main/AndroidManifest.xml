@@ -65,7 +65,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".ViewerMotionActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <!-- 네이버 아이디로 로그인 API 사용을 위해 추가한 액티비티들 -->
         <activity android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>

@@ -17,7 +17,9 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tsengvn.typekit.TypekitContextWrapper;
@@ -44,7 +46,7 @@ public class MainActivity extends TypeKitActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);            // 액션바에서 앱 이름 보이지 않게 함
         getSupportActionBar().setDisplayShowHomeEnabled(false);
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -52,7 +54,14 @@ public class MainActivity extends TypeKitActivity
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        View headerview = navigationView.getHeaderView(0);
+        Button navHeader = (Button)headerview.findViewById(R.id.nav_login);
+        navHeader.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
         search = (EditText)findViewById(R.id.searchbar);
         search.setOnKeyListener(this);
 

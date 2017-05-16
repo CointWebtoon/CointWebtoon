@@ -19,6 +19,7 @@ public class Application_UserInfo extends Application {
      * User Info ( Save Login Data )
      */
     private static boolean login = false;
+    private static String userID = null;
     private static String userName = null;
     private static boolean userAdult = false;
     private static char userGender = 'N';   //설정 안된 상태 : N, 남자 : M, 여자 : F
@@ -30,6 +31,7 @@ public class Application_UserInfo extends Application {
     public static boolean isUserAdult(){return userAdult;}
     public static char getUserGender(){return userGender;}
     public static OAuthLogin getLoginInstance(){return loginInstance;}
+    public static String getUserID(){return userID;}
     public static boolean isLogin(){return login;}
 
     public static void initUserInfo(){
@@ -48,8 +50,9 @@ public class Application_UserInfo extends Application {
         super.onCreate();
     }
 
-    public static void onLogIn(String name, boolean adult, char gender){
+    public static void onLogIn(String ID, String name, boolean adult, char gender){
         login = true;
+        userID = ID;
         userName = name;
         userAdult = adult;
         userGender = gender;
@@ -57,6 +60,7 @@ public class Application_UserInfo extends Application {
 
     public static void onLogOut(Context mContext){
         login = false;
+        userID = null;
         userName = null;
         userAdult = false;
         userGender = 'N';
