@@ -257,6 +257,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             if(event == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag) {
                 if (runMode && (ep_id < manager.maxEpisodeId(id))) {
                     //정주행 모드일 때, List View의 바닥에 닿으면 다음 회차가 존재할 경우에 다음 회차로 넘어감
+                    showUIs(false);
                     imageUrls.clear();
                     ep_id += 1;
                     serverData.getImagesFromServer(id, ep_id);
