@@ -74,7 +74,6 @@ public class SearchAdapter extends BaseAdapter {
 
         addWebtoon.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Log.i("addWebtoon", Integer.toString(getId));
                 try {
                     String result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
                     Toast.makeText(context,result,Toast.LENGTH_SHORT).show();
