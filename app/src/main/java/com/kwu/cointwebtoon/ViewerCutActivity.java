@@ -205,15 +205,23 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
 
     public void Previous(View v) {
-        Toast.makeText(this, "이전화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
-    }
-
-    public void Current(View v) {
-        Toast.makeText(this, "현재회차 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+        if(episodeId > 1){
+            flipper.removeAllViews();
+            imageURLs.clear();
+            episodeId -= 1;
+            getServerData.getImagesFromServer(toonId, episodeId);
+            manager.updateEpisodeRead(toonId, episodeId);
+        }
     }
 
     public void Next(View v) {
-        Toast.makeText(this, "다음화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+        if(episodeId > 1 ){
+            flipper.removeAllViews();
+            imageURLs.clear();
+            episodeId += 1;
+            getServerData.getImagesFromServer(toonId, episodeId);
+            manager.updateEpisodeRead(toonId, episodeId);
+        }
     }
 
     public void timerClick(View v) {
