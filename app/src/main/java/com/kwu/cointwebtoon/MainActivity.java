@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.kwu.cointwebtoon.Views.SimpleSectionedRecyclerViewAdapter;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.util.ArrayList;
