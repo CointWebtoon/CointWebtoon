@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,7 +27,7 @@ import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import java.util.ArrayList;
 
 public class SearchActivity extends TypeKitActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnKeyListener, AdapterView.OnItemClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnKeyListener, AdapterView.OnItemClickListener, View.OnClickListener {
     ArrayList<Webtoon> resultQueries = new ArrayList<>();
     GridView gridView;
     SearchAdapter searchAdapter = null;
@@ -35,6 +36,7 @@ public class SearchActivity extends TypeKitActivity
     Toolbar toolbar;
     TextView resultview;
     private EditText search;
+    private FloatingActionButton fab;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,8 @@ public class SearchActivity extends TypeKitActivity
         searchAdapter = new SearchAdapter(this, new ArrayList<Webtoon>());
         gridView.setAdapter(searchAdapter);
         gridView.setOnItemClickListener(this);
+        fab = (FloatingActionButton)findViewById(R.id.search_floating_home);
+        fab.setOnClickListener(this);
         onSearch(something);
     }
 
@@ -192,6 +196,13 @@ public class SearchActivity extends TypeKitActivity
                     finish();
                     startActivity(intent);
                 }
+                break;
+            case R.id.search_floating_home:
+                intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finishAffinity();
+                break;
         }
     }
 

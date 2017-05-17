@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,7 +31,7 @@ import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import java.util.ArrayList;
 
 public class GenreActivity extends TypeKitActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnKeyListener, AdapterView.OnItemClickListener, View.OnTouchListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnKeyListener, AdapterView.OnItemClickListener, View.OnTouchListener, View.OnClickListener {
     private static final int COMIC = 0, DAILY = 1, PURE = 2, THRILL = 3, FANTASY = 4, HISTORICAL = 5,
             DRAMA = 6, SPORTS = 7, ACTION = 8, SENSIBILITY = 9, BRANDETC = 10;
     private static final String[] genreString = new String[11];
@@ -47,6 +48,7 @@ public class GenreActivity extends TypeKitActivity
     private GetGenreItems taskInstance;
     private TextView[] textViews = new TextView[11];
     private HorizontalScrollView titleBar;
+    private FloatingActionButton fab;
 
     /**
      * Data
@@ -86,6 +88,8 @@ public class GenreActivity extends TypeKitActivity
         /**
          * Nav 공통 요소 end
          */
+        fab = (FloatingActionButton)findViewById(R.id.genre_floating_home);
+        fab.setOnClickListener(this);
         dialog = new CointProgressDialog(this);
         gridView = (GridView) findViewById(R.id.genre_grid);
         gridAdapter = new SearchAdapter(this, new ArrayList<Webtoon>());
@@ -340,6 +344,13 @@ public class GenreActivity extends TypeKitActivity
                     finish();
                     startActivity(intent);
                 }
+                break;
+            case R.id.genre_floating_home:
+                intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finishAffinity();
+                break;
         }
     }
 

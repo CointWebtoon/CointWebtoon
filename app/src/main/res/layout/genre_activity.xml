@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#AAAAAA"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/genre_actionbar_cover"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#23C382"
@@ -27,6 +28,7 @@
     </LinearLayout>
 
     <HorizontalScrollView
+        android:layout_below="@id/genre_actionbar_cover"
         android:id="@+id/genre_titlebar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -173,6 +175,7 @@
     </HorizontalScrollView>
 
     <GridView
+        android:layout_below="@id/genre_titlebar"
         android:id="@+id/genre_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -182,4 +185,19 @@
         android:paddingRight="3dp"
         android:paddingTop="3dp"
         android:verticalSpacing="3dp" />
-</LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/genre_floating_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/floating_main_button_bottom_margin"
+        android:layout_marginLeft="16dp"
+        android:clickable="true"
+        android:src="@drawable/floating_home"
+        app:backgroundTint="@color/D2Dark"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal" />
+</RelativeLayout>
