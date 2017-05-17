@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.kwu.cointwebtoon.Views.GeneralToonImageView;
@@ -16,6 +19,9 @@ public class ViewerGeneralAdapter extends BaseAdapter{
     ArrayList<String> bitmaps;
     AppCompatActivity mContext;
     LayoutInflater inflater = null;
+    public TextView starTV = null;
+    public RatingBar ratingbar = null;
+    public Button givingstar = null;
 
     int width;
     private class ViewHolder {
@@ -49,6 +55,9 @@ public class ViewerGeneralAdapter extends BaseAdapter{
         View view;
         if(position == bitmaps.size()){
             view = inflater.inflate(R.layout.viewer_general_rating_item, null);
+            starTV = (TextView)view.findViewById(R.id.textview_starScore);
+            ratingbar = (RatingBar)view.findViewById(R.id.rating_bar);
+            givingstar = (Button) view.findViewById(R.id.giving_star);
         }else {
             view = convertView;
             ViewHolder holder = null;
