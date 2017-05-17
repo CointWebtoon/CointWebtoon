@@ -31,7 +31,7 @@
             android:background="#00ff0000"
             android:backgroundTint="@color/D2Gray"
             android:onClick="onClick"
-            android:src="@drawable/main_brown" />
+            android:src="@drawable/main_genre_button_state" />
 
         <ImageView
             android:id="@+id/artistBtn"
@@ -41,7 +41,7 @@
             android:background="#00ff0000"
             android:backgroundTint="@color/D2Gray"
             android:onClick="onClick"
-            android:src="@drawable/main_sally" />
+            android:src="@drawable/main_artist_button_state" />
 
         <ImageView
             android:id="@+id/weekdayBtn"
@@ -51,7 +51,7 @@
             android:background="#00ff0000"
             android:backgroundTint="@color/D2Gray"
             android:onClick="onClick"
-            android:src="@drawable/main_cony" />
+            android:src="@drawable/main_weekday_button_state" />
 
         <ImageView
             android:id="@+id/bestBtn"
@@ -61,7 +61,7 @@
             android:background="#00ff0000"
             android:backgroundTint="@color/D2Gray"
             android:onClick="onClick"
-            android:src="@drawable/main_leonard" />
+            android:src="@drawable/main_challenge_button_state" />
 
     </LinearLayout>
 

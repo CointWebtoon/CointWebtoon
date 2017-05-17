@@ -1,6 +1,7 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
             viewHolder.artist = (TextView) itemLayout.findViewById(R.id.artistName);
             viewHolder.starScore = (TextView) itemLayout.findViewById(R.id.starScore);
             viewHolder.ranking = (TextView) itemLayout.findViewById(R.id.totalRanking);
+            viewHolder.add = (ImageView)itemLayout.findViewById(R.id.addWebtoon);
 
             viewHolder.title.setSelected(true);
 
@@ -69,16 +71,27 @@ public class MyWebtoonAdapter extends BaseAdapter {
         viewHolder.starScore.setText(Float.toString(currentItem.getStarScore()));
         viewHolder.ranking.setText(Integer.toString(position + 1));
 
+        if(currentItem.isMine()){
+            viewHolder.add.setImageResource(R.drawable.main_minus_button_state);
+        }else{
+            viewHolder.add.setImageResource(R.drawable.main_add_button_state);
+        }
+
         //버튼을 누르면 해당 웹툰의 id를 가져옴
         //버튼이나 이미지버튼을 사용 할 경우, 리스트뷰의 focus가 버튼에 가서 onClickListener가 동작하지 않음
         final int getId = resultQuery.get(position).getId();
-        ImageView addWebtoon = (ImageView) itemLayout.findViewById(R.id.addWebtoon);
+        final ImageView addWebtoon = (ImageView) itemLayout.findViewById(R.id.addWebtoon);
 
         addWebtoon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
                     String result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
                     Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+                    if(result.equals("마이 웹툰 설정")){
+                        addWebtoon.setImageResource(R.drawable.main_minus_button_state);
+                    }else{
+                        addWebtoon.setImageResource(R.drawable.main_add_button_state);
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -93,5 +106,6 @@ public class MyWebtoonAdapter extends BaseAdapter {
         TextView artist;
         TextView starScore;
         TextView ranking;
+        ImageView add;
     }
 }
