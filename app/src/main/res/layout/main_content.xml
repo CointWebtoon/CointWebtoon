@@ -69,77 +69,182 @@
         style="@style/Divider"
         android:layout_marginBottom="1dp" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:layout_height="wrap_content">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#85FFFFFF"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-            <TextView
-                android:layout_width="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="2dp"
-                android:paddingTop="2dp"
-                android:text="    조회수 TOP 15"
-                android:textColor="#5F5F5F"
-                android:textSize="20dp" />
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#85FFFFFF"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="2dp"
+                        android:paddingTop="2dp"
+                        android:text="    조회수 TOP 15"
+                        android:textColor="#5F5F5F"
+                        android:textSize="20dp" />
+                </LinearLayout>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_marginBottom="1dp" />
+
+                <!--Top 15 띄우는 부분-->
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/Divider"
+                android:layout_marginBottom="1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="135dp"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#85FFFFFF"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:text="    My Webtoon"
+                    android:textColor="#5F5F5F"
+                    android:textSize="20dp" />
+
+                <View
+                    style="@style/Divider"
+                    android:layout_marginBottom="1dp" />
+
+                <!--즐겨찾는 웹툰 추가하는 부분-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_weight="1.38"
+                    android:background="@drawable/main_shelf"
+                    android:clipToPadding="false"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/main_shelf">
+                <!--즐겨찾는 웹툰 추가하는 부분-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clipToPadding="false"
+                    android:paddingTop="3dp"
+                    android:scrollbars="none" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/main_shelf">
+                <!--즐겨찾는 웹툰 추가하는 부분-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view3"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/main_shelf">
+                <!--즐겨찾는 웹툰 추가하는 부분-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view4"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/main_shelf">
+                <!--즐겨찾는 웹툰 추가하는 부분-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view5"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/main_shelf">
+                <!--즐겨찾는 웹툰 추가하는 부분-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view6"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/main_shelf">
+                <!--즐겨찾는 웹툰 추가하는 부분-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view7"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/main_shelf">
+                <!--즐겨찾는 웹툰 추가하는 부분-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view8"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <View
-            style="@style/Divider"
-            android:layout_marginBottom="1dp" />
-
-        <!--Top 15 띄우는 부분-->
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="140dp" />
-
-    </LinearLayout>
-
-    <View
-        style="@style/Divider"
-        android:layout_marginBottom="1dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="135dp"
-        android:orientation="vertical"
-        android:weightSum="1">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#85FFFFFF"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:text="    My Webtoon"
-            android:textColor="#5F5F5F"
-            android:textSize="20dp" />
-
-        <View
-            style="@style/Divider"
-            android:layout_marginBottom="1dp" />
-
-        <!--즐겨찾는 웹툰 추가하는 부분-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/my_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_weight="1.38"
-            android:background="@drawable/main_shelf"
-            android:clipToPadding="false"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:scrollbars="none" />
-    </LinearLayout>
-
+    </ScrollView>
 
 </LinearLayout>
