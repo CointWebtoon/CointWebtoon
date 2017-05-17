@@ -343,5 +343,34 @@ public class COINT_SQLiteManager {
                 cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
                 cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11));
     }
+
+    public ArrayList<Webtoon> getWebtoonsByGenre(String genre){
+        ArrayList<Webtoon> returnList = new ArrayList<>();
+        if(genre.equals("BRANDETC")){
+            Cursor cursor = db.rawQuery("SELECT * FROM WEBTOON WHERE Id NOT IN(SELECT DISTINCT Id_G FROM GENRE) ORDER BY Id DESC", null);
+            while(cursor.moveToNext()){
+                returnList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
+                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
+                        cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+            }
+            cursor.close();
+            cursor = db.rawQuery("SELECT * FROM WEBTOON, GENRE WHERE Id=Id_G AND Genre='BRAND' ORDER BY Id DESC", null);
+            while(cursor.moveToNext()){
+                returnList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
+                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
+                        cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+            }
+            cursor.close();
+        }else{
+            Cursor cursor = db.rawQuery("SELECT * FROM WEBTOON, GENRE WHERE Id=Id_G AND Genre='" + genre + "' ORDER BY Id DESC", null);
+            while(cursor.moveToNext()){
+                returnList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
+                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
+                        cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+            }
+            cursor.close();
+        }
+        return returnList;
+    }
 }
 
