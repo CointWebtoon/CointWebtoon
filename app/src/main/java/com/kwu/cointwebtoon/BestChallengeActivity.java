@@ -1,10 +1,13 @@
 package com.kwu.cointwebtoon;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.DialogPreference;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,15 +19,57 @@ import android.widget.Toast;
 public class BestChallengeActivity extends TypeKitActivity {
 
     private WebView webView;
+    private CointProgressDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.best_challenge_activity);
+        dialog = new CointProgressDialog(this);
         webView = (WebView) findViewById(R.id.challengeVIew);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                dialog.show();
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                Log.i("coint", url);
+                if (url.contains("genre.nhn") | url.contains("list.nhn")) {
+                    Log.i("coint", "genre, list page finished");
+                    webView.loadUrl("javascript:document.getElementsByTagName('header')[0].style.display='none';" +
+                            "document.getElementsByClassName('bx_tab')[0].style.display='none';" +
+                            "document.getElementsByTagName('footer')[0].style.display='none';" +
+                            "document.getElementsByClassName('info_bottom')[0].style.display='none';void(0);");
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                    }
+                } else if (url.contains("detail.nhn")) {
+                    webView.loadUrl("javascript:document.getElementsByTagName('footer')[0].style.display='none';" +
+                            "document.getElementsByClassName('info_bottom')[0].style.display='none';void(0);");
+                    Log.i("coint", "detail page finished");
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                    }
+                } else if (url.contains("comment.nhn")) {
+                    Log.i("coint", "comment page finished");
+                    webView.loadUrl("javascript:document.getElementsByClassName('u_ts')[0].style.display='none';" +
+                            "document.getElementsByClassName('info_bottom')[0].style.display='none';void(0);");
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        });
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("http://m.comic.naver.com/bestChallenge/genre.nhn");
+
         //문제가 있음 왜째서 조회순 업데이트순 이런 체크박스 체크는 되지않는가!
     }
 

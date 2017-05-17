@@ -20,12 +20,12 @@ import com.kwu.cointwebtoon.DataStructure.Episode;
 import java.util.ArrayList;
 
 ////////////////////////ADAPTER////////////////////////
-public  class EpisodeActivityAdapter extends RecyclerView.Adapter{
+public class EpisodeActivityAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private ArrayList<Episode> episodes;
     private LayoutInflater inflater;
 
-    public EpisodeActivityAdapter(Context mContext, ArrayList<Episode> episodes){
+    public EpisodeActivityAdapter(Context mContext, ArrayList<Episode> episodes) {
         this.mContext = mContext;
         this.episodes = episodes;
         inflater = LayoutInflater.from(mContext);
@@ -40,12 +40,12 @@ public  class EpisodeActivityAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ViewHolder myHolder = (ViewHolder)holder;
+        ViewHolder myHolder = (ViewHolder) holder;
         Episode currentItem = episodes.get(position);
-        if(currentItem.getIs_read() == 1) {
+        if (currentItem.getIs_read() == 1) {
             myHolder.background.setBackgroundColor(Color.parseColor("#D3D3D3"));
-            myHolder.thumb.setColorFilter(Color.argb(100,100,100,100));
-        }else{
+            myHolder.thumb.setColorFilter(Color.argb(100, 100, 100, 100));
+        } else {
             myHolder.background.setBackgroundColor(Color.parseColor("#FFFFFF"));
             myHolder.thumb.setColorFilter(null);
         }
@@ -67,7 +67,14 @@ public  class EpisodeActivityAdapter extends RecyclerView.Adapter{
         return episodes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public void addEpisodes(ArrayList<Episode> items) {
+        for (int i = 0; i < items.size(); i++) {
+            episodes.add(i, items.get(i));
+        }
+        notifyDataSetChanged();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView thumb;
         public TextView epTitle;
         public TextView regDate;
@@ -75,15 +82,16 @@ public  class EpisodeActivityAdapter extends RecyclerView.Adapter{
         public CardView cardView;
         public RelativeLayout background;
         public View view;
-        public ViewHolder(View view){
+
+        public ViewHolder(View view) {
             super(view);
             this.view = view;
-            background = (RelativeLayout)view.findViewById(R.id.backgroundRelative) ;
-            cardView = (CardView)view.findViewById(R.id.cardView);
-            thumb = (ImageView)view.findViewById(R.id.thumb);
-            epTitle = (TextView)view.findViewById(R.id.episode_Title);
-            regDate = (TextView)view.findViewById(R.id.reg_date);
-            starScore = (TextView)view.findViewById(R.id.episode_Starscore);
+            background = (RelativeLayout) view.findViewById(R.id.backgroundRelative);
+            cardView = (CardView) view.findViewById(R.id.cardView);
+            thumb = (ImageView) view.findViewById(R.id.thumb);
+            epTitle = (TextView) view.findViewById(R.id.episode_Title);
+            regDate = (TextView) view.findViewById(R.id.reg_date);
+            starScore = (TextView) view.findViewById(R.id.episode_Starscore);
 
             epTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             epTitle.setSingleLine(true);

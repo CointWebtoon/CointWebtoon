@@ -27,8 +27,8 @@ public class Weekday {
     ///------------- ArrayList.Contains 기능 사용하기 위해 만든 메소드------//////
     @Override
     public boolean equals(Object obj) {
-        Weekday weekday = (Weekday) obj;
-        if (this.id_W == weekday.id_W)
+        Weekday weekdayObj = (Weekday) obj;
+        if (this.id_W == weekdayObj.getId() && this.weekday == weekdayObj.getWeekday())
             return true;
         else
             return false;

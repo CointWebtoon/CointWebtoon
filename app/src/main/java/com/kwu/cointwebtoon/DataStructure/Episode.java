@@ -80,7 +80,7 @@ public class Episode {
     @Override
     public boolean equals(Object obj) {
         Episode episode = (Episode) obj;
-        if (this.id_E == episode.id_E)
+        if (this.id_E == episode.id_E && this.episode_id == episode.episode_id)
             return true;
         else
             return false;

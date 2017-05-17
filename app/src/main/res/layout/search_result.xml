@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    android:orientation="vertical"
-    android:weightSum="1"
+    android:background="@drawable/background_bricks"
+    android:padding="0dp"
     tools:showIn="@layout/search_app_bar">
 
     <LinearLayout
+        android:id="@+id/actionbar_cover"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#23C382"
         android:orientation="vertical">
-
 
         <TextView
             android:id="@+id/intentText"
@@ -28,11 +26,41 @@
             android:textColor="#5F5F5F"
             android:textSize="30dp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
-    <ListView
+    <TextView
+        android:id="@+id/search_result"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/actionbar_cover"
+        android:background="#11000000"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="검색 결과"
+        android:textSize="21dp" />
+
+    <GridView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@id/search_result"
+        android:background="#22000000"
+        android:horizontalSpacing="3dp"
+        android:numColumns="3"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingTop="3dp"
+        android:verticalSpacing="3dp" />
+
+    <TextView
+        android:id="@+id/noresult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="표시할 결과가 없습니다."
+        android:textColor="#DAA520"
+        android:textSize="30dp"
+        android:visibility="gone" />
+</RelativeLayout>

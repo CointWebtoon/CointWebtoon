@@ -2,6 +2,7 @@ package com.kwu.cointwebtoon;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +14,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
@@ -23,19 +26,20 @@ import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import java.util.ArrayList;
 
 public class SearchActivity extends TypeKitActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnKeyListener {
-    ArrayList<Webtoon> resultQueries = null;
-    ListView listView;
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnKeyListener, AdapterView.OnItemClickListener {
+    ArrayList<Webtoon> resultQueries = new ArrayList<>();
+    GridView gridView;
     SearchAdapter searchAdapter = null;
     Cursor cursor = null;
     COINT_SQLiteManager coint_sqLiteManager;
     Toolbar toolbar;
+    TextView resultview;
     private EditText search;
 
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//키보드 숨김
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,39 +57,57 @@ public class SearchActivity extends TypeKitActivity
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         Intent intent = getIntent();
         String something = intent.getStringExtra("Intent");
-
         search = (EditText) findViewById(R.id.searchbar);
         search.setOnKeyListener(this);
-
         search.setText(something);
-
+        resultview = (TextView) findViewById(R.id.noresult);
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(this);
-        cursor = coint_sqLiteManager.searchquery(something);
+        gridView = (GridView) findViewById(R.id.searchView);
+        searchAdapter = new SearchAdapter(this, new ArrayList<Webtoon>());
+        gridView.setAdapter(searchAdapter);
+        gridView.setOnItemClickListener(this);
+        onSearch(something);
+    }
 
-        resultQueries = new ArrayList<>();
+    private void onSearch(String keyword) {
+        GetSearchResult result = new GetSearchResult();
+        result.execute(keyword);
+    }
 
-        while (cursor.moveToNext()) {
-            resultQueries.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+    private class GetSearchResult extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            cursor = coint_sqLiteManager.searchquery(params[0]);
+            resultQueries.clear();
+            while (cursor.moveToNext()) {
+                resultQueries.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
+                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                        cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
+            }
+            publishProgress();
+            return null;
         }
 
-        searchAdapter = new SearchAdapter(this, resultQueries);
-
-        listView = (ListView) findViewById(R.id.searchView);
-        listView.setAdapter(searchAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {             //리스트뷰 클릭 리스너로 id를 보내줌
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {// Intent로 id를 넘겨주면 회차정보 액티비티가 뜨면 됨.
-                Webtoon target = (Webtoon)searchAdapter.getItem(position);
-                Toast.makeText(SearchActivity.this, target.getTitle() , Toast.LENGTH_SHORT).show();
-                Intent episodeIntent = new Intent(SearchActivity.this, EpisodeActivity.class);
-                episodeIntent.putExtra("id", target.getId());
-                episodeIntent.putExtra("toontype", target.getToonType());
-                startActivity(episodeIntent);
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            if (resultQueries.size() == 0) {
+                resultview.setVisibility(View.VISIBLE);
+            } else {
+                resultview.setVisibility(View.GONE);
             }
-        });
+            searchAdapter.changeItems(resultQueries);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Webtoon target = searchAdapter.getItem(position);
+        Toast.makeText(SearchActivity.this, target.getTitle(), Toast.LENGTH_SHORT).show();
+        Intent episodeIntent = new Intent(SearchActivity.this, EpisodeActivity.class);
+        episodeIntent.putExtra("id", target.getId());
+        episodeIntent.putExtra("toontype", target.getToonType());
+        startActivity(episodeIntent);
     }
 
     @Override
@@ -119,10 +141,7 @@ public class SearchActivity extends TypeKitActivity
             if (searchString.equals("")) {
                 Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
             } else {
-                intent = new Intent(SearchActivity.this, SearchActivity.class);
-                intent.putExtra("Intent", search.getText().toString());
-                finish();
-                startActivity(intent);
+                onSearch(search.getText().toString());
             }
             return true;
         }
@@ -184,10 +203,7 @@ public class SearchActivity extends TypeKitActivity
             if (searchString.equals("")) {
                 Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
             } else {
-                Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
-                intent.putExtra("Intent", search.getText().toString());
-                finish();
-                startActivity(intent);
+                onSearch(search.getText().toString());
             }
             return true;
         }
