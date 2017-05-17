@@ -207,10 +207,29 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     public void Dat(View v){
         Toast.makeText(this, "댓글 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
     }
-    public void Previous(View v) { Toast.makeText(this, "이전화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
-    public void Current(View v) {Toast.makeText(this, "현재회차 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
-    public void Next(View v) {Toast.makeText(this, "다음화 보기 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();}
-    public void givingStarBtnClick(View v) { startActivity(new Intent(v.getContext(), ViewerStarScoreActivity.class));}
+    public void Previous(View v) {
+        if(ep_id > 1 ){
+            ep_id -= 1;
+            serverData.getImagesFromServer(id, ep_id);
+            manager.updateEpisodeRead(id, ep_id);
+            episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
+            episodeIdTextView.setText(String.valueOf(ep_id));
+        }
+    }
+    public void Next(View v) {
+        if(ep_id > 1 && (ep_id < manager.maxEpisodeId(id))){
+            ep_id += 1;
+            serverData.getImagesFromServer(id, ep_id);
+            manager.updateEpisodeRead(id, ep_id);
+            episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
+            episodeIdTextView.setText(String.valueOf(ep_id));
+        }
+    }
+    public void givingStarBtnClick(View v) {
+        try {
+            startActivity(new Intent(this, ViewerStarScoreActivity.class));
+        }catch (Exception e) { e.printStackTrace();}
+    }
 
     private class ScrollBarOnTouchListener implements View.OnTouchListener {
         @Override
@@ -258,23 +277,22 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             if(event == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag) {
                 if (runMode && (ep_id < manager.maxEpisodeId(id))) {
                     //정주행 모드일 때, List View의 바닥에 닿으면 다음 회차가 존재할 경우에 다음 회차로 넘어감
-                    showUIs(false);
                     imageUrls.clear();
                     ep_id += 1;
                     serverData.getImagesFromServer(id, ep_id);
                     manager.updateEpisodeRead(id, ep_id);
                     episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
                     episodeIdTextView.setText(String.valueOf(ep_id));
-                    System.out.println("the last");
                 }
             }
         }
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if(imageUrls == null){ return; }
             lastItemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
             final int currentFirstVisibleItem = viewerListView.getFirstVisiblePosition();
             if (currentFirstVisibleItem < this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.GONE) {
-                showUIs(true);
+                showUIs(false);
             } else if (currentFirstVisibleItem > this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.VISIBLE) {
                 if (scrollManually)
                     showUIs(false);

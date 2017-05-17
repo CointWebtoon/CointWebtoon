@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="150dp"
     android:background="#FFFFFF"
     android:orientation="vertical"
     android:id="@+id/dialog_of_starscore">
@@ -46,7 +46,8 @@
             android:layout_toRightOf="@+id/btnCancel"
             android:layout_weight="0.5"
             android:background="@drawable/view_button_state_confirm"
-            android:text="별점주기" />
+            android:text="별점주기"
+            android:textColor="#000000" />
 
         <Button
             android:id="@+id/btnCancel"
@@ -55,6 +56,7 @@
             android:layout_alignParentBottom="true"
             android:layout_weight="0.5"
             android:background="@drawable/view_button_state_cancle"
+            android:textColor="#000000"
             android:text="취소하기" />
     </LinearLayout>
 </LinearLayout>
