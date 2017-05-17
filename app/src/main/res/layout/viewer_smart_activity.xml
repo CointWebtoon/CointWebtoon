@@ -63,7 +63,7 @@
                 android:layout_toRightOf="@+id/smarttoon_gotoepi"
                 android:textColor="#FFFFFF" />
 
-            <ImageButton
+            <ImageButton android:id="@+id/smart_jung"
                 android:background="#333333"
                 android:onClick="runButtonClick"
                 android:layout_width="38dp"
@@ -73,6 +73,16 @@
                 android:layout_marginRight="5dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/run_inactive" />
+            <ImageButton android:id="@+id/viewer_timer"
+                android:layout_width="38dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/smart_jung"
+                android:scaleType="fitCenter"
+                android:src="@drawable/viewer_defaultset"
+                android:onClick="timerClick"
+                android:background="#333333"
+                />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -121,7 +131,8 @@
                 android:src="@drawable/view_button_state_dat"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
-            <Button
+            <Button android:id="@+id/Smarttoon_previous"
+                android:onClick="SmartToonPrevious"
                 android:text="\u003C"
                 android:textSize="30dp"
                 android:textColor="#ffffff"
@@ -141,7 +152,8 @@
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
-            <Button
+            <Button android:id="@+id/smarttoon_next"
+                android:onClick="SmartToonNext"
                 android:text="\u003E"
                 android:textSize="30dp"
                 android:textColor="#ffffff"

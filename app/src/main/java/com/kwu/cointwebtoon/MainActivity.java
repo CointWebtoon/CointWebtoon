@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,6 +24,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tsengvn.typekit.TypekitContextWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends TypeKitActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -71,7 +75,84 @@ public class MainActivity extends TypeKitActivity
 
         //즐겨찾는 웹툰 추가하는 부분 Id(R.id.my_recycler_view);
 
+        //1번
         recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        myToonAdapter = new Main_MyToonAdapter(this);
+        recyclerView.setAdapter(myToonAdapter);
+
+
+        //2번
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view2);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        myToonAdapter = new Main_MyToonAdapter(this);
+        recyclerView.setAdapter(myToonAdapter);
+
+
+        //3번
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view3);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        myToonAdapter = new Main_MyToonAdapter(this);
+        recyclerView.setAdapter(myToonAdapter);
+
+
+        //4번
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view4);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        myToonAdapter = new Main_MyToonAdapter(this);
+        recyclerView.setAdapter(myToonAdapter);
+
+
+        //5번
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view5);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        myToonAdapter = new Main_MyToonAdapter(this);
+        recyclerView.setAdapter(myToonAdapter);
+
+
+        //6번
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view6);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        myToonAdapter = new Main_MyToonAdapter(this);
+        recyclerView.setAdapter(myToonAdapter);
+
+
+        //7번
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view7);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        myToonAdapter = new Main_MyToonAdapter(this);
+        recyclerView.setAdapter(myToonAdapter);
+
+        //8번
+        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view8);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);

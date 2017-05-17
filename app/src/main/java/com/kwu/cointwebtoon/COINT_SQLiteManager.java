@@ -305,7 +305,8 @@ public class COINT_SQLiteManager {
     public Cursor getMyWebtoons() {
         return db.rawQuery("SELECT * " +
                 "FROM WEBTOON " +
-                "WHERE Is_mine=1", null);
+                "WHERE Is_mine=1"
+                +" ORDER BY title ASC", null);
     }
 
     public Cursor searchquery(String s) {

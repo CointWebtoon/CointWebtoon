@@ -13,6 +13,7 @@ public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnC
     private Button mConfirm, mCancle, giving;
     private TextView starTextView;
     private float number = 0.0f;
+    private RatingBar ratingbar;
     @Override
     protected  void onCreate(Bundle saveInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -20,9 +21,9 @@ public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnC
         setContentView(R.layout.viewer_starscore_activity);
         starTextView = (TextView)findViewById(R.id.txtView);
         setContent();
-        RatingBar ratingBar = (RatingBar)findViewById(R.id.dialog_rating);
-        ratingBar.setMax(10);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        ratingbar = (RatingBar)findViewById(R.id.dialog_rating);
+        ratingbar.setMax(10);
+        ratingbar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean onTouch) {
                 if(rating == 0){
@@ -45,12 +46,13 @@ public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnConfirm:
-                Intent intent = new Intent(this,ViewerGerneralActivity.class);
-                intent.putExtra("starScore", number);
+                System.out.println("현재별점" + number);
                 try {
-                    giving.setEnabled(false);
-                } catch (NullPointerException ex) { ex.printStackTrace(); }
-                this.finish();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("SCORE", number);
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
+                }catch (Exception ex) { ex.printStackTrace();}
                 break;
             case R.id.btnCancel:
                 this.finish();

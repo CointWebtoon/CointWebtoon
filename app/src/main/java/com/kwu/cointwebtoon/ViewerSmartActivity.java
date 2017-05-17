@@ -40,6 +40,8 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     private TextView progressTextView, episodeTitleTextView, episodeIdTextView;
     private boolean runMode = false;
     private COINT_SQLiteManager manager;
+    private int sleepTime = -1;
+    private Thread autoThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,7 +145,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
      * 1. 현재 툴바가 보이는 상태일 경우 툴바를 보이지 않게 설정하고 return
      * 2. 현재 툴바가 보이지 않는 상태이고,
      */
-    public void flipperClick(View v) {
+    public void flipperClick() {
         if(imageURLs == null)
             return;
         if (topToolbar.getVisibility() == View.VISIBLE) {
@@ -221,6 +223,72 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
             target.setImageDrawable(getDrawable(R.drawable.run_active));
         }
     }
+    public void SmartToonPrevious(View v) {
+        if(episodeId > 1) {
+            imageFlipper.removeAllViews();
+            imageURLs.clear();
+            episodeId -= 1;
+            serverData.getImagesFromServer(toonId, episodeId);
+            manager.updateEpisodeRead(toonId, episodeId);
+        }
+
+    }
+    public void SmartToonNext(View v){
+        if(episodeId > 1){
+            imageFlipper.removeAllViews();
+            imageURLs.clear();
+            episodeId += 1;
+            serverData.getImagesFromServer(toonId, episodeId);
+            manager.updateEpisodeRead(toonId, episodeId);
+        }
+    }
+    public void timerClick(View v) {
+        ImageButton my = (ImageButton) v;
+        if(sleepTime == -1) {
+            my.setImageDrawable(getDrawable(R.drawable.viewer_2sec));
+            sleepTime = 2000;
+        }
+        else if(sleepTime == 2000) {
+            my.setImageDrawable(getDrawable(R.drawable.viewer_3sec));
+            sleepTime = 3000;
+        }
+        else if(sleepTime == 3000) {
+            my.setImageDrawable(getDrawable(R.drawable.viewer_4sec));
+            sleepTime = 4000;
+        }
+        else if(sleepTime == 4000) {
+            my.setImageDrawable(getDrawable(R.drawable.viewer_defaultset));
+            sleepTime = -1;
+            try {
+                autoThread.interrupt();
+            } catch (Exception e) {
+            }
+            return;
+        }
+        try {
+            autoThread.interrupt();
+        } catch (Exception e) {
+        }
+        autoThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(sleepTime);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                flipperClick();
+                            }
+                        });
+                    } catch (InterruptedException intex) {
+                        break;
+                    }
+                }
+            }
+        });
+        autoThread.start();
+    }
 
     private class OnFlipperLongClick implements View.OnLongClickListener {
         @Override
@@ -244,7 +312,6 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
             } catch (Exception e) {
             }
         }
-
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
         }

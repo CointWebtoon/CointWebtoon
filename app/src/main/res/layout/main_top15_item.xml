@@ -21,7 +21,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/splash_mdpi" />
 
         <TextView
             android:id="@+id/starScore"
@@ -65,7 +65,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
             android:onClick="onClick"
-            android:src="@drawable/main_addmark" />
+            android:src="@drawable/main_add_button_state" />
 
         <TextView
             android:id="@+id/webtoonName"
@@ -109,7 +109,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
             android:onClick="onClick"
-            android:src="@drawable/main_addmark" />
+            android:src="@drawable/main_add_button_state" />
 
         <ImageView
             android:id="@+id/webtoonImg1"
@@ -120,7 +120,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/splash_mdpi" />
 
         <TextView
             android:id="@+id/starScore1"
@@ -178,7 +178,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/splash_mdpi" />
 
         <TextView
             android:id="@+id/starScore2"
@@ -211,7 +211,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
             android:onClick="onClick"
-            android:src="@drawable/main_addmark" />
+            android:src="@drawable/main_add_button_state" />
 
         <TextView
             android:id="@+id/rankBottom"

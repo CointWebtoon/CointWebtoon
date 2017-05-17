@@ -150,6 +150,9 @@ public class Main_Top15Adapter extends PagerAdapter {
             titleTop.setText(c.getString(1));
             artistTop.setText(c.getString(2));
             starTop.setText(String.valueOf(c.getFloat(3)));
+            if(c.getInt(11)==1){
+
+            }
             c.moveToNext();
 
             Glide.with(mContext).load(c.getString(5)).into(imgMid);
