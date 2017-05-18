@@ -106,34 +106,33 @@ public class WeekdayAdapter extends BaseAdapter {
 
         //Update상태 아이콘 표시 TODO - 최신화 조건에 맞는 up Icon 표시 작업 --> 조건 추가 완료했는데 서버에 다 is_updated로 되있는거가틈 서버 수정할게요
         if(currentItem.isUpdated() == 0){
-            tvUpdateIcon.setBackgroundResource(0);
-            tvUpdateIcon.setText(null);
             tvUpdateIcon.setVisibility(View.GONE);
         }
         else if(currentItem.isUpdated() == 1){
             //Updated
+            tvUpdateIcon.setVisibility(View.VISIBLE);
             tvUpdateIcon.setBackgroundResource(R.drawable.week_icon_update);
             tvUpdateIcon.setText("UP");
             tvUpdateIcon.setTextColor(Color.parseColor("#fc6c00"));
         }
         else if(currentItem.isUpdated() == 2){
             //Dormant
+            tvUpdateIcon.setVisibility(View.VISIBLE);
             tvUpdateIcon.setBackgroundResource(R.drawable.week_icon_dormant);
             tvUpdateIcon.setText("휴재");
             tvUpdateIcon.setTextColor(Color.parseColor("#ffffff"));
-
         }
 
         //Webtoon type 아이콘 표시
         if (currentItem.getToonType() == 'G'){
-            tvToontypeIcon.setBackgroundResource(0);
-            tvToontypeIcon.setText(null);
             tvToontypeIcon.setVisibility(View.GONE);
         }
         else if (currentItem.getToonType() == 'C'){
+            tvToontypeIcon.setVisibility(View.VISIBLE);
             tvToontypeIcon.setBackgroundResource(R.drawable.week_icon_cuttoon);
             tvToontypeIcon.setText("컷툰");
         }
+
         return convertView;
     }
 
