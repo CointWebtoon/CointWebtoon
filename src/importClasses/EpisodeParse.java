@@ -38,7 +38,6 @@ public class EpisodeParse {
     private HashMap<Integer, Integer> adultMap = new HashMap<>();
     private HashSet<Integer> errorList = new HashSet<>();
     private int timeoutCount = 0;
-    boolean doNotDeleteChargedEpisode = false;
 
     //DB에서 사용할 인증 정보, SQL
     private static final String query = "SELECT Id FROM WEBTOON WHERE Mobile_unsupported=0";   //모든 웹툰 Id를 가져오는 질의(모바일 지원 웹툰만)
@@ -49,10 +48,8 @@ public class EpisodeParse {
             "VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE Episode_title=?, Ep_starscore=?,Ep_thumburl=?,Reg_date=?";
     //해당 회차가 존재하지 않으면 INSERT, 존재하면 UPDATE
     private static final String isAdultUpdate = "UPDATE WEBTOON SET Is_adult=? WHERE Id=?";
-    private static final String deleteChargedWebtoon = "DELETE FROM EPISODE WHERE Id_E=? AND Episode_Id > ?";
     private Connection connection = null;   //DB Connection
     private PreparedStatement[] psts;   //쓰레드에서 사용할 PreparedStatement 객체들을 담는 배열
-    private PreparedStatement[] deleteStatements; //쓰레드에서 사용할 에피소드 삭제 Statement들을 담는 배열
     private ArrayList<Integer> ids = new ArrayList<>();    //회차를 가져올 ID 리스트
 
     //Constuctor
@@ -199,6 +196,7 @@ public class EpisodeParse {
 
             String adultKeyword = "var isAdultWebtoon = '";
             String content = doc.html();
+
             char isAdult = content.charAt(content.indexOf(adultKeyword) + adultKeyword.length());
             synchronized (this) {
                 switch (isAdult) {
@@ -233,8 +231,9 @@ public class EpisodeParse {
                 page = doc.select(".viewList > tbody > tr");
 
                 for (Element element : page) {
-                    if (element.className().length() > 0)
+                    if (element.className().length() > 0) {
                         continue;   //회차정보 상단 광고 배너 무시
+                    }
                     ep_Title = parseEpTitle(element);
                     ep_id = parseEpisode_Id(element);
                     starScore = parseEp_StarScore(element);
@@ -451,11 +450,9 @@ public class EpisodeParse {
                     int count = 1;
                     try {
                         psts[currentIndex] = connection.prepareStatement(insertSQL);
-                        deleteStatements[currentIndex] = connection.prepareStatement(deleteChargedWebtoon);
                         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                         for (Integer id : ids) {
                             if ((hour == 23 || hour == 0) && !isUpdateAll) {
-                                doNotDeleteChargedEpisode = true;
                                 if ((episodes = getEpisodesOnePage(id)) == null) {
                                     System.out.println("GET EPISODE ERR IN ID[" + id + "]");
                                     continue;
@@ -486,12 +483,6 @@ public class EpisodeParse {
                                 psts[currentIndex].addBatch();
                                 psts[currentIndex].clearParameters();
                             }
-
-                            //유료화 된 웹툰은 유료화 된 회차를 삭제해줘야 함!! --> 마지막에 DB에 현재 가져온 회차보다 회차id가 큰 회차가 있으면 삭제
-                            deleteStatements[currentIndex].setInt(1, id);
-                            deleteStatements[currentIndex].setInt(2, episodes.size());
-                            deleteStatements[currentIndex].addBatch();
-                            deleteStatements[currentIndex].clearParameters();
                         }
                     } catch (SQLException sqlex) {
                         sqlex.printStackTrace();
@@ -530,7 +521,6 @@ public class EpisodeParse {
             connection = DriverManager.getConnection(DBAuthentication.url, DBAuthentication.id, DBAuthentication.password);//드라이버 로드
             connection.setAutoCommit(false);
             psts = new PreparedStatement[numOfThreads];
-            deleteStatements = new PreparedStatement[numOfThreads];
 
             if (!getIds(weekday))   //웹툰 테이블에서 Id 가져와서 각 쓰레드에서 사용할 ArrayList<Integer>에 넣음
                 return false;
@@ -544,13 +534,11 @@ public class EpisodeParse {
             }
             System.out.println("=======================모든 쓰레드 행동 종료.. ERROR LIST HANDLING 시작===========================");
             retryErrorList();
-            for (int i = 0; i < numOfThreads; i++) {
-                psts[i].executeBatch();
-                if(!doNotDeleteChargedEpisode)
-                    deleteStatements[i].executeBatch();
-            }
             System.out.println("총 " + timeoutCount + "번의 TIME OUT 발생");
             System.out.println("최종 ERR LIST : " + errorList + "\n============성인웹툰 리스트============\n");
+            for (int i = 0; i < numOfThreads; i++) {
+                psts[i].executeBatch();
+            }
             updateIsAdult();
             System.out.println("\n=========================모든 Batch 실행 완료.... COMMIT 시작===============================");
             connection.commit();
@@ -591,7 +579,6 @@ public class EpisodeParse {
         HashSet<Integer> errorListInstance = new HashSet<>();
         try {
             PreparedStatement errorInsertStatement = connection.prepareStatement(insertSQL);
-            PreparedStatement errorDeleteStatement = connection.prepareStatement(deleteChargedWebtoon);
             ArrayList<Episode> episodes;
             while (!errorList.isEmpty() && retryCount < 5) {    //error List가 비면 error handling 종료.. 재시도 횟수가 5번이 되면 handling 종료
                 System.out.println("재시도 횟수 : " + String.valueOf(retryCount + 1) + "/5 현재 ERR LIST : " + errorList);
@@ -600,7 +587,6 @@ public class EpisodeParse {
                 for (Integer id : errorListInstance) {
                     errorList.remove(id);
                     if (hour == 23 || hour == 0 && !isUpdateAll) {
-                        doNotDeleteChargedEpisode = true;
                         if ((episodes = getEpisodesOnePage(id)) == null) {    //23~1시까지 빠른 업데이트 --> 한 페이지(최신화)만 받아옴
                             System.out.println("ERROR OCCURRED AGAIN IN ID " + id);
                             errorList.add(id);
@@ -632,19 +618,11 @@ public class EpisodeParse {
                         errorInsertStatement.addBatch();
                         errorInsertStatement.clearParameters();
                     }
-
-                    //유료화 된 웹툰은 유료화 된 회차를 삭제해줘야 함!! --> 마지막에 DB에 현재 가져온 회차보다 회차id가 큰 회차가 있으면 삭제
-                    errorDeleteStatement.setInt(1, id);
-                    errorDeleteStatement.setInt(2, episodes.size());
-                    errorDeleteStatement.addBatch();
-                    errorDeleteStatement.clearParameters();
                 }
                 retryCount++;
             }//while
             System.out.println("=========================SQL Batch 작성 완료.... DB Update를 시작합니다===============================");
             errorInsertStatement.executeBatch();
-            if(!doNotDeleteChargedEpisode)
-                errorDeleteStatement.executeBatch();
         } catch (SQLException sqlex) {
             System.out.println("SQLException OCCURRED..... EXIT PROGRAM....");
             System.exit(-1);

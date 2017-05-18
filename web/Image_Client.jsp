@@ -8,12 +8,15 @@
 <%@ page contentType="application/json;charset=EUC-KR" language="java" %>
 <%@ page import="org.json.simple.JSONArray" %>
 <%@ page import="org.json.simple.JSONObject" %>
-<%@ page import="java.sql.*" %><%@ page import="importClasses.DBAuthentication"%>
+<%@ page import="java.sql.*" %><%@ page import="importClasses.DBAuthentication"%><%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.util.Date"%>
 <%
+    Connection connection = null;
+    ResultSet resultSet = null;
+    PreparedStatement statement = null;
   try {
     JSONObject jsonObject = new JSONObject();
     JSONArray jsonArray = new JSONArray();
-    Connection connection = null;
     Class.forName(DBAuthentication.driverName);
     connection = DriverManager.getConnection(DBAuthentication.url, DBAuthentication.id, DBAuthentication.password);
     System.out.println("Connection successful");
@@ -23,12 +26,12 @@
       String ep_id = request.getParameter("ep_id");
 
      String sql = "SELECT  * FROM IMAGE WHERE Id_I=? AND Ep_id=? ORDER BY Image_id ASC";
-     PreparedStatement statement = connection.prepareStatement(sql);
+     statement = connection.prepareStatement(sql);
 
      statement.setString(1,id);
      statement.setString(2,ep_id);
 
-     ResultSet resultSet = statement.executeQuery();
+     resultSet = statement.executeQuery();
 
       int i=0;
       while(resultSet.next()){
@@ -46,11 +49,15 @@
       }
       out.println(jsonObject);
       out.flush();
-      System.out.println("[Image Page] ID : " + id  + "Episode ID : " + ep_id +  " Connection successful");
+      System.out.println("[Image Page] ID : " + id  + "Episode ID : " + ep_id +  " Connection successful"  + new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a").format(new Date()).toString());
     }
   }catch (SQLException ex){
     System.out.println("SQL Exception "+ex);
   }catch (Exception ex) {
     System.out.println("Exception " + ex);
+  }finally{
+        if (resultSet != null) try {resultSet.close();} catch (SQLException e) {}
+        if (statement != null) try {statement.close();} catch (SQLException e) {}
+        if (connection != null) try {connection.close();} catch (SQLException e) {}
   }
 %>

@@ -3,6 +3,8 @@
 <%@ page import="org.json.simple.JSONObject" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="importClasses.DBAuthentication" %>
+<%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.util.Date"%>
 
 <%
     /* Variables */
@@ -52,7 +54,7 @@
 
             out.println(jsonResult);
             out.flush();
-            System.out.println("[Episode Page] ID : " + id  + " Connection successful");
+            System.out.println("[Episode Page] ID : " + id  + " Connection successful" + "  "  + new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a").format(new Date()).toString());
         }
     } catch (Exception e) {
         e.printStackTrace();
