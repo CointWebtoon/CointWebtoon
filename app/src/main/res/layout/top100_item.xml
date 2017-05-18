@@ -37,14 +37,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/webtoonName"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="6dp"
             android:layout_toEndOf="@+id/webtoonImg"
+            android:paddingRight="5dp"
             android:text="artist"
+            android:textColor="#5F5F5F"
             android:textSize="10dp" />
 
         <TextView
             android:id="@+id/webtoonName"
-            android:layout_width="170dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/artistName"
             android:layout_alignTop="@+id/webtoonImg"
@@ -74,7 +77,27 @@
             android:textAlignment="center"
             android:textSize="30dp" />
 
+        <TextView
+            android:id="@+id/cutton"
+            android:layout_width="24dp"
+            android:layout_height="15dp"
+            android:layout_alignBaseline="@+id/artistName"
+            android:layout_toEndOf="@+id/artistName"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/D2Light"
+            android:textSize="9sp" />
 
+        <TextView
+            android:id="@+id/update"
+            android:layout_width="21dp"
+            android:layout_height="15dp"
+            android:layout_alignBaseline="@+id/artistName"
+            android:layout_toEndOf="@+id/cutton"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="9sp" />
     </RelativeLayout>
 
 </LinearLayout>

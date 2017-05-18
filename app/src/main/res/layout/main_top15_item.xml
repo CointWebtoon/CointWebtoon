@@ -42,6 +42,7 @@
             android:layout_marginStart="33dp"
             android:layout_marginTop="6dp"
             android:layout_toEndOf="@+id/webtoonImg"
+            android:paddingRight="5dp"
             android:text="artist"
             android:textColor="#5F5F5F"
             android:textSize="10dp" />
@@ -81,6 +82,29 @@
             android:text="Name"
             android:textColor="#5F5F5F"
             android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/cuttonTop"
+            android:layout_width="24dp"
+            android:layout_height="15dp"
+            android:layout_alignBaseline="@+id/rankTop"
+            android:layout_toEndOf="@+id/artistName"
+            android:gravity="center"
+            android:paddingRight="5dp"
+            android:textAlignment="center"
+            android:textColor="@color/D2Light"
+            android:textSize="9sp" />
+
+        <TextView
+            android:id="@+id/upTop"
+            android:layout_width="21dp"
+            android:layout_height="15dp"
+            android:layout_alignBaseline="@+id/rankTop"
+            android:layout_toEndOf="@+id/cuttonTop"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="9sp" />
 
     </RelativeLayout>
 
@@ -141,6 +165,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="6dp"
             android:layout_toEndOf="@+id/rankMiddle"
+            android:paddingRight="5dp"
             android:text="artist"
             android:textColor="#5F5F5F"
             android:textSize="10dp" />
@@ -159,6 +184,30 @@
             android:text="Name"
             android:textColor="#5F5F5F"
             android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/cuttonMid"
+            android:layout_width="24dp"
+            android:layout_height="15dp"
+            android:layout_alignBaseline="@+id/rankMiddle"
+            android:layout_toEndOf="@+id/artistName1"
+            android:gravity="center"
+            android:paddingRight="5dp"
+            android:textAlignment="center"
+            android:textColor="@color/D2Light"
+            android:textSize="9sp" />
+
+
+        <TextView
+            android:id="@+id/upMid"
+            android:layout_width="21dp"
+            android:layout_height="15dp"
+            android:layout_alignBaseline="@+id/rankMiddle"
+            android:layout_toEndOf="@+id/cuttonMid"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="9sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -199,6 +248,7 @@
             android:layout_marginStart="33dp"
             android:layout_marginTop="6dp"
             android:layout_toEndOf="@+id/webtoonImg2"
+            android:paddingRight="5dp"
             android:text="artist"
             android:textColor="#5F5F5F"
             android:textSize="10dp" />
@@ -239,5 +289,27 @@
             android:textColor="#5F5F5F"
             android:textSize="15dp" />
 
+        <TextView
+            android:id="@+id/cuttonBot"
+            android:layout_width="24dp"
+            android:layout_height="15dp"
+            android:layout_alignBaseline="@+id/rankBottom"
+            android:layout_toEndOf="@+id/artistName2"
+            android:gravity="center"
+            android:paddingRight="5dp"
+            android:textAlignment="center"
+            android:textColor="@color/D2Light"
+            android:textSize="9sp" />
+
+        <TextView
+            android:id="@+id/upBot"
+            android:layout_width="21dp"
+            android:layout_height="15dp"
+            android:layout_alignBaseline="@+id/rankBottom"
+            android:layout_toEndOf="@+id/cuttonBot"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="9sp" />
     </RelativeLayout>
 </LinearLayout>

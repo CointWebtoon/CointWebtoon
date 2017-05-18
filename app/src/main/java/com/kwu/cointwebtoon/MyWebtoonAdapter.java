@@ -1,6 +1,7 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,8 @@ public class MyWebtoonAdapter extends BaseAdapter {
             viewHolder.starScore = (TextView) itemLayout.findViewById(R.id.starScore);
             viewHolder.ranking = (TextView) itemLayout.findViewById(R.id.totalRanking);
             viewHolder.add = (ImageView)itemLayout.findViewById(R.id.addWebtoon);
+            viewHolder.cutton  = ( TextView)itemLayout.findViewById(R.id.cutton);
+            viewHolder.update = (TextView)itemLayout.findViewById(R.id.update);
 
             viewHolder.title.setSelected(true);
 
@@ -71,12 +74,36 @@ public class MyWebtoonAdapter extends BaseAdapter {
         viewHolder.starScore.setText(Float.toString(currentItem.getStarScore()));
         viewHolder.ranking.setText(Integer.toString(position + 1));
 
-        if(currentItem.isMine()){
+        if(currentItem.isMine()){           //마이웹툰일 경우 -로 설정
             viewHolder.add.setImageResource(R.drawable.main_minus_button_state);
         }else{
             viewHolder.add.setImageResource(R.drawable.main_add_button_state);
         }
 
+        if(currentItem.getToonType() == 'C') {      // 컷툰 여부
+            viewHolder.cutton.setVisibility(View.VISIBLE);
+            viewHolder.cutton.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.cutton.setText("컷툰");
+            viewHolder.cutton.setTextColor(Color.parseColor("#fc6c00"));
+        }else{
+            viewHolder.cutton.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.cutton.setText(null);
+            viewHolder.cutton.setVisibility(convertView.GONE);
+        }
+        if(currentItem.isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
+            viewHolder.update.setVisibility(View.VISIBLE);
+            viewHolder.update.setBackgroundResource(R.drawable.week_icon_update);
+            viewHolder.update.setText("UP");
+        }else if(currentItem.isUpdated()==2){
+            viewHolder.update.setVisibility(View.VISIBLE);
+            viewHolder.update.setBackgroundResource(R.drawable.week_icon_update);
+            viewHolder.update.setText("휴재");
+            viewHolder.update.setTextColor(Color.parseColor("#ffffff"));
+        }else{
+            viewHolder.update.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.update.setText(null);
+            viewHolder.update.setVisibility(convertView.GONE);
+        }
         //버튼을 누르면 해당 웹툰의 id를 가져옴
         //버튼이나 이미지버튼을 사용 할 경우, 리스트뷰의 focus가 버튼에 가서 onClickListener가 동작하지 않음
         final int getId = resultQuery.get(position).getId();
@@ -107,5 +134,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
         TextView starScore;
         TextView ranking;
         ImageView add;
+        TextView update;
+        TextView cutton;
     }
 }

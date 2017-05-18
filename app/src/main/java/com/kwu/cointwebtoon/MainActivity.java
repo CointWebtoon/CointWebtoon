@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -266,6 +267,7 @@ public class MainActivity extends TypeKitActivity
         int position;
         ArrayList<Webtoon> mList = new ArrayList<>();
         Cursor cursor;
+        ImageView addWebtoon;
         switch (id){
             case R.id.genreBtn:
                 startActivity(new Intent(this, GenreActivity.class));
@@ -292,6 +294,7 @@ public class MainActivity extends TypeKitActivity
                 cursor = coint_sqLiteManager.topHits(position);
                 cursor.moveToFirst();
                 result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
+                top15Adapter.notifyDataSetChanged();
                 break;
 
             case R.id.addMidBtn:
@@ -299,6 +302,7 @@ public class MainActivity extends TypeKitActivity
                 cursor = coint_sqLiteManager.topHits(position);
                 cursor.moveToPosition(1);
                 result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
+                top15Adapter.notifyDataSetChanged();
                 break;
             case R.id.addBotBtn:
                 position = (Integer)view.getTag();
@@ -307,6 +311,7 @@ public class MainActivity extends TypeKitActivity
                 cursor.moveToLast();
 
                 result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
+                top15Adapter.notifyDataSetChanged();
                 break;
 
             case R.id.action_search:
