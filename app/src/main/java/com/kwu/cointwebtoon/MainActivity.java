@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
+import com.nhn.android.naverlogin.OAuthLogin;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.lang.reflect.Array;
@@ -47,6 +48,8 @@ public class MainActivity extends TypeKitActivity
     private COINT_SQLiteManager coint_sqLiteManager;
     private EditText search;
     private int dateday=0;
+    private static OAuthLogin loginInstance;
+    Button navHeader;
 
     Toolbar toolbar;
 
@@ -68,7 +71,8 @@ public class MainActivity extends TypeKitActivity
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerview = navigationView.getHeaderView(0);
-        Button navHeader = (Button)headerview.findViewById(R.id.nav_login);
+
+        navHeader = (Button)headerview.findViewById(R.id.nav_login);
         navHeader.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -342,6 +346,16 @@ public class MainActivity extends TypeKitActivity
 
     protected void onResume() {
         super.onResume();
+
+        loginInstance = Application_UserInfo.getLoginInstance();
+        if(Application_UserInfo.isLogin()){
+            navHeader.setBackgroundResource(R.drawable.logout);
+            Application_UserInfo.onLogOut(this);
+            loginInstance.logoutAndDeleteToken(this);
+        }else{
+            navHeader.setBackgroundResource(R.drawable.login);
+        }
+
         ArrayList<Webtoon> mList = new ArrayList<>();
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(this);
         Cursor cursor = coint_sqLiteManager.getMyWebtoons();

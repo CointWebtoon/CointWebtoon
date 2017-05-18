@@ -17,12 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
+import com.nhn.android.naverlogin.OAuthLogin;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,8 @@ public class SearchActivity extends TypeKitActivity
     TextView resultview;
     private EditText search;
     private FloatingActionButton fab;
+    private static OAuthLogin loginInstance;
+    Button navHeader;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +50,7 @@ public class SearchActivity extends TypeKitActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -57,6 +61,16 @@ public class SearchActivity extends TypeKitActivity
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);            // 액션바에서 앱 이름 보이지 않게 함
         getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+        View headerview = navigationView.getHeaderView(0);
+        navHeader = (Button)headerview.findViewById(R.id.nav_login);
+        navHeader.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                startActivity(new Intent(SearchActivity.this, LoginActivity.class));
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
         Intent intent = getIntent();
         String something = intent.getStringExtra("Intent");
         search = (EditText) findViewById(R.id.searchbar);
@@ -219,5 +233,18 @@ public class SearchActivity extends TypeKitActivity
             return true;
         }
         return false;
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        loginInstance = Application_UserInfo.getLoginInstance();
+        if(Application_UserInfo.isLogin()){
+            navHeader.setBackgroundResource(R.drawable.logout);
+            Application_UserInfo.onLogOut(this);
+            loginInstance.logoutAndDeleteToken(this);
+        }else{
+            navHeader.setBackgroundResource(R.drawable.login);
+        }
     }
 }
