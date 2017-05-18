@@ -33,10 +33,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private ArrayList<String> imageUrls; // 웹툰 한 화에 있는 이미지 url을 순서대로 담을 ArraytList
     private ListView viewerListView; // url들을 통해 이미지들이 놓일 ListView
     private ViewerGeneralAdapter adapter;
-    private AppCompatActivity mContext; // Adapter View 에 넘겨줄 Context
     public static final int REQUEST_CODE_RATING = 1001;
-    private RatingBar ratingBar;
-    private String buffer;
     private Thread myTread;
     private float x, y;
     private int count = 0;
@@ -81,7 +78,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewer_general_activity);
         relativeLayout = (RelativeLayout)findViewById(R.id.coint_layout);
-        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
         runMode = false;
@@ -200,6 +196,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         }
     }
     public void Dat(View v){
+        startActivity(new Intent(this, ViewerCommentActivity.class));
         Toast.makeText(this, "댓글 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
     }
     public void Previous(View v) {
@@ -243,7 +240,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             }
         }
     }
-
 
     private class ScrollBarOnTouchListener implements View.OnTouchListener {
         @Override
@@ -297,6 +293,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     manager.updateEpisodeRead(id, ep_id);
                     episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
                     episodeIdTextView.setText(String.valueOf(ep_id));
+                }
+                else{
+                    showToolbars(true);
                 }
             }
         }
