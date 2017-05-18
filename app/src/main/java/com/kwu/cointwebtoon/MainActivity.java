@@ -23,10 +23,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends TypeKitActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -35,9 +41,11 @@ public class MainActivity extends TypeKitActivity
     RecyclerView recyclerView;
     Main_Top15Adapter top15Adapter;
     RecyclerView.LayoutManager layoutManager;
-    Main_MyToonAdapter myToonAdapter;
+    Main_MyToonAdapter myToonAdapter, myToonAdapter2, myToonAdapter3, myToonAdapter4,
+            myToonAdapter5,myToonAdapter6,myToonAdapter7,myToonAdapter8;
     private COINT_SQLiteManager coint_sqLiteManager;
     private EditText search;
+    private int dateday=0;
 
     Toolbar toolbar;
 
@@ -75,6 +83,11 @@ public class MainActivity extends TypeKitActivity
 
         //즐겨찾는 웹툰 추가하는 부분 Id(R.id.my_recycler_view);
 
+        try{
+            dateday = getDateDay();
+            Toast.makeText(this, Integer.toString(dateday), Toast.LENGTH_SHORT).show();
+        }catch (Exception e){}
+
         //1번
         recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -82,9 +95,8 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this);
+        myToonAdapter = new Main_MyToonAdapter(this, 1);
         recyclerView.setAdapter(myToonAdapter);
-
 
         //2번
         recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view2);
@@ -93,8 +105,8 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this);
-        recyclerView.setAdapter(myToonAdapter);
+        myToonAdapter2 = new Main_MyToonAdapter(this, 2);
+        recyclerView.setAdapter(myToonAdapter2);
 
 
         //3번
@@ -104,8 +116,8 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this);
-        recyclerView.setAdapter(myToonAdapter);
+        myToonAdapter3 = new Main_MyToonAdapter(this, 3);
+        recyclerView.setAdapter(myToonAdapter3);
 
 
         //4번
@@ -115,8 +127,8 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this);
-        recyclerView.setAdapter(myToonAdapter);
+        myToonAdapter4 = new Main_MyToonAdapter(this, 4);
+        recyclerView.setAdapter(myToonAdapter4);
 
 
         //5번
@@ -126,8 +138,8 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this);
-        recyclerView.setAdapter(myToonAdapter);
+        myToonAdapter5 = new Main_MyToonAdapter(this, 5);
+        recyclerView.setAdapter(myToonAdapter5);
 
 
         //6번
@@ -137,8 +149,8 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this);
-        recyclerView.setAdapter(myToonAdapter);
+        myToonAdapter6 = new Main_MyToonAdapter(this, 6);
+        recyclerView.setAdapter(myToonAdapter6);
 
 
         //7번
@@ -148,8 +160,8 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this);
-        recyclerView.setAdapter(myToonAdapter);
+        myToonAdapter7 = new Main_MyToonAdapter(this, 7);
+        recyclerView.setAdapter(myToonAdapter7);
 
         //8번
         recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view8);
@@ -158,8 +170,28 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this);
-        recyclerView.setAdapter(myToonAdapter);
+        myToonAdapter8 = new Main_MyToonAdapter(this, 0);
+        recyclerView.setAdapter(myToonAdapter8);
+    }
+
+    public static int getDateDay() throws Exception {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN);
+        String str_date = dateFormat.format(new Date());
+        Date nDate = dateFormat.parse(str_date);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nDate);
+
+        int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+
+        //일요일 : 1 , 월- 토 : 2-7 이라서 바꿔서 넘겨줌
+        if(dayNum == 0) {//일요일인 경우
+            dayNum = 7;
+        }else{
+            dayNum-=1;
+        }
+        return dayNum;
     }
     @Override
     protected void attachBaseContext(Context newBase){
@@ -232,7 +264,8 @@ public class MainActivity extends TypeKitActivity
         String result;
         Intent intent;
         int position;
-        Cursor c;
+        ArrayList<Webtoon> mList = new ArrayList<>();
+        Cursor cursor;
         switch (id){
             case R.id.genreBtn:
                 startActivity(new Intent(this, GenreActivity.class));
@@ -256,30 +289,24 @@ public class MainActivity extends TypeKitActivity
                 break;
             case R.id.addTopBtn:
                 position = (Integer)view.getTag();
-                c = coint_sqLiteManager.topHits(position);
-                c.moveToFirst();
-                result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
-                c = coint_sqLiteManager.getMyWebtoons();
-                myToonAdapter.addRemoveItem(c);
+                cursor = coint_sqLiteManager.topHits(position);
+                cursor.moveToFirst();
+                result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
                 break;
 
             case R.id.addMidBtn:
                 position = (Integer)view.getTag();
-                c = coint_sqLiteManager.topHits(position);
-                c.moveToPosition(1);
-                result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
-                c = coint_sqLiteManager.getMyWebtoons();
-                myToonAdapter.addRemoveItem(c);
+                cursor = coint_sqLiteManager.topHits(position);
+                cursor.moveToPosition(1);
+                result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
                 break;
             case R.id.addBotBtn:
                 position = (Integer)view.getTag();
 
-                c = coint_sqLiteManager.topHits(position);
-                c.moveToLast();
+                cursor = coint_sqLiteManager.topHits(position);
+                cursor.moveToLast();
 
-                result = coint_sqLiteManager.updateMyWebtoon(c.getString(0).toString());
-                c = coint_sqLiteManager.getMyWebtoons();
-                myToonAdapter.addRemoveItem(c);
+                result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
                 break;
 
             case R.id.action_search:
@@ -292,13 +319,40 @@ public class MainActivity extends TypeKitActivity
                     startActivity(intent);
                 }
         }
+        cursor = coint_sqLiteManager.getMyWebtoons();
+        while (cursor.moveToNext()) {
+            mList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
+                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
+                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+        }
+        myToonAdapter.addRemoveItem(mList);
+        myToonAdapter2.addRemoveItem(mList);
+        myToonAdapter3.addRemoveItem(mList);
+        myToonAdapter4.addRemoveItem(mList);
+        myToonAdapter5.addRemoveItem(mList);
+        myToonAdapter6.addRemoveItem(mList);
+        myToonAdapter7.addRemoveItem(mList);
+        myToonAdapter8.addRemoveItem(mList);
     }
 
     protected void onResume() {
         super.onResume();
+        ArrayList<Webtoon> mList = new ArrayList<>();
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(this);
-        Cursor c = coint_sqLiteManager.getMyWebtoons();
-        myToonAdapter.addRemoveItem(c);
+        Cursor cursor = coint_sqLiteManager.getMyWebtoons();
+        while (cursor.moveToNext()) {
+            mList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
+                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
+                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+        }
+        myToonAdapter.addRemoveItem(mList);
+        myToonAdapter2.addRemoveItem(mList);
+        myToonAdapter3.addRemoveItem(mList);
+        myToonAdapter4.addRemoveItem(mList);
+        myToonAdapter5.addRemoveItem(mList);
+        myToonAdapter6.addRemoveItem(mList);
+        myToonAdapter7.addRemoveItem(mList);
+        myToonAdapter8.addRemoveItem(mList);
         search.setText("");
     }
 

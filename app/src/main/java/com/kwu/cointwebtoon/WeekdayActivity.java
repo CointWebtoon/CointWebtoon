@@ -21,7 +21,7 @@ import com.kwu.cointwebtoon.databinding.WeekdayActivityBinding;
 public class WeekdayActivity extends TypeKitActivity {
     private WeekdayActivityBinding binding;
     private int selectedDay = 0;
-    static public Weekday_ListItem[] listItems = new Weekday_ListItem[8];
+    static public Weekday_ListItem[] listItems = new Weekday_ListItem[7];
     private Button[] btnWeekdays = new Button[8];
 
     @Override
@@ -35,7 +35,8 @@ public class WeekdayActivity extends TypeKitActivity {
         btnWeekdays[4] = binding.btnFri;
         btnWeekdays[5] = binding.btnSat;
         btnWeekdays[6] = binding.btnSun;
-        btnWeekdays[7] = binding.btnNew;
+        btnWeekdays[7] = binding.btnMy;
+
         //현재 요일 설정
         selectedDay = 0;
         changeBtnDayState(btnWeekdays[selectedDay], true);
@@ -46,9 +47,8 @@ public class WeekdayActivity extends TypeKitActivity {
         }
 
         //listItem 생성
-        for(int i = 0; i<8; i++){
-          listItems[i] =  new Weekday_ListItem(this);
-          listItems[i].generateList(i);
+        for(int i = 0; i<7; i++){
+          listItems[i] =  new Weekday_ListItem(this, i+1);
         }
 
         //viewPager Adapter, PageTransformer 설정
@@ -56,6 +56,7 @@ public class WeekdayActivity extends TypeKitActivity {
         binding.viewPager.setPageTransformer(true, new WeekdayTransformer());
         binding.viewPager.addOnPageChangeListener(new OPCListener());
     }
+
 
     private class OPCListener implements ViewPager.OnPageChangeListener{
         @Override
@@ -114,7 +115,8 @@ public class WeekdayActivity extends TypeKitActivity {
 
         @Override
         public int getCount() {
-            return 8;
+            return 7;
         }
     }
+
 }
