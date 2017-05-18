@@ -3,32 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <com.kwu.cointwebtoon.Views.CircularView
+        android:id="@+id/frame_my"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:background="#ffffff">
-
-        <!--<ToggleButton
-        android:id="@+id/btn_addMy"
-        style="@style/Base.Widget.AppCompat.DrawerArrowToggle"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:background="@drawable/week_icon_star"
-        android:focusable="false"
-        android:textOff=""
-        android:textOn="" />-->
-        <LinearLayout
-            android:id="@+id/frame_my"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/week_highlight_item">
+        android:paddingLeft="27dp"
+        android:paddingRight="18dp"
+        >
 
             <ImageView
                 android:id="@+id/iv_thumbnail"
@@ -58,22 +40,51 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_starPoint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+
                         android:text="★ "
                         android:textAlignment="center"
                         android:textColor="@android:color/holo_red_light"
-                        android:textSize="12sp" />
+                        android:textSize="10sp" />
 
-                    <ImageView
-                        android:id="@+id/iv_upIcon"
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/week_icon_up" />
+                    <TextView
+                        android:id="@+id/tv_update_icon"
+                        android:layout_marginRight="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:gravity="center"
+                        android:textSize="9sp"
+
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_toontype_icon"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:gravity="center"
+                        android:textSize="9sp"
+                        android:textColor="@color/D2Light"
+
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
+                        />
                 </LinearLayout>
 
                 <TextView
@@ -84,17 +95,5 @@
                     android:textSize="12sp" />
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/icon_my"
-                android:text="MY"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/D2Gray" />
-
-        </LinearLayout>
-
     </com.kwu.cointwebtoon.Views.CircularView>
 </layout>

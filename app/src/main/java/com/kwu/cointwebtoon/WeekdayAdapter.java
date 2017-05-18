@@ -1,14 +1,13 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Context;
-import android.media.Image;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,14 +30,14 @@ public class WeekdayAdapter extends BaseAdapter {
 
     private ListView mListView;
     private ImageView ivThumbnail;
-    private ImageView ivUpIcon;
+    private TextView tvUpdateIcon;
+    private TextView tvToontypeIcon;
 
     private TextView tvTitle ;
     private TextView tvStarPoint;
     private TextView tvArtist;
 
-    private LinearLayout frameMy;
-    private TextView iconMy;
+    private CircularView frameMy;
 
     private COINT_SQLiteManager manager;
 
@@ -76,10 +75,11 @@ public class WeekdayAdapter extends BaseAdapter {
         tvTitle = (TextView)convertView.findViewById(R.id.tv_title);
         tvStarPoint = (TextView)convertView.findViewById(R.id.tv_starPoint);
         tvArtist = (TextView)convertView.findViewById(R.id.tv_artist);
-        ivUpIcon = (ImageView)convertView.findViewById(R.id.iv_upIcon);
+        tvUpdateIcon = (TextView)convertView.findViewById(R.id.tv_update_icon);
+        tvToontypeIcon = (TextView)convertView.findViewById(R.id.tv_toontype_icon);
 
-        frameMy = (LinearLayout)convertView.findViewById(R.id.frame_my);
-        iconMy = (TextView)convertView.findViewById(R.id.icon_my);
+        frameMy = (CircularView)convertView.findViewById(R.id.frame_my);
+        //iconMy = (TextView)convertView.findViewById(R.id.icon_my);
         //btnAddMy.setTag(position);
         //btnAddMy.setOnClickListener(new btnAddMyOnClick());
         //btnAddMy.setOnCheckedChangeListener(new btnAddMyOnCheckedChange());
@@ -90,32 +90,64 @@ public class WeekdayAdapter extends BaseAdapter {
                 .centerCrop()
                 .bitmapTransform(new CropCircleTransformation(new CustomBitmapPool()))
                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                .placeholder(R.drawable.weekday_placeholder)
                 .into(ivThumbnail);
         tvTitle.setText(currentItem.getTitle());
         tvStarPoint.setText("★" + String.valueOf(currentItem.getStarScore()));
+        tvArtist.setText(currentItem.getArtist());
 
        if (currentItem.isMine()){
            //마이 웹툰 여부에 따라 별 아이콘 다르게 설정
-           frameMy.setBackgroundResource(R.drawable.week_highlight_item);
-           iconMy.setText("MY");
+           frameMy.setBackgroundResource(R.drawable.week_background_my);
        }
         else{
            frameMy.setBackgroundResource(0);
-           iconMy.setText("");
        }
 
-        if(currentItem.isUpdated() == 1) //TODO - 최신화 조건에 맞는 up Icon 표시 작업 --> 조건 추가 완료했는데 서버에 다 is_updated로 되있는거가틈 서버 수정할게요
-            ivUpIcon.setImageResource(R.drawable.week_icon_up);
-        tvArtist.setText(currentItem.getArtist());
+        //Update상태 아이콘 표시 TODO - 최신화 조건에 맞는 up Icon 표시 작업 --> 조건 추가 완료했는데 서버에 다 is_updated로 되있는거가틈 서버 수정할게요
+        if(currentItem.isUpdated() == 0){
+            tvUpdateIcon.setBackgroundResource(0);
+            tvUpdateIcon.setText(null);
+            tvUpdateIcon.setVisibility(View.GONE);
+        }
+        else if(currentItem.isUpdated() == 1){
+            //Updated
+            tvUpdateIcon.setBackgroundResource(R.drawable.week_icon_update);
+            tvUpdateIcon.setText("UP");
+            tvUpdateIcon.setTextColor(Color.parseColor("#fc6c00"));
+        }
+        else if(currentItem.isUpdated() == 2){
+            //Dormant
+            tvUpdateIcon.setBackgroundResource(R.drawable.week_icon_dormant);
+            tvUpdateIcon.setText("휴재");
+            tvUpdateIcon.setTextColor(Color.parseColor("#ffffff"));
 
+        }
+
+        //Webtoon type 아이콘 표시
+        if (currentItem.getToonType() == 'G'){
+            tvToontypeIcon.setBackgroundResource(0);
+            tvToontypeIcon.setText(null);
+            tvToontypeIcon.setVisibility(View.GONE);
+        }
+        else if (currentItem.getToonType() == 'C'){
+            tvToontypeIcon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            tvToontypeIcon.setText("컷툰");
+        }
         return convertView;
     }
+
+    public void setItemList(Weekday_ListItem listItem){
+        this.webtoons = listItem.getList();
+    }
+
     class btnAddMyOnClick implements ToggleButton.OnClickListener{
         @Override
         public void onClick(View v) {
             //TODO - 해당 웹툰 MY웹툰으로 설정/해제 --> 완료
             int position  = (int)v.getTag();
             Webtoon item = (Webtoon)getItem(position);
+
             String result = manager.updateMyWebtoon(String.valueOf(item.getId()));
             if(result.equals("마이 웹툰 설정")){
                 item.setIs_mine(true);
