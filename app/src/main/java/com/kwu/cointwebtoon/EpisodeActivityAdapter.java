@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.kwu.cointwebtoon.DataStructure.Episode;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 ////////////////////////ADAPTER////////////////////////
@@ -67,11 +69,23 @@ public class EpisodeActivityAdapter extends RecyclerView.Adapter {
         return episodes.size();
     }
 
-    public void addEpisodes(ArrayList<Episode> items) {
-        for (int i = 0; i < items.size(); i++) {
-            episodes.add(i, items.get(i));
-        }
-        notifyDataSetChanged();
+    public void addEpisodes(final ArrayList<Episode> items) {
+        final EpisodeActivityAdapter adapter = this;
+        new Thread(){
+            public void run(){
+                TypeKitActivity activity = (TypeKitActivity)mContext;
+                for(Episode ep : items){
+                    if(!episodes.contains(ep))
+                        episodes.add(ep);
+                }
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }.start();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

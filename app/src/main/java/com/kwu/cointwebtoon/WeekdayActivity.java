@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
 import com.kwu.cointwebtoon.databinding.WeekdayActivityBinding;
 
+import java.util.Calendar;
+
 public class WeekdayActivity extends TypeKitActivity {
     private WeekdayActivityBinding binding;
     private int selectedDay = 0;
@@ -38,7 +40,8 @@ public class WeekdayActivity extends TypeKitActivity {
         btnWeekdays[7] = binding.btnMy;
 
         //현재 요일 설정
-        selectedDay = 0;
+        Calendar calendar = Calendar.getInstance();
+        selectedDay = (calendar.get(Calendar.DAY_OF_WEEK) + 5)%7;
         changeBtnDayState(btnWeekdays[selectedDay], true);
 
         //dayButtons(요일별 버튼) 태그 설정
@@ -52,9 +55,13 @@ public class WeekdayActivity extends TypeKitActivity {
         }
 
         //viewPager Adapter, PageTransformer 설정
+
         binding.viewPager.setAdapter(new FSPagerAdapter(getSupportFragmentManager()));
-        binding.viewPager.setPageTransformer(true, new WeekdayTransformer());
+        //binding.viewPager.setPageTransformer(true, new WeekdayTransformer());
+        binding.viewPager.setPagingEnabled(false);
         binding.viewPager.addOnPageChangeListener(new OPCListener());
+        binding.viewPager.setCurrentItem(selectedDay);
+
     }
 
 
