@@ -48,6 +48,9 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ViewerStarScoreActivity"
             android:theme="@style/Theme.AppCompat.Dialog"/>
+        <activity android:name=".ViewerCommentActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <!--석희 end-->
 
         <activity android:name=".LoginActivity"

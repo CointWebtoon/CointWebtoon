@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/comment_toolbar"
+        android:background="#333333"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/viewer_actionbar_height"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button android:id="@+id/comment_back"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/view_button_state_bback"
+                android:onClick="Comment_BackBtn"/>
+            <TextView android:id="@+id/Comment_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="Comment_BackBtn"
+                android:text="댓글 수"
+                android:layout_marginLeft="5dp"
+                android:gravity="center|left"
+                android:layout_toRightOf="@+id/comment_back"
+                android:textColor="#FFFFFF"
+                />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="9">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:textColor="#FFFFFF"
+            android:background="@color/D2Light"
+            android:text="My 댓글"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:background="@drawable/testing"
+            android:text="Best 댓글"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:background="@drawable/testing"
+            android:text="전체 댓글"/>
+    </LinearLayout>
+
+</LinearLayout>
