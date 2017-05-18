@@ -150,7 +150,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     }
 
     private void updateCursorFromSQLite(Cursor episodeCursor) {
-        final ArrayList<Episode> newEpisodes = new ArrayList<>();
+        episodes.clear();
         try {
             timeOutThread.interrupt();
         } catch (Exception e) {
@@ -173,16 +173,13 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             //Log.i("episodeData", String.valueOf(id_E) + " " +  String.valueOf(episode_id) + " " + episode_title + " " + String.valueOf(ep_starscore) + " " + ep_thumburl + " " + reg_date + " " + mention + " " + is_read);
 
             episode = new Episode(id_E, episode_id, episode_title, ep_starscore, ep_thumburl, reg_date, mention, likes_E, is_read);
-            if (!episodes.contains(episode)) {
-                episodes.add(0, episode);
-                newEpisodes.add(episode);
-            }
+            episodes.add(episode);
         }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 hideFloatingButtons();
-                recyclerAdapter.addEpisodes(newEpisodes);
+                recyclerAdapter.addEpisodes(episodes);
                 progressDialog.dismiss();
             }
         });
@@ -197,24 +194,34 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
      */
     @Override
     public void update(Observable observable, Object data) {
-        Cursor episodeCursor = manager.getEpisodes(currentToonId);
-        updateCursorFromSQLite(episodeCursor);
-        if (isFirst) {
-            int readNumber;
-            for (readNumber = 0; readNumber < episodes.size(); readNumber++) {
-                if (episodes.get(readNumber).getIs_read() == 1)
-                    break;
+        new Thread(){
+            public void run(){
+                Cursor episodeCursor = manager.getEpisodes(currentToonId);
+                updateCursorFromSQLite(episodeCursor);
+                if (isFirst) {
+                    int readNumber;
+                    for (readNumber = 0; readNumber < episodes.size(); readNumber++) {
+                        if (episodes.get(readNumber).getIs_read() == 1)
+                            break;
+                    }
+                    if (readNumber > 0 && readNumber < episodes.size())
+                        readNumber--;
+                    else if (readNumber >= episodes.size())
+                        readNumber = 0;
+                    isFirst = false;
+                    final int readNumCopy = readNumber;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            recycler.getLayoutManager().scrollToPosition(readNumCopy);
+                            getSupportActionBar().show();
+                        }
+                    });
+                }
+                Log.i("ProgressReport", "Cursor Updated From Server 총 , " + String.valueOf(episodeCursor.getCount()) + "개의 Row");
+                maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
             }
-            if (readNumber > 0 && readNumber < episodes.size())
-                readNumber--;
-            else if (readNumber >= episodes.size())
-                readNumber = 0;
-            recycler.getLayoutManager().scrollToPosition(readNumber);
-            isFirst = false;
-            getSupportActionBar().show();
-        }
-        Log.i("ProgressReport", "Cursor Updated From Server 총 , " + String.valueOf(episodeCursor.getCount()) + "개의 Row");
-        maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
+        }.start();
     }
 
     @Override
@@ -235,7 +242,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent generalIntent = new Intent(this, ViewerGerneralActivity.class);
                 generalIntent.putExtra("id", target.getId());
                 generalIntent.putExtra("ep_id", target.getEpisode_id());
-                generalIntent.putExtra("mention", target.getMention());
                 startActivity(generalIntent);
                 break;
             }
@@ -244,7 +250,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent cutIntent = new Intent(this, ViewerCutActivity.class);
                 cutIntent.putExtra("id", target.getId());
                 cutIntent.putExtra("ep_id", target.getEpisode_id());
-                cutIntent.putExtra("mention", target.getMention());
                 startActivity(cutIntent);
                 break;
             }
@@ -253,7 +258,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent smartIntent = new Intent(this, ViewerSmartActivity.class);
                 smartIntent.putExtra("id", target.getId());
                 smartIntent.putExtra("ep_id", target.getEpisode_id());
-                smartIntent.putExtra("mention", target.getMention());
                 startActivity(smartIntent);
                 break;
             }
@@ -262,7 +266,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent motionIntent = new Intent(this, ViewerMotionActivity.class);
                 motionIntent.putExtra("id", target.getId());
                 motionIntent.putExtra("ep_id", target.getEpisode_id());
-                motionIntent.putExtra("mention", target.getMention());
                 startActivity(motionIntent);
                 break;
             }
@@ -346,7 +349,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent generalIntent = new Intent(this, ViewerGerneralActivity.class);
                         generalIntent.putExtra("id", currentToonId);
                         generalIntent.putExtra("ep_id", 1);
-                        generalIntent.putExtra("mention", episodes.get(episodes.size() - 1).getMention());
                         startActivity(generalIntent);
                         break;
                     }
@@ -355,7 +357,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent cutIntent = new Intent(this, ViewerCutActivity.class);
                         cutIntent.putExtra("id", currentToonId);
                         cutIntent.putExtra("ep_id", 1);
-                        cutIntent.putExtra("mention", episodes.get(episodes.size() - 1).getMention());
                         startActivity(cutIntent);
                         break;
                     }
@@ -364,7 +365,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent smartIntent = new Intent(this, ViewerSmartActivity.class);
                         smartIntent.putExtra("id", currentToonId);
                         smartIntent.putExtra("ep_id", 1);
-                        smartIntent.putExtra("mention", episodes.get(episodes.size() - 1).getMention());
                         startActivity(smartIntent);
                         break;
                     }
@@ -373,7 +373,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent motionIntent = new Intent(this, ViewerMotionActivity.class);
                         motionIntent.putExtra("id", currentToonId);
                         motionIntent.putExtra("ep_id", 1);
-                        motionIntent.putExtra("mention", episodes.get(episodes.size() - 1).getMention());
                         startActivity(motionIntent);
                         break;
                     }
@@ -456,12 +455,10 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
      */
     private class ActionbarShowHideListener extends RecyclerView.OnScrollListener {
         private int mLastFirstVisibleItem = 0;
-
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
         }
-
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
