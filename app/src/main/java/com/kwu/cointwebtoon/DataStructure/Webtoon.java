@@ -135,7 +135,7 @@ public class Webtoon {
     @Override
     public boolean equals(Object obj) {
         Webtoon webtoon = (Webtoon) obj;
-        if (this.id == webtoon.id)
+        if (this.id == webtoon.getId())
             return true;
         else
             return false;

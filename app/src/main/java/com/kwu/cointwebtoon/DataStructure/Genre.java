@@ -31,8 +31,8 @@ public class Genre {
     ///------------- ArrayList.Contains 기능 사용하기 위해 만든 메소드------//////
     @Override
     public boolean equals(Object obj) {
-        Genre genre = (Genre) obj;
-        if (this.id_G == genre.id_G)
+        Genre genreObj = (Genre) obj;
+        if (this.id_G == genreObj.getId() && this.genre == genreObj.getGenre())
             return true;
         else
             return false;

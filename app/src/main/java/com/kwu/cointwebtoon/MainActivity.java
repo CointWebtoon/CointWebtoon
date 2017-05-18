@@ -235,9 +235,7 @@ public class MainActivity extends TypeKitActivity
         Cursor c;
         switch (id){
             case R.id.genreBtn:
-                /**
-                 * 장르별 웹툰 Activity 연결부
-                 */
+                startActivity(new Intent(this, GenreActivity.class));
                 break;
             case R.id.artistBtn:
                 /**

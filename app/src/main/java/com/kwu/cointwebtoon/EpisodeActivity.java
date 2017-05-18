@@ -37,6 +37,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
      * Views
      */
     private RecyclerView recycler;
+    private EpisodeActivityAdapter recyclerAdapter;
     private RelativeLayout scrollSection;
     private ImageView scrollbar, likeImageButton, myImageButton;
     private TextView title;
@@ -77,20 +78,22 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         scrollSection = (RelativeLayout) findViewById(R.id.scrollSection);
         scrollbar = (ImageView) findViewById(R.id.scrollbar);
         scrollbar.setOnTouchListener(new ScrollBarOnTouchListener());
+        recyclerAdapter = new EpisodeActivityAdapter(this, episodes);
         recycler = (RecyclerView) findViewById(R.id.episode_recycler);
         recycler.setVerticalScrollBarEnabled(false);
         recycler.setOnScrollListener(new ActionbarShowHideListener());
+        recycler.setAdapter(recyclerAdapter);
         title = (TextView) findViewById(R.id.episodeActivity_Title);
         toolbar = (Toolbar) findViewById(R.id.episode_toolbar);
         toolbar.bringToFront();
         setSupportActionBar(toolbar);
         title.setSelected(true);
-        main = (FloatingActionButton)findViewById(R.id.episode_floating_more);
-        top = (FloatingActionButton)findViewById(R.id.episode_floating_top);
-        first = (FloatingActionButton)findViewById(R.id.episode_floating_first);
-        home = (FloatingActionButton)findViewById(R.id.episode_floating_home);
-        likeImageButton = (ImageButton)findViewById(R.id.episode_like);
-        myImageButton = (ImageButton)findViewById(R.id.episode_my);
+        main = (FloatingActionButton) findViewById(R.id.episode_floating_more);
+        top = (FloatingActionButton) findViewById(R.id.episode_floating_top);
+        first = (FloatingActionButton) findViewById(R.id.episode_floating_first);
+        home = (FloatingActionButton) findViewById(R.id.episode_floating_home);
+        likeImageButton = (ImageButton) findViewById(R.id.episode_like);
+        myImageButton = (ImageButton) findViewById(R.id.episode_my);
         progressDialog = new CointProgressDialog(this);
         progressDialog.show();
     }
@@ -112,12 +115,12 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         new GetCurrentToonInfo().execute();
         getServerData = new GetServerData(this);
         getServerData.registerObserver(this);
-        timeOutThread = new Thread(){
+        timeOutThread = new Thread() {
             @Override
             public void run() {
-                try{
-                    Thread.sleep(1000 * 10);
-                }catch (InterruptedException e){
+                try {
+                    Thread.sleep(1000 * 15);
+                } catch (InterruptedException e) {
                     Log.i("coint", "No Time Out");
                     return;
                 }
@@ -147,7 +150,11 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     }
 
     private void updateCursorFromSQLite(Cursor episodeCursor) {
-        episodes.clear();
+        final ArrayList<Episode> newEpisodes = new ArrayList<>();
+        try {
+            timeOutThread.interrupt();
+        } catch (Exception e) {
+        }
         int id_E, episode_id, likes_E, is_read;
         String episode_title, ep_thumburl, reg_date, mention;
         float ep_starscore;
@@ -166,23 +173,30 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             //Log.i("episodeData", String.valueOf(id_E) + " " +  String.valueOf(episode_id) + " " + episode_title + " " + String.valueOf(ep_starscore) + " " + ep_thumburl + " " + reg_date + " " + mention + " " + is_read);
 
             episode = new Episode(id_E, episode_id, episode_title, ep_starscore, ep_thumburl, reg_date, mention, likes_E, is_read);
-            episodes.add(episode);
+            if (!episodes.contains(episode)) {
+                episodes.add(0, episode);
+                newEpisodes.add(episode);
+            }
         }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                recycler.setAdapter(new EpisodeActivityAdapter(EpisodeActivity.this, episodes));
+                hideFloatingButtons();
+                recyclerAdapter.addEpisodes(newEpisodes);
                 progressDialog.dismiss();
             }
         });
     }
 
+
+    /**
+     * 서버에서 데이터 로드가 완료되었을 때 호출되는 메소드
+     *
+     * @param observable
+     * @param data
+     */
     @Override
     public void update(Observable observable, Object data) {
-        hideFloatingButtons();
-        try{
-            timeOutThread.interrupt();
-        }catch (Exception e){}
         Cursor episodeCursor = manager.getEpisodes(currentToonId);
         updateCursorFromSQLite(episodeCursor);
         if (isFirst) {
@@ -205,9 +219,10 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
 
     @Override
     protected void onDestroy() {
-        try{
+        try {
             progressDialog.dismiss();
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         getServerData.removeObserver(this);
         super.onDestroy();
     }
@@ -220,6 +235,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent generalIntent = new Intent(this, ViewerGerneralActivity.class);
                 generalIntent.putExtra("id", target.getId());
                 generalIntent.putExtra("ep_id", target.getEpisode_id());
+                generalIntent.putExtra("mention", target.getMention());
                 startActivity(generalIntent);
                 break;
             }
@@ -228,6 +244,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent cutIntent = new Intent(this, ViewerCutActivity.class);
                 cutIntent.putExtra("id", target.getId());
                 cutIntent.putExtra("ep_id", target.getEpisode_id());
+                cutIntent.putExtra("mention", target.getMention());
                 startActivity(cutIntent);
                 break;
             }
@@ -236,16 +253,27 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent smartIntent = new Intent(this, ViewerSmartActivity.class);
                 smartIntent.putExtra("id", target.getId());
                 smartIntent.putExtra("ep_id", target.getEpisode_id());
+                smartIntent.putExtra("mention", target.getMention());
                 startActivity(smartIntent);
+                break;
+            }
+            case 'M': {//모션툰
+                manager.updateEpisodeRead(target.getId(), target.getEpisode_id());
+                Intent motionIntent = new Intent(this, ViewerMotionActivity.class);
+                motionIntent.putExtra("id", target.getId());
+                motionIntent.putExtra("ep_id", target.getEpisode_id());
+                motionIntent.putExtra("mention", target.getMention());
+                startActivity(motionIntent);
                 break;
             }
         }
     }
+
     private class ScrollBarOnTouchListener implements View.OnTouchListener {
 
         @Override
         public boolean onTouch(View view, MotionEvent event) {
-            if(episodes.size() == 0)
+            if (episodes.size() == 0)
                 return false;
             y = (int) event.getRawY();
             switch (event.getAction()) {
@@ -267,14 +295,13 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         layoutParams.topMargin = maxTopMargin;
                     }
                     scrollManually = false;
-                    try{
+                    try {
                         recycler.scrollToPosition((episodes.size() - 1) * layoutParams.topMargin / maxTopMargin);
-                    }catch(ArithmeticException e){
+                    } catch (ArithmeticException e) {
                         //Divided By Zero Excpetion 처리 --> 아직 아이템들이 로드되지 않았을 때 스크롤을 하면 이렇게 됨
                         return true;
                     }
                     view.setLayoutParams(layoutParams);
-
                     break;
             }
             scrollSection.invalidate();
@@ -302,12 +329,12 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         }
     }
 
-    public void episodeFloatingClick(View v){
-        switch (v.getId()){
+    public void episodeFloatingClick(View v) {
+        switch (v.getId()) {
             case R.id.episode_floating_more:
-                if(isFloatingShown){
+                if (isFloatingShown) {
                     hideFloatingButtons();
-                }else{
+                } else {
                     showFloatingButtons();
                 }
                 break;
@@ -319,6 +346,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent generalIntent = new Intent(this, ViewerGerneralActivity.class);
                         generalIntent.putExtra("id", currentToonId);
                         generalIntent.putExtra("ep_id", 1);
+                        generalIntent.putExtra("mention", episodes.get(episodes.size() - 1).getMention());
                         startActivity(generalIntent);
                         break;
                     }
@@ -327,6 +355,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent cutIntent = new Intent(this, ViewerCutActivity.class);
                         cutIntent.putExtra("id", currentToonId);
                         cutIntent.putExtra("ep_id", 1);
+                        cutIntent.putExtra("mention", episodes.get(episodes.size() - 1).getMention());
                         startActivity(cutIntent);
                         break;
                     }
@@ -335,15 +364,25 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent smartIntent = new Intent(this, ViewerSmartActivity.class);
                         smartIntent.putExtra("id", currentToonId);
                         smartIntent.putExtra("ep_id", 1);
+                        smartIntent.putExtra("mention", episodes.get(episodes.size() - 1).getMention());
                         startActivity(smartIntent);
+                        break;
+                    }
+                    case 'M': {//모션툰
+                        manager.updateEpisodeRead(currentToonId, 1);
+                        Intent motionIntent = new Intent(this, ViewerMotionActivity.class);
+                        motionIntent.putExtra("id", currentToonId);
+                        motionIntent.putExtra("ep_id", 1);
+                        motionIntent.putExtra("mention", episodes.get(episodes.size() - 1).getMention());
+                        startActivity(motionIntent);
                         break;
                     }
                 }
                 break;
             case R.id.episode_floating_top:
-                try{
+                try {
                     recycler.scrollToPosition(0);
-                }catch (Exception e){
+                } catch (Exception e) {
                     //index outofbound exception 방지
                 }
                 break;
@@ -356,15 +395,15 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         }
     }
 
-    public void episodeToolbarClick(View v){
-        switch (v.getId()){
-            case R.id.episode_like :
+    public void episodeToolbarClick(View v) {
+        switch (v.getId()) {
+            case R.id.episode_like:
             case R.id.episode_like_text:
                 SharedPreferences.Editor editor = likePreference.edit();
-                if(likePreference.getBoolean(String.valueOf(currentToonId), false)){//좋아요 취소
+                if (likePreference.getBoolean(String.valueOf(currentToonId), false)) {//좋아요 취소
                     editor.putBoolean(String.valueOf(currentToonId), false);
                     likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
-                }else{//좋아요
+                } else {//좋아요
                     editor.putBoolean(String.valueOf(currentToonId), true);
                     likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
                 }
@@ -374,14 +413,14 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             case R.id.episode_my_text:
                 //마이웹툰작업
                 String result = manager.updateMyWebtoon(String.valueOf(currentWebtoon.getId()));
-                if(result.equals("마이 웹툰 설정")){
+                if (result.equals("마이 웹툰 설정")) {
                     currentWebtoon.setIs_mine(true);
                     myImageButton.setImageDrawable(getDrawable(R.drawable.my_set));
-                }else if(result.equals("마이 웹툰 해제")){
+                } else if (result.equals("마이 웹툰 해제")) {
                     currentWebtoon.setIs_mine(false);
                     myImageButton.setImageDrawable(getDrawable(R.drawable.my_release));
                 }
-                Toast.makeText(this, currentWebtoon.getTitle() + " " + result , Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, currentWebtoon.getTitle() + " " + result, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.episodeActivity_Title:
             case R.id.episode_finish:
@@ -393,7 +432,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     /**
      * 메인 플로팅 버튼 클릭시 다른 플로팅 버튼 띄우는 함수
      */
-    private void showFloatingButtons(){
+    private void showFloatingButtons() {
         isFloatingShown = true;
         main.setImageDrawable(getDrawable(R.drawable.floating_close));
         first.animate().translationY(0).setInterpolator(new DecelerateInterpolator(1)).start();
@@ -404,7 +443,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     /**
      * 메인 플로팅 버튼 클릭시 다른 플로팅 버튼 없애는 함수
      */
-    private void hideFloatingButtons(){
+    private void hideFloatingButtons() {
         isFloatingShown = false;
         main.setImageDrawable(getDrawable(R.drawable.floating_more));
         first.animate().translationY(first.getHeight() + 19).setInterpolator(new AccelerateInterpolator(1)).start();
@@ -446,7 +485,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         }
     }
 
-    private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void>{
+    private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
             currentWebtoon = manager.getWebtoonInstance(currentToonId);
@@ -457,10 +496,10 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             title.setText(currentWebtoon.getTitle());
-            if(currentWebtoon.isMine()){
+            if (currentWebtoon.isMine()) {
                 myImageButton.setImageDrawable(getDrawable(R.drawable.my_set));
             }
-            if(likePreference.getBoolean(String.valueOf(currentToonId), false)){
+            if (likePreference.getBoolean(String.valueOf(currentToonId), false)) {
                 likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
             }
         }
