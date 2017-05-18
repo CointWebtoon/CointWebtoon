@@ -61,6 +61,8 @@
         </activity>
         <activity android:name=".ViewerSmartActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".GenreActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
