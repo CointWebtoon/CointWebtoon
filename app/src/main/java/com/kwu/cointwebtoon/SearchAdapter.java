@@ -1,6 +1,7 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,9 @@ public class SearchAdapter extends BaseAdapter {
             viewHolder.title = (TextView) itemLayout.findViewById(R.id.webtoonName);
             viewHolder.artist = (TextView) itemLayout.findViewById(R.id.artistName);
             viewHolder.starScore = (TextView) itemLayout.findViewById(R.id.starScore);
+            viewHolder.up = (TextView)itemLayout.findViewById(R.id.search_update);
+            viewHolder.cuttoon = (TextView)itemLayout.findViewById(R.id.search_cuttoon);
+            viewHolder.addItemButton = (ImageView)itemLayout.findViewById(R.id.addWebtoon);
 
             viewHolder.title.setSelected(true);
 
@@ -73,18 +77,54 @@ public class SearchAdapter extends BaseAdapter {
         viewHolder.artist.setText(resultQuery.get(position).getArtist());
         viewHolder.starScore.setText("★ " + Float.toString(resultQuery.get(position).getStarScore()));
 
+        if(resultQuery.get(position).isMine()){           //마이웹툰일 경우 -로 설정
+            viewHolder.addItemButton.setImageResource(R.drawable.main_minus_button_state);
+        }else{
+            viewHolder.addItemButton.setImageResource(R.drawable.main_add_button_state);
+        }
+
+        if(resultQuery.get(position).getToonType() == 'C') {      // 컷툰 여부
+            viewHolder.cuttoon.setVisibility(View.VISIBLE);
+            viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.cuttoon.setText("컷툰");
+        }else{
+            viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.cuttoon.setText(null);
+            viewHolder.cuttoon.setVisibility(itemLayout.GONE);
+        }
+        if(resultQuery.get(position).isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
+            viewHolder.up.setVisibility(View.VISIBLE);
+            viewHolder.up.setBackgroundResource(R.drawable.week_icon_update);
+            viewHolder.up.setText("UP");
+        }else if(resultQuery.get(position).isUpdated()==2){
+            viewHolder.up.setVisibility(View.VISIBLE);
+            viewHolder.up.setBackgroundResource(R.drawable.main_icon_dormant);
+            viewHolder.up.setText("휴재");
+            viewHolder.up.setTextColor(Color.parseColor("#5F5F5F"));
+        }else{
+            viewHolder.up.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.up.setText(null);
+            viewHolder.up.setVisibility(itemLayout.GONE);
+        }
+
         //버튼을 누르면 해당 웹툰의 id를 가져옴
         //버튼이나 이미지버튼을 사용 할 경우, 리스트뷰의 focus가 버튼에 가서 onClickListener가 동작하지 않음
         final int getId = resultQuery.get(position).getId();
-        ImageView addWebtoon = (ImageView) itemLayout.findViewById(R.id.addWebtoon);
+        final ImageView addWebtoon = (ImageView) itemLayout.findViewById(R.id.addWebtoon);
         addWebtoon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                String result=null;
                 Log.i("addWebtoon", Integer.toString(getId));
                 try {
-                    String result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
+                    result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
                     Toast.makeText(context, resultQuery.get(position).getTitle() + " " + result, Toast.LENGTH_SHORT).show();
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                }
+                if(result.equals("마이 웹툰 설정")){
+                    addWebtoon.setImageResource(R.drawable.main_minus_button_state);
+                }else{
+                    addWebtoon.setImageResource(R.drawable.main_add_button_state);
                 }
             }
         });
@@ -93,9 +133,12 @@ public class SearchAdapter extends BaseAdapter {
 
     class ViewHolder {
         ImageView imageView;
+        ImageView addItemButton;
         TextView title;
         TextView artist;
         TextView starScore;
+        TextView up;
+        TextView cuttoon;
     }
 
 }

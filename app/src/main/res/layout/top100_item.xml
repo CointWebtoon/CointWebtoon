@@ -78,25 +78,26 @@
             android:textSize="30dp" />
 
         <TextView
-            android:id="@+id/cutton"
-            android:layout_width="24dp"
+            android:id="@+id/update"
+            android:layout_width="21dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/artistName"
             android:layout_toEndOf="@+id/artistName"
             android:gravity="center"
             android:textAlignment="center"
-            android:textColor="@color/D2Light"
+            android:textColor="@android:color/holo_red_light"
             android:textSize="9sp" />
 
+
         <TextView
-            android:id="@+id/update"
-            android:layout_width="21dp"
+            android:id="@+id/cuttoon"
+            android:layout_width="24dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/artistName"
-            android:layout_toEndOf="@+id/cutton"
+            android:layout_toEndOf="@+id/update"
             android:gravity="center"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/D2Light"
             android:textSize="9sp" />
     </RelativeLayout>
 

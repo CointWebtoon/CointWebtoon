@@ -57,7 +57,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
             viewHolder.starScore = (TextView) itemLayout.findViewById(R.id.starScore);
             viewHolder.ranking = (TextView) itemLayout.findViewById(R.id.totalRanking);
             viewHolder.add = (ImageView)itemLayout.findViewById(R.id.addWebtoon);
-            viewHolder.cutton  = ( TextView)itemLayout.findViewById(R.id.cutton);
+            viewHolder.cuttoon  = ( TextView)itemLayout.findViewById(R.id.cuttoon);
             viewHolder.update = (TextView)itemLayout.findViewById(R.id.update);
 
             viewHolder.title.setSelected(true);
@@ -81,14 +81,13 @@ public class MyWebtoonAdapter extends BaseAdapter {
         }
 
         if(currentItem.getToonType() == 'C') {      // 컷툰 여부
-            viewHolder.cutton.setVisibility(View.VISIBLE);
-            viewHolder.cutton.setBackgroundResource(R.drawable.week_icon_cuttoon);
-            viewHolder.cutton.setText("컷툰");
-            viewHolder.cutton.setTextColor(Color.parseColor("#fc6c00"));
+            viewHolder.cuttoon.setVisibility(View.VISIBLE);
+            viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.cuttoon.setText("컷툰");
         }else{
-            viewHolder.cutton.setBackgroundResource(R.drawable.week_icon_cuttoon);
-            viewHolder.cutton.setText(null);
-            viewHolder.cutton.setVisibility(convertView.GONE);
+            viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.cuttoon.setText(null);
+            viewHolder.cuttoon.setVisibility(convertView.GONE);
         }
         if(currentItem.isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
             viewHolder.update.setVisibility(View.VISIBLE);
@@ -96,7 +95,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
             viewHolder.update.setText("UP");
         }else if(currentItem.isUpdated()==2){
             viewHolder.update.setVisibility(View.VISIBLE);
-            viewHolder.update.setBackgroundResource(R.drawable.week_icon_update);
+            viewHolder.update.setBackgroundResource(R.drawable.week_icon_dormant);
             viewHolder.update.setText("휴재");
             viewHolder.update.setTextColor(Color.parseColor("#ffffff"));
         }else{
@@ -135,6 +134,6 @@ public class MyWebtoonAdapter extends BaseAdapter {
         TextView ranking;
         ImageView add;
         TextView update;
-        TextView cutton;
+        TextView cuttoon;
     }
 }

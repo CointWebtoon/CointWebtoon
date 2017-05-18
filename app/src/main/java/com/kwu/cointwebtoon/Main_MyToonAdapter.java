@@ -3,6 +3,7 @@ package com.kwu.cointwebtoon;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.DataStructure.Weekday;
 import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -35,12 +38,18 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         ImageView imageView;
         TextView title;
         TextView artist;
+        TextView starscore;
+        TextView up;
+        TextView cuttoon;
 
         public ViewHolder(View view) {
             super(view);
             imageView = (ImageView) view.findViewById(R.id.addView);
             title = (TextView) view.findViewById(R.id.mainTitle);
             artist = (TextView) view.findViewById(R.id.mainArtist);
+            starscore = (TextView) view.findViewById(R.id.mainStarScore);
+            up = (TextView)view.findViewById(R.id.recycle_update);
+            cuttoon = (TextView)view.findViewById(R.id.recycle_cuttoon);
         }
     }
 
@@ -72,12 +81,38 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (position == 0) {
             holder.title.setText("웹툰 추가");
-            holder.artist.setText("");
+            holder.artist.setText(null);
+            holder.starscore.setText(null);
             holder.imageView.setImageResource(R.drawable.main_addmark);
         } else {
             holder.title.setText(arrayList.get(position).getTitle());
             holder.artist.setText(arrayList.get(position).getArtist());
+            holder.starscore.setText(String.valueOf(arrayList.get(position).getStarScore()));
             Glide.with(mContext).load(arrayList.get(position).getThumbURL()).into(holder.imageView);
+
+            if(arrayList.get(position).getToonType() == 'C') {      // 컷툰 여부
+                holder.cuttoon.setVisibility(View.VISIBLE);
+                holder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                holder.cuttoon.setText("컷툰");
+            }else{
+                holder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                holder.cuttoon.setText(null);
+                holder.cuttoon.setVisibility(v.GONE);
+            }
+            if(arrayList.get(position).isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
+                holder.up.setVisibility(View.VISIBLE);
+                holder.up.setBackgroundResource(R.drawable.week_icon_update);
+                holder.up.setText("UP");
+            }else if(arrayList.get(position).isUpdated()==2){
+                holder.up.setVisibility(View.VISIBLE);
+                holder.up.setBackgroundResource(R.drawable.main_icon_dormant);
+                holder.up.setText("휴재");
+                holder.up.setTextColor(Color.parseColor("#5F5F5F"));
+            }else{
+                holder.up.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                holder.up.setText(null);
+                holder.up.setVisibility(v.GONE);
+            }
         }
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
