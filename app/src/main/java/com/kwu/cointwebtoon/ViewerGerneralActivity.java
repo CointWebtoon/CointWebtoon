@@ -94,6 +94,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData.registerObserver(this);
         runMode = false;
         episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
+        episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView)findViewById(R.id.GeneralToont_current_pos);
         goodCount = (TextView) findViewById(R.id.GeneralToont_count_txt);
         GeneralToonTopToolbar = (Toolbar) findViewById(R.id.GeneralToontoptoolbar);
@@ -261,9 +262,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     float SCORE = data.getExtras().getFloat("SCORE");
                     Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
                     if(adapter.starTV != null && adapter.ratingbar != null){
-                        adapter.starTV.setText(String.valueOf(episode_instance.getEp_starScore() + SCORE));
+                        adapter.starTV.setText(String.valueOf(SCORE));
                         adapter.ratingbar.setMax(10);
-                        adapter.ratingbar.setRating((episode_instance.getEp_starScore() + SCORE)/2);
+                        adapter.ratingbar.setRating((SCORE)/2);
                         adapter.givingstar.setEnabled(false);
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}

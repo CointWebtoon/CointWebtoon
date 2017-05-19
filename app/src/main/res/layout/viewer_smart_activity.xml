@@ -57,6 +57,7 @@
                 android:id="@+id/smarttoon_episodeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:ellipsize="marquee"
                 android:onClick="BackBtn"
                 android:text="웹툰 제목"
                 android:layout_marginLeft="5dp"

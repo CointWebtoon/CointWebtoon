@@ -81,6 +81,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         progressSeekBar.setOnSeekBarChangeListener(new OnCutSeekBarChanged());
         progressTextView = (TextView) findViewById(R.id.cutProgressTextView);
         episodeTitleTextView = (TextView) findViewById(R.id.smarttoon_episodeTitle);
+        episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView)findViewById(R.id.smarttoon_episodeId);
 
         inflater = LayoutInflater.from(this);
@@ -134,6 +135,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                 Glide.with(this)
                         .load(imageURLs.get(i))
                         .asBitmap()
+                        .placeholder(R.drawable.view_placeholder_testing)
                         .into(newImageView);
             }
             imageFlipper.addView(newImageView);
@@ -161,9 +163,9 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                     float SCORE = data.getExtras().getFloat("SCORE");
                     Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
                     if(starTV != null && ratingbar != null){
-                        starTV.setText(String.valueOf(episode_instance.getEp_starScore() + SCORE));
+                        starTV.setText(String.valueOf(SCORE));
                         ratingbar.setMax(10);
-                        ratingbar.setRating((episode_instance.getEp_starScore() + SCORE)/2);
+                        ratingbar.setRating((SCORE)/2);
                         givingStar.setEnabled(false);
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}
@@ -188,7 +190,6 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
             bottomToolbar.setVisibility(View.GONE);
         }
     }
-
     /*
      * imageFlipper 를 클릭했을 때의 행동
      * 1. 현재 툴바가 보이는 상태일 경우 툴바를 보이지 않게 설정하고 return

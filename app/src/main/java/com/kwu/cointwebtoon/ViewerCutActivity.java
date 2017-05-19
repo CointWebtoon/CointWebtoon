@@ -70,6 +70,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         topToolbar = (Toolbar) findViewById(R.id.toptoolbar);
         bottomToolbar = (Toolbar) findViewById(R.id.bottomtoolbar);
         episodeTitleTextView = (TextView) findViewById(R.id.CutToonTitle);
+        episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView) findViewById(R.id.current_pos);
         manager = COINT_SQLiteManager.getInstance(this);
         runMode = false;
@@ -77,7 +78,6 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         setSupportActionBar(topToolbar);
         flipper = (ViewFlipper) findViewById(R.id.viewflipper);
         inflater = LayoutInflater.from(this);
-
         ///Flipper 리스너 추가 + SwipeDetector Class를 추가하여 Swipe과 touch 동작을 구분
         final SwipeDetector swipeDetector = new SwipeDetector();
         flipper.setOnTouchListener(swipeDetector);
@@ -142,6 +142,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                     Glide.with(this)
                             .load(imageURLs.get(i))
                             .asBitmap()
+                            .placeholder(R.drawable.view_placeholder_testing)
                             .into(newImageView);
                 }
                 flipper.addView(newImageView);
@@ -362,9 +363,9 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                     float SCORE = data.getExtras().getFloat("SCORE");
                     Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
                     if(starTV != null && ratingbar != null){
-                        starTV.setText(String.valueOf(episode_instance.getEp_starScore() + SCORE));
+                        starTV.setText(String.valueOf(SCORE));
                         ratingbar.setMax(10);
-                        ratingbar.setRating((episode_instance.getEp_starScore() + SCORE)/2);
+                        ratingbar.setRating((SCORE)/2);
                         givingStar.setEnabled(false);
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}

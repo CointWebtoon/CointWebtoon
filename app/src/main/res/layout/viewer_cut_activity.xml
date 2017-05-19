@@ -35,6 +35,7 @@
                 android:layout_height="match_parent"
                 android:onClick="BackBtn"
                 android:text="웹툰 제목"
+                android:ellipsize="marquee"
                 android:layout_marginLeft="5dp"
                 android:gravity="center|left"
                 android:layout_toRightOf="@+id/gotoepi"
