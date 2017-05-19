@@ -14,8 +14,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.DataStructure.Weekday;
 import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
@@ -151,7 +153,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                 Intent intent;
                 switch (id) {
                     case R.id.cardview:
-                        if (holder.title.getText().equals("웹툰 추가")) {
+                        if (position==0) {
                             /**
                              * Activity 연결부
                              */
@@ -165,10 +167,52 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                             mContext.startActivity(intent);
                         }
                         break;
+                    case R.id.latest:
+                        Episode episode = coint_sqLiteManager.getLatestEpisode(arrayList.get(position).getId());
+                        if(episode==null){
+                            Toast.makeText(mContext,"한개도 안봄!",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(mContext,"이어보기!",Toast.LENGTH_SHORT).show();
+                            switch (arrayList.get(position).getToonType()) {
+                                case 'G': {//일반툰
+                                    Toast.makeText(mContext,Integer.toString(arrayList.get(position).getId()),Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext,Integer.toString(episode.getId()), Toast.LENGTH_SHORT).show();
+                                    Intent generalIntent = new Intent(mContext, ViewerGerneralActivity.class);
+                                    generalIntent.putExtra("id", episode.getId());
+                                    generalIntent.putExtra("ep_id", episode.getEpisode_id());
+                                    mContext.startActivity(generalIntent);
+                                    break;
+                                }
+                                case 'C': {//컷툰
+                                    Intent cutIntent = new Intent(mContext, ViewerCutActivity.class);
+                                    cutIntent.putExtra("id", episode.getId());
+                                    cutIntent.putExtra("ep_id", episode.getEpisode_id());
+                                    mContext.startActivity(cutIntent);
+                                    break;
+                                }
+                                case 'S': {//스마트툰
+                                    Intent smartIntent = new Intent(mContext, ViewerSmartActivity.class);
+                                    smartIntent.putExtra("id", episode.getId());
+                                    smartIntent.putExtra("ep_id", episode.getEpisode_id());
+                                    mContext.startActivity(smartIntent);
+                                    break;
+                                }
+                                case 'M': {//모션툰
+                                    Intent motionIntent = new Intent(mContext, ViewerMotionActivity.class);
+                                    motionIntent.putExtra("id", episode.getId());
+                                    motionIntent.putExtra("ep_id", episode.getEpisode_id());
+                                    mContext.startActivity(motionIntent);
+                                    break;
+                                }
+                            }
+                        }
+                        episode = null;
+                        break;
                 }
             }
         };
         v.findViewById(R.id.cardview).setOnClickListener(onClickListener);
+        v.findViewById(R.id.latest).setOnClickListener(onClickListener);
 
         setAnimation(holder.imageView, position);
     }
@@ -205,7 +249,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
     private void setAnimation(View viewToAnimate, int position) {
         // 새로 보여지는 뷰라면 애니메이션을 해줍니다
         if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_out_right);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
