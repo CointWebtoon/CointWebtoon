@@ -53,6 +53,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private TextView episodeTitleTextView, episodeIdTextView, goodCount;
     private COINT_SQLiteManager manager;
     private Button good;
+    private ImageButton autoscroll;
     private boolean runMode;
     private boolean isFirst = true;             //읽은 화까지 스크롤할 때 사용
     private int yDelta, ys= 0;                          //스크롤바 좌표 계산
@@ -93,6 +94,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
         runMode = false;
+        autoscroll = (ImageButton) findViewById(R.id.autoscroll);
         episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
         episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView)findViewById(R.id.GeneralToont_current_pos);
@@ -275,7 +277,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private class ScrollBarOnTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
-            if(imageUrls.size() == 0)
+            if(imageUrls == null)
                 return false;
             ys = (int) event.getRawY();
             switch (event.getAction()) {
@@ -381,6 +383,14 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             ImageButton target = (ImageButton)v;
             target.setImageDrawable(getDrawable(R.drawable.run_active));
         }
+    }
+    public void autoScroll(View v) {
+        viewerListView.post(new Runnable() {
+            @Override
+            public void run() {
+                viewerListView.smoothScrollToPosition(adapter.getCount() - 1);
+            }
+        });
     }
     @Override
     protected void onDestroy() {
