@@ -3,14 +3,18 @@ package com.kwu.cointwebtoon;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +22,7 @@ import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
 
 import java.util.ArrayList;
@@ -42,6 +47,12 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     private COINT_SQLiteManager manager;
     private int sleepTime = -1;
     private Thread autoThread;
+    private LayoutInflater inflater = null;
+    private Episode episode_instance;
+    private RatingBar ratingbar;
+    private TextView mention, starTV;
+    private Button givingStar;
+    public static final int REQUEST_CODE_RATING = 1001;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +82,8 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         progressTextView = (TextView) findViewById(R.id.cutProgressTextView);
         episodeTitleTextView = (TextView) findViewById(R.id.smarttoon_episodeTitle);
         episodeIdTextView = (TextView)findViewById(R.id.smarttoon_episodeId);
+
+        inflater = LayoutInflater.from(this);
     }
 
     /**
@@ -94,6 +107,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     //이미지 로드가 완료되었을 때 수행할 행동
     @Override
     public void update(Observable observable, Object data) {
+        View view;
         imageURLs = (ArrayList<String>) data;
         if(imageURLs == null){
             return;
@@ -104,7 +118,6 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
             Toast.makeText(this, "이미지 로드 에러", Toast.LENGTH_SHORT).show();
             return;
         }
-
         imageIndex = 0;
         progressSeekBar.setMax(imageURLs.size());
         progressSeekBar.setProgress(1);
@@ -119,8 +132,38 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                     .into(smartCut);
             imageFlipper.addView(smartCut);
         }
+        view = inflater.inflate(R.layout.viewer_rating_item, null);
+        imageFlipper.addView(view);
+        ratingbar = (RatingBar) view.findViewById(R.id.cut_rating_bar);
+        mention = (TextView) view.findViewById(R.id.cut_mention);
+        starTV = (TextView) view.findViewById(R.id.cut_starScore);
+        givingStar = (Button) view.findViewById(R.id.cut_giving_star);
+        new ViewerSmartActivity.GetCurrentToonInfo().execute();
+        serverData.plusHit(toonId);
     }
-
+    public void cut_givingStarBtnClick(View v) {
+        try {
+            startActivityForResult(new Intent(this, ViewerStarScoreActivity.class), REQUEST_CODE_RATING);
+        }catch (Exception e) { e.printStackTrace();}
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_RATING) {
+            if(resultCode == RESULT_OK) {
+                try {
+                    float SCORE = data.getExtras().getFloat("SCORE");
+                    Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
+                    if(starTV != null && ratingbar != null){
+                        starTV.setText(String.valueOf(episode_instance.getEp_starScore() + SCORE));
+                        ratingbar.setMax(10);
+                        ratingbar.setRating((episode_instance.getEp_starScore() + SCORE)/2);
+                        givingStar.setEnabled(false);
+                    }
+                }catch (NullPointerException ex) {ex.printStackTrace();}
+            }
+        }
+    }
     @Override
     protected void onDestroy() {
         serverData.removeObserver(this);
@@ -171,7 +214,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                 imageFlipper.setOutAnimation(mContext, animations.get(R.anim.slide_in_right));
                 break;
         }
-        if (imageIndex < imageURLs.size() - 1) {
+        if (imageIndex < imageURLs.size()) {
             imageFlipper.showNext();
             imageIndex++;
             progressSeekBar.setProgress(imageIndex + 1);
@@ -235,7 +278,6 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
             serverData.getImagesFromServer(toonId, episodeId);
             manager.updateEpisodeRead(toonId, episodeId);
         }
-
     }
     public void SmartToonNext(View v){
         if(episodeId > 0){
@@ -299,6 +341,21 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         public boolean onLongClick(View v) {
             showToolbars(true);
             return true;
+        }
+    }
+    private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            episode_instance = manager.getEpisodeInstance(toonId, episodeId);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ratingbar.setRating(episode_instance.getEp_starScore()/2);
+            mention.setText(episode_instance.getMention());
+            starTV.setText(String.valueOf(episode_instance.getEp_starScore()));
         }
     }
 
