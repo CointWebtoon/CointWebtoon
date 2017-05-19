@@ -18,7 +18,7 @@
         android:layout_marginBottom="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/previous"
+        android:src="@drawable/viewer_smart_previous"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:onClick="previousBtnClick" />
@@ -29,7 +29,7 @@
         android:layout_marginBottom="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/menubtn"
+        android:src="@drawable/viewer_smart_menubtn"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:onClick="previousBtnClick" />
@@ -133,6 +133,7 @@
                 android:layout_height="match_parent" />
             <Button android:id="@+id/Smarttoon_previous"
                 android:onClick="SmartToonPrevious"
+                android:gravity="center"
                 android:text="\u003C"
                 android:textSize="30dp"
                 android:textColor="#ffffff"
@@ -155,6 +156,7 @@
             <Button android:id="@+id/smarttoon_next"
                 android:onClick="SmartToonNext"
                 android:text="\u003E"
+                android:gravity="center"
                 android:textSize="30dp"
                 android:textColor="#ffffff"
                 android:background="#333333"
