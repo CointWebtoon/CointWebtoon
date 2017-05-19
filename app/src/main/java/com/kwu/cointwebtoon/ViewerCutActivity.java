@@ -2,21 +2,25 @@ package com.kwu.cointwebtoon;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
+import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
 
 import org.w3c.dom.Text;
@@ -34,6 +38,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
 
     private ArrayList<String> imageURLs;//imageURL 담을 ArrayList
+    private Episode episode_instance;
     private ViewFlipper flipper;//이미지를 넘기면서 볼 수 있는 뷰
     private int imageIndex = 0;//현재 보고 있는 컷이 몇 번째 컷인가?
     private int count = 0; // 좋아요 기능을 위한 변수
@@ -46,6 +51,11 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private boolean runMode, autoMode;
     private Thread autoThread;
     private int sleepTime = -1;
+    private RatingBar ratingbar;
+    private TextView mention, starTV;
+    private LayoutInflater inflater = null;
+    private Button givingStar;
+    public static final int REQUEST_CODE_RATING = 1001;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +71,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         autoMode = false;
         setSupportActionBar(topToolbar);
         flipper = (ViewFlipper) findViewById(R.id.viewflipper);
+        inflater = LayoutInflater.from(this);
 
         ///Flipper 리스너 추가 + SwipeDetector Class를 추가하여 Swipe과 touch 동작을 구분
         final SwipeDetector swipeDetector = new SwipeDetector();
@@ -106,6 +117,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
+        View view;
         Log.i("update", "되냐?");
         episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
         episodeIdTextView.setText(String.valueOf(episodeId));
@@ -121,12 +133,19 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                         .into(newImageView);
                 flipper.addView(newImageView);
             }
-            System.out.println(imageURLs.size());
+            view = inflater.inflate(R.layout.viewer_rating_item, null);
+            flipper.addView(view);
+            ratingbar = (RatingBar) view.findViewById(R.id.cut_rating_bar);
+            mention = (TextView) view.findViewById(R.id.cut_mention);
+            starTV = (TextView) view.findViewById(R.id.cut_starScore);
+            givingStar = (Button) view.findViewById(R.id.cut_giving_star);
+            new ViewerCutActivity.GetCurrentToonInfo().execute();
         }
+        getServerData.plusHit(toonId);
     }
 
     private void MoveNextView() {
-        if (imageIndex < imageURLs.size() - 1) {
+        if (imageIndex < imageURLs.size()) {
             flipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.appear_from_right));
             flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.disappear_to_left));
             flipper.showNext();
@@ -311,10 +330,47 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             return false;
         }
     }
-
+    public void cut_givingStarBtnClick(View v) {
+        try {
+            startActivityForResult(new Intent(this, ViewerStarScoreActivity.class), REQUEST_CODE_RATING);
+        }catch (Exception e) { e.printStackTrace();}
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_RATING) {
+            if(resultCode == RESULT_OK) {
+                try {
+                    float SCORE = data.getExtras().getFloat("SCORE");
+                    Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
+                    if(starTV != null && ratingbar != null){
+                        starTV.setText(String.valueOf(episode_instance.getEp_starScore() + SCORE));
+                        ratingbar.setMax(10);
+                        ratingbar.setRating((episode_instance.getEp_starScore() + SCORE)/2);
+                        givingStar.setEnabled(false);
+                    }
+                }catch (NullPointerException ex) {ex.printStackTrace();}
+            }
+        }
+    }
     @Override
     protected void onDestroy() {
         getServerData.removeObserver(this);
         super.onDestroy();
+    }
+    private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            episode_instance = manager.getEpisodeInstance(toonId, episodeId);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ratingbar.setRating(episode_instance.getEp_starScore()/2);
+            mention.setText(episode_instance.getMention());
+            starTV.setText(String.valueOf(episode_instance.getEp_starScore()));
+        }
     }
 }

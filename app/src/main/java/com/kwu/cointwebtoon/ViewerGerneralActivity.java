@@ -36,17 +36,19 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private ListView viewerListView; // url들을 통해 이미지들이 놓일 ListView
     private ViewerGeneralAdapter adapter;
     public static final int REQUEST_CODE_RATING = 1001;
+    private Episode episode_instance;
     private Thread myTread;
     private float x, y;
     private int count = 0;
     private String general_artist, general_mention;
+    private String plus, minus;
     private ImageView scrollbar;
     private LinearLayout linearLayout;
     private RelativeLayout relativeLayout;
     private RelativeLayout scrollSection;
     private GetServerData serverData;
     private Toolbar GeneralToonTopToolbar, GeneralToonBottomToolbar;
-    private TextView episodeTitleTextView, episodeIdTextView;
+    private TextView episodeTitleTextView, episodeIdTextView, goodCount;
     private COINT_SQLiteManager manager;
     private Button good;
     private boolean runMode;
@@ -74,7 +76,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             viewerListView.smoothScrollToPosition(readNumber);
             isFirst = false;
         }
+        episode_instance = manager.getEpisodeInstance(id,ep_id);
         maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
+        serverData.plusHit(id);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         runMode = false;
         episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
         episodeIdTextView = (TextView)findViewById(R.id.GeneralToont_current_pos);
+        goodCount = (TextView) findViewById(R.id.GeneralToont_count_txt);
         GeneralToonTopToolbar = (Toolbar) findViewById(R.id.GeneralToontoptoolbar);
         GeneralToonBottomToolbar = (Toolbar) findViewById(R.id.GeneralToontbottomtoolbar);
         good = (Button)findViewById(R.id.GeneralToontgood);
@@ -135,7 +140,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         Intent getIntent = getIntent();
         id = getIntent.getIntExtra("id", -1);
         ep_id = getIntent.getIntExtra("ep_id", -1);
-        general_mention = getIntent.getStringExtra("mention");
         if(id == -1 | ep_id == -1){
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
@@ -143,6 +147,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
+        goodCount.setText(String.valueOf(manager.getEpisodeInstance(id, ep_id).getLikes_E()));
     }
 
     private void initializeThread() {
@@ -190,9 +195,13 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         Toast.makeText(this, "좋아요 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
         count++;
         if(count % 2 != 0) {
+            serverData.likeEpisode(id, ep_id, plus);
+            goodCount.setText(String.valueOf(episode_instance.getLikes_E()));
             good.setBackgroundResource(R.drawable.view_heartcolor);
         }
         else{
+            serverData.likeEpisode(id, ep_id, minus);
+            goodCount.setText(String.valueOf(episode_instance.getLikes_E()));
             good.setBackgroundResource(R.drawable.view_heartempty);
         }
     }
@@ -217,7 +226,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             manager.updateEpisodeRead(id, ep_id);
             episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
             episodeIdTextView.setText(String.valueOf(ep_id));
-
         }
     }
     public void givingStarBtnClick(View v) {
@@ -234,9 +242,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     float SCORE = data.getExtras().getFloat("SCORE");
                     Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
                     if(adapter.starTV != null && adapter.ratingbar != null){
-                        adapter.starTV.setText(String.valueOf((manager.getEpisodeInstance(id,ep_id).getEp_starScore() + SCORE)));
+                        adapter.starTV.setText(String.valueOf(episode_instance.getEp_starScore() + SCORE));
                         adapter.ratingbar.setMax(10);
-                        adapter.ratingbar.setRating(((manager.getEpisodeInstance(id,ep_id).getEp_starScore() + SCORE)/2));
+                        adapter.ratingbar.setRating((episode_instance.getEp_starScore() + SCORE)/2);
                         adapter.givingstar.setEnabled(false);
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}
@@ -299,9 +307,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                 }
                 else{
                     if(adapter != null){
-                        adapter.ratingbar.setRating((manager.getEpisodeInstance(id,ep_id).getEp_starScore())/2);
-                        adapter.starTV.setText(String.valueOf(manager.getEpisodeInstance(id,ep_id).getEp_starScore()));
-                        adapter.mention.setText(manager.getEpisodeInstance(id, ep_id).getMention());
+                        adapter.ratingbar.setRating(episode_instance.getEp_starScore()/2);
+                        adapter.starTV.setText(String.valueOf(episode_instance.getEp_starScore()));
+                        adapter.mention.setText(episode_instance.getMention());
                     }
                     showToolbars(true);
                 }

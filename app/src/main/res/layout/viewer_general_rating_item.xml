@@ -8,15 +8,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RatingBar
             android:id="@+id/rating_bar"
+            style="?android:attr/ratingBarStyleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:numStars="5"
             android:layout_gravity="center"
             android:isIndicator="true"
-            style="?android:attr/ratingBarStyleIndicator"
-            />
+            android:numStars="5" />
+
         <TextView
             android:id="@+id/textview_starScore"
             android:layout_width="wrap_content"
