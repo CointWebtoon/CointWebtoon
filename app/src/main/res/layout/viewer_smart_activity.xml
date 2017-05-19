@@ -19,19 +19,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:src="@drawable/viewer_smart_previous"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:onClick="previousBtnClick" />
 
     <ImageView
+        android:id="@+id/smart_menuBtn"
         android:scaleType="fitXY"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:src="@drawable/viewer_smart_menubtn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:onClick="previousBtnClick" />
 
     <android.support.v7.widget.Toolbar
@@ -97,8 +98,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
         <LinearLayout
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
