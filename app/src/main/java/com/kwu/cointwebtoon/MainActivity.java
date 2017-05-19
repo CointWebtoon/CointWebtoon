@@ -1,6 +1,8 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
@@ -50,6 +53,7 @@ public class MainActivity extends TypeKitActivity
     private int[] dateday={0,0,0,0,0,0,0};
     private Application_UserInfo userInfo;
     Button navHeader;
+    TextView navStatus;
 
     Toolbar toolbar;
 
@@ -73,6 +77,7 @@ public class MainActivity extends TypeKitActivity
         navigationView.setNavigationItemSelectedListener(this);
         View headerview = navigationView.getHeaderView(0);
 
+        navStatus = (TextView)headerview.findViewById(R.id.nav_status);
         navHeader = (Button)headerview.findViewById(R.id.nav_login);
         navHeader.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -80,6 +85,7 @@ public class MainActivity extends TypeKitActivity
                     userInfo.onLogOut(MainActivity.this);
                     Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                     navHeader.setBackgroundResource(R.drawable.login);
+                    navStatus.setText("로그인 해주세요");
                 }else{
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     drawer.closeDrawer(GravityCompat.START);
@@ -312,6 +318,25 @@ public class MainActivity extends TypeKitActivity
                 position = (Integer)view.getTag();
                 cursor = coint_sqLiteManager.topHits(position);
                 cursor.moveToFirst();
+                if(cursor.getString(8).equals("1")){
+                    if(userInfo.isLogin()){
+                        if(!userInfo.isUserAdult()){
+                            Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }else{
+                        new AlertDialog.Builder(this)
+                                .setTitle("로그인")
+                                .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                    }
+                                }).setNegativeButton("아니요", null).show();
+                        return;
+                    }
+                }
                 result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
                 top15Adapter.notifyDataSetChanged();
                 break;
@@ -320,6 +345,25 @@ public class MainActivity extends TypeKitActivity
                 position = (Integer)view.getTag();
                 cursor = coint_sqLiteManager.topHits(position);
                 cursor.moveToPosition(1);
+                if(cursor.getString(8).equals("1")){
+                    if(userInfo.isLogin()){
+                        if(!userInfo.isUserAdult()){
+                            Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }else{
+                        new AlertDialog.Builder(this)
+                                .setTitle("로그인")
+                                .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                    }
+                                }).setNegativeButton("아니요", null).show();
+                        return;
+                    }
+                }
                 result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
                 top15Adapter.notifyDataSetChanged();
                 break;
@@ -328,6 +372,26 @@ public class MainActivity extends TypeKitActivity
 
                 cursor = coint_sqLiteManager.topHits(position);
                 cursor.moveToLast();
+
+                if(cursor.getString(8).equals("1")){
+                    if(userInfo.isLogin()){
+                        if(!userInfo.isUserAdult()){
+                            Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }else{
+                        new AlertDialog.Builder(this)
+                                .setTitle("로그인")
+                                .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                    }
+                                }).setNegativeButton("아니요", null).show();
+                        return;
+                    }
+                }
 
                 result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
                 top15Adapter.notifyDataSetChanged();
@@ -362,10 +426,11 @@ public class MainActivity extends TypeKitActivity
     protected void onResume() {
         super.onResume();
         if(userInfo.isLogin()){
-            //TODO : 로그인 되었을 경우 로그인을 해주세요 말고 유저 정보로 세팅
             navHeader.setBackgroundResource(R.drawable.logout);
+            navStatus.setText(userInfo.getUserName()+"님");
         }else{
             navHeader.setBackgroundResource(R.drawable.login);
+            navStatus.setText("로그인 해주세요");
         }
 
         ArrayList<Webtoon> mList = new ArrayList<>();

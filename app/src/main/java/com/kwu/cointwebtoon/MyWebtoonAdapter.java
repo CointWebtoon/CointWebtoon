@@ -59,6 +59,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
             viewHolder.add = (ImageView)itemLayout.findViewById(R.id.addWebtoon);
             viewHolder.cuttoon  = ( TextView)itemLayout.findViewById(R.id.cuttoon);
             viewHolder.update = (TextView)itemLayout.findViewById(R.id.update);
+            viewHolder.adult = (TextView)itemLayout.findViewById(R.id.adult);
 
             viewHolder.title.setSelected(true);
 
@@ -71,7 +72,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
         Glide.with(context).load(currentItem.getThumbURL()).into(viewHolder.imageView);
         viewHolder.title.setText(currentItem.getTitle());
         viewHolder.artist.setText(currentItem.getArtist());
-        viewHolder.starScore.setText(Float.toString(currentItem.getStarScore()));
+        viewHolder.starScore.setText("★ "+Float.toString(currentItem.getStarScore()));
         viewHolder.ranking.setText(Integer.toString(position + 1));
 
         if(currentItem.isMine()){           //마이웹툰일 경우 -로 설정
@@ -89,6 +90,17 @@ public class MyWebtoonAdapter extends BaseAdapter {
             viewHolder.cuttoon.setText(null);
             viewHolder.cuttoon.setVisibility(convertView.GONE);
         }
+
+        if(currentItem.isAdult() == true) {      // 성인툰 여부
+            viewHolder.adult.setVisibility(View.VISIBLE);
+            viewHolder.adult.setBackgroundResource(R.drawable.main_icon_adult);
+            viewHolder.adult.setText("성인");
+        }else{
+            viewHolder.adult.setBackgroundResource(R.drawable.main_icon_adult);
+            viewHolder.adult.setText(null);
+            viewHolder.adult.setVisibility(convertView.GONE);
+        }
+
         if(currentItem.isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
             viewHolder.update.setVisibility(convertView.VISIBLE);
             viewHolder.update.setBackgroundResource(R.drawable.week_icon_update);
@@ -135,5 +147,6 @@ public class MyWebtoonAdapter extends BaseAdapter {
         ImageView add;
         TextView update;
         TextView cuttoon;
+        TextView adult;
     }
 }

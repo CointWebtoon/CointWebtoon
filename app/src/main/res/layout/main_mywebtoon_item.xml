@@ -32,7 +32,7 @@
                     android:paddingBottom="2dp"
                     android:layout_marginLeft="5dp"
                     android:paddingTop="6dp"
-                    android:src="@drawable/splash" />
+                    android:src="@drawable/week_placeholder" />
 
 
                 <TextView
@@ -56,6 +56,17 @@
                     android:textColor="@color/D2Light"
                     android:textSize="9sp"
                     android:layout_below="@+id/recycle_update"
+                    android:layout_alignParentStart="true" />
+                <TextView
+                    android:id="@+id/recycle_adult"
+                    android:layout_width="24dp"
+                    android:layout_height="15dp"
+                    android:gravity="center"
+                    android:layout_marginLeft="6dp"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="9sp"
+                    android:layout_below="@+id/recycle_cuttoon"
                     android:layout_alignParentStart="true" />
             </RelativeLayout>
 
@@ -94,7 +105,7 @@
                     android:text="9.99"
                     android:layout_gravity="center"
                     android:textAlignment="center"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@android:color/holo_red_light"
                     android:textSize="8dp"/>
 
 

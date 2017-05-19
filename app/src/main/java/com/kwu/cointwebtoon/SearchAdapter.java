@@ -64,6 +64,7 @@ public class SearchAdapter extends BaseAdapter {
             viewHolder.up = (TextView)itemLayout.findViewById(R.id.search_update);
             viewHolder.cuttoon = (TextView)itemLayout.findViewById(R.id.search_cuttoon);
             viewHolder.addItemButton = (ImageView)itemLayout.findViewById(R.id.addWebtoon);
+            viewHolder.adult = (TextView)itemLayout.findViewById(R.id.search_adult);
 
             viewHolder.title.setSelected(true);
 
@@ -92,6 +93,17 @@ public class SearchAdapter extends BaseAdapter {
             viewHolder.cuttoon.setText(null);
             viewHolder.cuttoon.setVisibility(itemLayout.GONE);
         }
+
+        if(resultQuery.get(position).isAdult() == true) {      // 컷툰 여부
+            viewHolder.adult.setVisibility(View.VISIBLE);
+            viewHolder.adult.setBackgroundResource(R.drawable.main_icon_adult);
+            viewHolder.adult.setText("성인");
+        }else{
+            viewHolder.adult.setBackgroundResource(R.drawable.main_icon_adult);
+            viewHolder.adult.setText(null);
+            viewHolder.adult.setVisibility(itemLayout.GONE);
+        }
+
         if(resultQuery.get(position).isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
             viewHolder.up.setVisibility(View.VISIBLE);
             viewHolder.up.setBackgroundResource(R.drawable.week_icon_update);
@@ -139,6 +151,7 @@ public class SearchAdapter extends BaseAdapter {
         TextView starScore;
         TextView up;
         TextView cuttoon;
+        TextView adult;
     }
 
 }
