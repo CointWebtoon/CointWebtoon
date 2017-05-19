@@ -1,5 +1,7 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -55,6 +57,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     private char currentToonType;
     private Webtoon currentWebtoon;
     private SharedPreferences likePreference;
+    Application_UserInfo userInfo;
 
     /**
      * Members
@@ -99,6 +102,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     }
 
     private void initData() {
+        userInfo = (Application_UserInfo)getApplication();
         likePreference = getSharedPreferences("episode_like", MODE_PRIVATE);
         Intent getIntent = getIntent();
         currentToonId = getIntent.getIntExtra("id", ERR_CODE);
@@ -236,6 +240,26 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
 
     public void onRecyclerViewItemClick(View v) {
         Episode target = (Episode) v.findViewById(R.id.reg_date).getTag();
+        if(currentWebtoon.isAdult()){
+            Log.i("coint", "로그인 상태 : " + String.valueOf(userInfo.isLogin()));
+            if(userInfo.isLogin()){
+                if(!userInfo.isUserAdult()){
+                    Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }else{
+                new AlertDialog.Builder(this)
+                        .setTitle("로그인")
+                        .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(EpisodeActivity.this, LoginActivity.class));
+                            }
+                        }).setNegativeButton("아니요", null).show();
+                return;
+            }
+        }
         switch (currentToonType) {
             case 'G': {//일반툰
                 manager.updateEpisodeRead(target.getId(), target.getEpisode_id());
@@ -342,6 +366,26 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 }
                 break;
             case R.id.episode_floating_first:
+                if(currentWebtoon.isAdult()){
+                    Log.i("coint", "로그인 상태 : " + String.valueOf(userInfo.isLogin()));
+                    if(userInfo.isLogin()){
+                        if(!userInfo.isUserAdult()){
+                            Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }else{
+                        new AlertDialog.Builder(this)
+                                .setTitle("로그인")
+                                .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(EpisodeActivity.this, LoginActivity.class));
+                                    }
+                                }).setNegativeButton("아니요", null).show();
+                        return;
+                    }
+                }
                 recycler.scrollToPosition(recycler.getChildCount() - 1);
                 switch (currentToonType) {
                     case 'G': {//일반툰

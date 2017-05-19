@@ -39,13 +39,14 @@ public class SearchActivity extends TypeKitActivity
     TextView resultview;
     private EditText search;
     private FloatingActionButton fab;
-    private static OAuthLogin loginInstance;
+    private Application_UserInfo userInfo;
     Button navHeader;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//키보드 숨김
+        userInfo = (Application_UserInfo)getApplication();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,8 +67,14 @@ public class SearchActivity extends TypeKitActivity
         navHeader = (Button)headerview.findViewById(R.id.nav_login);
         navHeader.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                startActivity(new Intent(SearchActivity.this, LoginActivity.class));
-                drawer.closeDrawer(GravityCompat.START);
+                if(userInfo.isLogin()){
+                    userInfo.onLogOut(SearchActivity.this);
+                    Toast.makeText(SearchActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+                    navHeader.setBackgroundResource(R.drawable.login);
+                }else{
+                    startActivity(new Intent(SearchActivity.this, LoginActivity.class));
+                    drawer.closeDrawer(GravityCompat.START);
+                }
             }
         });
 
@@ -237,12 +244,9 @@ public class SearchActivity extends TypeKitActivity
 
     protected void onResume() {
         super.onResume();
-
-        loginInstance = Application_UserInfo.getLoginInstance();
-        if(Application_UserInfo.isLogin()){
+        if(userInfo.isLogin()){
             navHeader.setBackgroundResource(R.drawable.logout);
-            Application_UserInfo.onLogOut(this);
-            loginInstance.logoutAndDeleteToken(this);
+            //TODO : 로그인 되었을 경우 로그인을 해주세요 말고 유저 정보로 세팅
         }else{
             navHeader.setBackgroundResource(R.drawable.login);
         }

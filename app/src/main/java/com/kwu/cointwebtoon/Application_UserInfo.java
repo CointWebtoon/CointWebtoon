@@ -2,6 +2,7 @@ package com.kwu.cointwebtoon;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.nhn.android.naverlogin.OAuthLogin;
 
@@ -18,23 +19,23 @@ public class Application_UserInfo extends Application {
     /**
      * User Info ( Save Login Data )
      */
-    private static boolean login = false;
-    private static String userID = null;
-    private static String userName = null;
-    private static boolean userAdult = false;
-    private static char userGender = 'N';   //설정 안된 상태 : N, 남자 : M, 여자 : F
+    private boolean login = false;
+    private String userID = null;
+    private String userName = null;
+    private boolean userAdult = false;
+    private char userGender = 'N';   //설정 안된 상태 : N, 남자 : M, 여자 : F
 
     /**
      * Getter Methods
      */
-    public static String getUserName(){return userName;}
-    public static boolean isUserAdult(){return userAdult;}
-    public static char getUserGender(){return userGender;}
-    public static OAuthLogin getLoginInstance(){return loginInstance;}
-    public static String getUserID(){return userID;}
-    public static boolean isLogin(){return login;}
+    public String getUserName(){return userName;}
+    public boolean isUserAdult(){return userAdult;}
+    public char getUserGender(){return userGender;}
+    public OAuthLogin getLoginInstance(){return loginInstance;}
+    public String getUserID(){return userID;}
+    public boolean isLogin(){return login;}
 
-    public static void initUserInfo(){
+    public void initUserInfo(){
         userName = null;
         userAdult = false;
         userGender = 'N';
@@ -44,26 +45,26 @@ public class Application_UserInfo extends Application {
     public void onCreate() {
         loginInstance = OAuthLogin.getInstance();
         loginInstance.init(getApplicationContext(), Application_UserInfo.API_CLIENT_ID, Application_UserInfo.API_CLIENT_SECRET, Application_UserInfo.API_CLIENT_NAME);
-
-        LoginRequestApiTask apiTask = new LoginRequestApiTask(getApplicationContext());
+        LoginRequestApiTask apiTask = new LoginRequestApiTask(getApplicationContext(), this);
         apiTask.execute();
         super.onCreate();
     }
 
-    public static void onLogIn(String ID, String name, boolean adult, char gender){
+    public void onLogIn(String ID, String name, boolean adult, char gender){
         login = true;
         userID = ID;
         userName = name;
         userAdult = adult;
         userGender = gender;
+        Log.i("coint", "onLogIn");
     }
 
-    public static void onLogOut(Context mContext){
+    public void onLogOut(Context mContext){
         login = false;
         userID = null;
         userName = null;
         userAdult = false;
         userGender = 'N';
-        loginInstance.logout(mContext);
+        loginInstance.logoutAndDeleteToken(mContext);
     }
 }
