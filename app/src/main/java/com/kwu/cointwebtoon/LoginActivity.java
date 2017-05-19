@@ -14,6 +14,7 @@ public class LoginActivity extends TypeKitActivity {
     /**
      *  Login API Instance
      */
+    private Application_UserInfo userInfo;
     private static OAuthLogin loginInstance;
     private OAuthLoginHandler loginCallBack;
 
@@ -40,7 +41,8 @@ public class LoginActivity extends TypeKitActivity {
     }
 
     private void getLoginInstance(){
-        loginInstance = Application_UserInfo.getLoginInstance();
+        userInfo = (Application_UserInfo)getApplication();
+        loginInstance = userInfo.getLoginInstance();
         /**
          *  네아로 로그인 Activity(LoginActivity 말고 실제 로그인 액티비티) 종료 시 행동
          */
@@ -48,10 +50,10 @@ public class LoginActivity extends TypeKitActivity {
             @Override
             public void run(boolean success) {
                 if(success){
-                    LoginRequestApiTask apiTask = new LoginRequestApiTask(LoginActivity.this);
+                    LoginRequestApiTask apiTask = new LoginRequestApiTask(LoginActivity.this, userInfo);
                     apiTask.execute();
                 }else{
-                    Application_UserInfo.initUserInfo();
+                    userInfo.initUserInfo();
                 }
             }
         };

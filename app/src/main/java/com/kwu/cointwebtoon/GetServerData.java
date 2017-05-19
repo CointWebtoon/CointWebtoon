@@ -172,8 +172,8 @@ public class GetServerData extends Observable{
                                 thumburl = jsonObject.getString("Thumburl");
                                 likes = Integer.parseInt(jsonObject.getString("Likes"));
                                 toonType = jsonObject.getString("Toontype").charAt(0);
-                                isAdult = Boolean.parseBoolean(jsonObject.getString("Is_adult"));
-                                isCharged = Boolean.parseBoolean(jsonObject.getString("Is_charged"));
+                                isAdult = Integer.parseInt(jsonObject.getString("Is_adult")) == 1 ? true : false;
+                                isCharged = Integer.parseInt(jsonObject.getString("Is_charged")) == 1 ? true : false;
                                 isUpdated = Integer.parseInt(jsonObject.getString("Is_updated"));
 
                                 webtoons.add(new Webtoon(id, title, artist, starscore, thumburl, likes, hits, toonType, isCharged, isAdult, isUpdated));

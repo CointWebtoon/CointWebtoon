@@ -24,13 +24,15 @@ import javax.xml.parsers.ParserConfigurationException;
 public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
     private Context mContext;
     private OAuthLogin loginInstance;
+    private Application_UserInfo userInfo;
 
     /**
      * Constructor
      */
-    public LoginRequestApiTask(Context mContext){
+    public LoginRequestApiTask(Context mContext, Application_UserInfo application){
+        userInfo = application;
         this.mContext = mContext;
-        loginInstance = Application_UserInfo.getLoginInstance();
+        loginInstance = userInfo.getLoginInstance();
     }
 
     @Override
@@ -43,13 +45,12 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
         XMLDOMParser parser = new XMLDOMParser();
         if(parser.parse(content)){
             Log.i("coint" , "유저 정보 저장 성공");
+            Log.i("coint", "닉네임 : " + userInfo.getUserName() + " 성인 여부 : "  + userInfo.isUserAdult() +  " 성별 : " + userInfo.getUserGender());
             if(mContext instanceof LoginActivity){
-                AppCompatActivity loginActivity = (AppCompatActivity)mContext;
-                Toast.makeText(mContext, "닉네임 : " + Application_UserInfo.getUserName() + " 성인 여부 : "  + Application_UserInfo.isUserAdult() +  " 성별 : " + Application_UserInfo.getUserGender(), Toast.LENGTH_SHORT).show();
-                loginActivity.finish();
+                ((LoginActivity) mContext).finish();
             }
         }else{
-            Application_UserInfo.initUserInfo();
+            userInfo.initUserInfo();
         }
     }
 
@@ -89,9 +90,9 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
                 age = responseElement.getElementsByTagName("age").item(0).getTextContent();
                 gender = responseElement.getElementsByTagName("gender").item(0).getTextContent();
                 int startAge = Integer.parseInt(age.split("-")[0]);
-                Application_UserInfo.onLogIn(id, nickname, startAge > 19 ? true : false, gender.charAt(0));
+                userInfo.onLogIn(id, nickname, startAge > 19 ? true : false, gender.charAt(0));
 
-                Log.i("coint", Application_UserInfo.getUserName() + " " + Application_UserInfo.isUserAdult() + " " + Application_UserInfo.getUserGender());
+                Log.i("coint", userInfo.getUserName() + " " + userInfo.isUserAdult() + " " + userInfo.getUserGender());
                 return true;
             } catch (ResultCodeNotSuccessException e){
                 Log.e("coint", "Result Code is not SUCCESS : 로그인 안 된 상태");

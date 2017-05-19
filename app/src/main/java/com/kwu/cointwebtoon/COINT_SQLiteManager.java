@@ -334,6 +334,20 @@ public class COINT_SQLiteManager {
         }
         return genreArrayList;
     }
+
+    public Episode getLatestEpisode(int toonId){
+        Episode episode = null;
+        Cursor cursor = db.rawQuery("SELECT * "+
+                                                        "FROM EPISODE "+
+                                                        "WHERE Is_read = 1 AND Id_E ="+ Integer.toString(toonId)+
+                                                        " ORDER BY Episode_id DESC LIMIT 1",null);
+        if(cursor.moveToNext()){
+            return new Episode(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getFloat(3), cursor.getString(4),
+                    cursor.getString(5), cursor.getString(6), cursor.getInt(7), cursor.getInt(8));
+        }
+        return episode;
+
+    }
     /**
      * 1차 통합 은주 부분 추가 메소드 end
      */
