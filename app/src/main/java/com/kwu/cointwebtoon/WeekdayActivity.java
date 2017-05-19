@@ -55,7 +55,6 @@ public class WeekdayActivity extends TypeKitActivity {
         }
 
         //viewPager Adapter, PageTransformer 설정
-
         binding.viewPager.setAdapter(new FSPagerAdapter(getSupportFragmentManager()));
         //binding.viewPager.setPageTransformer(true, new WeekdayTransformer());
         binding.viewPager.setPagingEnabled(false);
@@ -84,7 +83,7 @@ public class WeekdayActivity extends TypeKitActivity {
     }
     public void btnMyOnClick(View v){
         Toast.makeText(getBaseContext(), "MY 메뉴로 이동", Toast.LENGTH_SHORT).show();
-        //TODO-MY 메뉴로 이동
+        finish();
     }
 
     public void setButtonTextAppearance(Context context, Button button,  int resId){

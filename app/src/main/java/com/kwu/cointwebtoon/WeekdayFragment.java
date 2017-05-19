@@ -15,11 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.util.Attributes;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
+import com.kwu.cointwebtoon.Views.CircularView;
 
-import java.util.Collections;
-import java.util.Comparator;
 
 public class WeekdayFragment extends Fragment {
     Weekday_ListItem listItem = null;
@@ -51,25 +52,24 @@ public class WeekdayFragment extends Fragment {
         listItem = WeekdayActivity.listItems[(position)];
         LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.weekday_fragment, container, false);
         listView = (ListView)layout.findViewById(R.id.listView);
-
         //리스트 조회순 정렬
         listItem.orderByHits();
         weekdayAdapter = new WeekdayAdapter(listView, listItem, getContext());
         listView.setAdapter(weekdayAdapter);
+        weekdayAdapter.setMode(Attributes.Mode.Single);
         listView.setClipToPadding(false);
         listView.setClipChildren(false);
         listView.setFocusable(false);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-                // get item
+                //웹툰연결
                 Webtoon target = (Webtoon)parent.getItemAtPosition(position);
                 Toast.makeText(getContext(),"웹툰 ID : " + target.getTitle(), Toast.LENGTH_SHORT).show();
                 Intent episodeIntent = new Intent(getContext(), EpisodeActivity.class);
                 episodeIntent.putExtra("id", target.getId());
                 episodeIntent.putExtra("toontype", target.getToonType());
                 startActivity(episodeIntent);
-                //TODO - 해당 웹툰 에피소드 액티비티 연결 --> 완료
             }
         }) ;
 
