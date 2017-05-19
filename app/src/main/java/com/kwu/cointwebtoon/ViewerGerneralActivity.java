@@ -1,5 +1,6 @@
 package com.kwu.cointwebtoon;
 
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -61,30 +62,21 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
     private int id, ep_id;
     private SharedPreferences likePreference;
-    Application_UserInfo userInfo;
+    private Application_UserInfo userInfo;
+    private Thread autoScrollThread;
+    private boolean autoScroll = false;
 
     @Override
     public void update(Observable observable, Object o) {
         this.imageUrls = (ArrayList<String>) o;
         adapter = new ViewerGeneralAdapter(this, imageUrls);
         viewerListView.setAdapter(adapter);
-        if (isFirst) {
-            int readNumber;
-            for (readNumber = 0; readNumber < imageUrls.size(); readNumber++) {
-                if (imageUrls.get(readNumber).isEmpty())
-                    break;
-            }
-            if (readNumber > 0 && readNumber < imageUrls.size())
-                readNumber--;
-            else if (readNumber >= imageUrls.size())
-                readNumber = 0;
-            viewerListView.smoothScrollToPosition(readNumber);
-            isFirst = false;
-        }
         episode_instance = manager.getEpisodeInstance(id,ep_id);
         new ViewerGerneralActivity.GetCurrentToonInfo().execute();
         maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
         serverData.plusHit(id);
+        if(autoScroll)
+            autoScroll();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +171,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                         }
                     });
                 } catch (InterruptedException intex) {
-                    Log.i("thread", "Interrupted");
                 }
             }
         });
@@ -300,7 +291,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     }
                     scrollManually = false;
                     try{
-                        viewerListView.smoothScrollToPosition((imageUrls.size() - 1) * layoutParams.topMargin / maxTopMargin);
+                        int position = imageUrls.size() * layoutParams.topMargin / maxTopMargin;
+                        viewerListView.smoothScrollToPosition(position);
+                        viewerListView.setSelection(position);
                     }catch(ArithmeticException e){
                         //Divided By Zero Excpetion 처리 --> 아직 아이템들이 로드되지 않았을 때 스크롤을 하면 이렇게 됨
                         return true;
@@ -312,6 +305,25 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             return true;
         }
     }
+    public void autoScroll(){
+        try{
+            autoScrollThread.interrupt();
+        }catch (Exception e){}
+        autoScrollThread = new Thread(){
+            public void run(){
+                while(true){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            viewerListView.smoothScrollBy(12, 10);
+                        }
+                    });
+                    try{Thread.sleep(10);}catch (Exception e){break;}
+                }
+            }
+        };
+        autoScrollThread.start();
+    }
     private class ScrollBarOnScrollListener implements AbsListView.OnScrollListener {
         private int mLastFirstVisibleItem = 0;
         private boolean lastItemVisibleFlag = false;
@@ -319,6 +331,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         public void onScrollStateChanged(AbsListView view, int event) {
             if(event == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag) {
                 if (runMode && (ep_id < manager.maxEpisodeId(id))) {
+                    try{autoScrollThread.interrupt();}catch (Exception e){}
                     //정주행 모드일 때, List View의 바닥에 닿으면 다음 회차가 존재할 경우에 다음 회차로 넘어감
                     imageUrls.clear();
                     ep_id += 1;
@@ -373,15 +386,28 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         }
     }
     public void runButtonClick(View v){
-        if(runMode) {
-            runMode = false;
-            ImageButton target = (ImageButton)v;
-            target.setImageDrawable(getDrawable(R.drawable.run_inactive));
-        }
-        else {
-            runMode = true;
-            ImageButton target = (ImageButton)v;
-            target.setImageDrawable(getDrawable(R.drawable.run_active));
+        switch (v.getId()){
+            case R.id.general_run:
+                if(runMode) {
+                    runMode = false;
+                    ImageButton target = (ImageButton)v;
+                    target.setImageDrawable(getDrawable(R.drawable.run_inactive));
+                }
+                else {
+                    runMode = true;
+                    ImageButton target = (ImageButton)v;
+                    target.setImageDrawable(getDrawable(R.drawable.run_active));
+                }
+                break;
+            case R.id.general_auto_scroll:
+                if(autoScroll){
+                    try{autoScrollThread.interrupt();}catch(Exception e){}
+                    autoScroll = false;
+                }else{
+                    autoScroll();
+                    autoScroll = true;
+                }
+                break;
         }
     }
     public void autoScroll(View v) {
@@ -394,6 +420,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     }
     @Override
     protected void onDestroy() {
+        try{autoScrollThread.interrupt();}catch (Exception e){}
         serverData.removeObserver(this);
         super.onDestroy();
     }
