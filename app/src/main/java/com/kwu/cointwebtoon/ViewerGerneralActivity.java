@@ -1,8 +1,10 @@
 package com.kwu.cointwebtoon;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,8 +42,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private Thread myTread;
     private float x, y;
     private int count = 0;
-    private String general_artist, general_mention;
-    private String plus, minus;
     private ImageView scrollbar;
     private LinearLayout linearLayout;
     private RelativeLayout relativeLayout;
@@ -57,6 +57,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private int maxTopMargin = 0;               //스크롤바 좌표 계산
     private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
     private int id, ep_id;
+    Application_UserInfo userInfo;
 
     @Override
     public void update(Observable observable, Object o) {
@@ -144,6 +145,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        userInfo = (Application_UserInfo)getApplication();
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
@@ -192,15 +194,25 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         this.finish();
     }
     public void HeartBtn(View v){
+        if(!userInfo.isLogin()){
+            new AlertDialog.Builder(this)
+                    .setTitle("로그인")
+                    .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                    .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(ViewerGerneralActivity.this, LoginActivity.class));
+                        }
+                    }).setNegativeButton("아니요", null).show();
+            return;
+        }
         Toast.makeText(this, "좋아요 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
         count++;
         if(count % 2 != 0) {
-            serverData.likeEpisode(id, ep_id, plus);
             goodCount.setText(String.valueOf(episode_instance.getLikes_E()));
             good.setBackgroundResource(R.drawable.view_heartcolor);
         }
         else{
-            serverData.likeEpisode(id, ep_id, minus);
             goodCount.setText(String.valueOf(episode_instance.getLikes_E()));
             good.setBackgroundResource(R.drawable.view_heartempty);
         }
@@ -216,7 +228,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             manager.updateEpisodeRead(id, ep_id);
             episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
             episodeIdTextView.setText(String.valueOf(ep_id));
-            System.out.println("작가의말" + general_mention);
         }
     }
     public void Next(View v) {

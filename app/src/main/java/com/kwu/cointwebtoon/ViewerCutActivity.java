@@ -1,10 +1,12 @@
 package com.kwu.cointwebtoon;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -56,6 +58,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private LayoutInflater inflater = null;
     private Button givingStar;
     public static final int REQUEST_CODE_RATING = 1001;
+    Application_UserInfo userInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,7 +103,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             }
 
         });
-
+        userInfo = (Application_UserInfo)getApplication();
         flipper.setBackgroundColor(Color.WHITE);
         Intent getIntent = getIntent();
         toonId = getIntent.getIntExtra("id", -1);
@@ -210,6 +213,18 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
 
     public void HeartBtn(View v) {
+        if(!userInfo.isLogin()){
+            new AlertDialog.Builder(this)
+                    .setTitle("로그인")
+                    .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                    .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(ViewerCutActivity.this, LoginActivity.class));
+                        }
+                    }).setNegativeButton("아니요", null).show();
+            return;
+        }
         Toast.makeText(this, "좋아요 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
         count++;
         if (count % 2 != 0) {
