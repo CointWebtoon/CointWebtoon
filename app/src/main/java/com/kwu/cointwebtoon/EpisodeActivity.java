@@ -442,11 +442,25 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         switch (v.getId()) {
             case R.id.episode_like:
             case R.id.episode_like_text:
+                if(!userInfo.isLogin()){
+                    new AlertDialog.Builder(this)
+                            .setTitle("로그인")
+                            .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(EpisodeActivity.this, LoginActivity.class));
+                                }
+                            }).setNegativeButton("아니요", null).show();
+                    return;
+                }
                 SharedPreferences.Editor editor = likePreference.edit();
                 if (likePreference.getBoolean(String.valueOf(currentToonId), false)) {//좋아요 취소
+                    getServerData.likeWebtoon(currentToonId, "minus");
                     editor.putBoolean(String.valueOf(currentToonId), false);
                     likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
                 } else {//좋아요
+                    getServerData.likeWebtoon(currentToonId, "plus");
                     editor.putBoolean(String.valueOf(currentToonId), true);
                     likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
                 }
@@ -539,6 +553,9 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             title.setText(currentWebtoon.getTitle());
             if (currentWebtoon.isMine()) {
                 myImageButton.setImageDrawable(getDrawable(R.drawable.my_set));
+            }
+            if(!userInfo.isLogin()){
+                likePreference.edit().putBoolean(String.valueOf(currentToonId), false).commit();
             }
             if (likePreference.getBoolean(String.valueOf(currentToonId), false)) {
                 likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
