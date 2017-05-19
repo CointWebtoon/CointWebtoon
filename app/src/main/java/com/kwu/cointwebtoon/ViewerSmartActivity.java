@@ -234,7 +234,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
 
     }
     public void SmartToonNext(View v){
-        if(episodeId > 1){
+        if(episodeId > 0){
             imageFlipper.removeAllViews();
             imageURLs.clear();
             episodeId += 1;

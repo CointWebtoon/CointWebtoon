@@ -30,29 +30,36 @@
                 />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
-    <LinearLayout
+    <HorizontalScrollView
+        android:layout_below="@id/comment_toolbar"
+        android:id="@+id/genre_titlebar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="9">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:textColor="#FFFFFF"
-            android:background="@color/D2Light"
-            android:text="My 댓글"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@drawable/testing"
-            android:text="Best 댓글"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@drawable/testing"
-            android:text="전체 댓글"/>
-    </LinearLayout>
-
+        android:layout_height="40dp"
+        android:background="@android:color/white"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="9">
+            <Button
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textColor="#FFFFFF"
+                android:background="@color/D2Light"
+                android:text="My 댓글"/>
+            <Button
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@drawable/testing"
+                android:text="Best 댓글"/>
+            <Button
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@drawable/testing"
+                android:text="전체 댓글"/>
+        </LinearLayout>
+    </HorizontalScrollView>
 </LinearLayout>

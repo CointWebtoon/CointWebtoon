@@ -215,7 +215,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
 
     public void Next(View v) {
-        if(episodeId > 1 ){
+        if(episodeId > 0 ){
             flipper.removeAllViews();
             imageURLs.clear();
             episodeId += 1;

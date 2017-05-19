@@ -143,7 +143,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
-        manager.getEpisodes(id);
     }
 
     private void initializeThread() {
@@ -209,17 +208,15 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
             episodeIdTextView.setText(String.valueOf(ep_id));
             System.out.println("작가의말" + general_mention);
-            adapter.mention.setText(general_mention);
         }
     }
     public void Next(View v) {
-        if(ep_id > 1 && (ep_id < manager.maxEpisodeId(id))){
+        if(ep_id > 0 && (ep_id < manager.maxEpisodeId(id))){
             ep_id += 1;
             serverData.getImagesFromServer(id, ep_id);
             manager.updateEpisodeRead(id, ep_id);
             episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
             episodeIdTextView.setText(String.valueOf(ep_id));
-            System.out.println("작가의말" + general_mention);
 
         }
     }
@@ -237,9 +234,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     float SCORE = data.getExtras().getFloat("SCORE");
                     Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
                     if(adapter.starTV != null && adapter.ratingbar != null){
-                        adapter.starTV.setText(String.valueOf(SCORE));
+                        adapter.starTV.setText(String.valueOf((manager.getEpisodeInstance(id,ep_id).getEp_starScore() + SCORE)));
                         adapter.ratingbar.setMax(10);
-                        adapter.ratingbar.setRating(SCORE/2);
+                        adapter.ratingbar.setRating(((manager.getEpisodeInstance(id,ep_id).getEp_starScore() + SCORE)/2));
                         adapter.givingstar.setEnabled(false);
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}
@@ -301,8 +298,11 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     episodeIdTextView.setText(String.valueOf(ep_id));
                 }
                 else{
-
-
+                    if(adapter != null){
+                        adapter.ratingbar.setRating((manager.getEpisodeInstance(id,ep_id).getEp_starScore())/2);
+                        adapter.starTV.setText(String.valueOf(manager.getEpisodeInstance(id,ep_id).getEp_starScore()));
+                        adapter.mention.setText(manager.getEpisodeInstance(id, ep_id).getMention());
+                    }
                     showToolbars(true);
                 }
             }

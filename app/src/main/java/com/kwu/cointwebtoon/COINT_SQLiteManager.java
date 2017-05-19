@@ -267,6 +267,14 @@ public class COINT_SQLiteManager {
         }
     }
 
+    public Episode getEpisodeInstance(int id, int ep_id){
+        //Episode 생성자 :
+        Cursor cursor = db.rawQuery("SELECT Episode_title, Ep_starscore, Ep_thumbURL, Reg_date, Mention, Likes_E FROM EPISODE WHERE Id_E=" + id + " AND Episode_id=" + ep_id, null);
+        cursor.moveToNext();
+        return new Episode(id, ep_id, cursor.getString(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), 1);
+    }
+
+
     //테스트용 --> 모든 Episode를 안읽은 상태로 만드는 메소드
     public void initializeEpisodeRead(){
         db.execSQL("UPDATE EPISODE SET Is_read=0");
