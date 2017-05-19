@@ -37,18 +37,25 @@
                 android:gravity="center|left"
                 android:layout_toRightOf="@+id/GeneralToontgotoepi"
                 android:textColor="#FFFFFF"
-                android:onClick="BackBtn"
-                />
+                android:onClick="BackBtn" />
             <ImageButton
+                android:id="@+id/general_run"
                 android:background="#333333"
                 android:onClick="runButtonClick"
-                android:layout_width="45dp"
+                android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/run_inactive" />
+            <ImageButton
+                android:onClick="runButtonClick"
+                android:layout_toLeftOf="@id/general_run"
+                android:id="@+id/general_auto_scroll"
+                android:layout_width="38dp"
+                android:layout_height="38dp" />
+
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
