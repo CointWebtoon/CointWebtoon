@@ -34,7 +34,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimaryDark">@color/D2Gray</item>
+        <item name="colorPrimaryDark">#333333</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
