@@ -4,7 +4,7 @@
     xmlns:card="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview"
@@ -14,7 +14,6 @@
         app:cardusecompatpadding="false"
         card:cardBackgroundColor="#5F5F5F"
         card:cardCornerRadius="10dp">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -101,5 +100,12 @@
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
+    <Button
+        android:id="@+id/latest"
+        android:layout_marginTop="9dp"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:text="이어보기"
+        android:background="@color/episode_sub_floating_color"/>
 
 </LinearLayout>

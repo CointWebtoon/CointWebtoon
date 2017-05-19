@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         TextView starscore;
         TextView up;
         TextView cuttoon;
+        Button latest;
 
         public ViewHolder(View view) {
             super(view);
@@ -50,6 +52,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
             starscore = (TextView) view.findViewById(R.id.mainStarScore);
             up = (TextView)view.findViewById(R.id.recycle_update);
             cuttoon = (TextView)view.findViewById(R.id.recycle_cuttoon);
+            latest = (Button)view.findViewById(R.id.latest);
         }
     }
 
@@ -80,15 +83,42 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (position == 0) {
-            holder.title.setText("웹툰 추가");
+            switch (day){
+                case 1:
+                    holder.title.setText("월요일");
+                    break;
+                case 2:
+                    holder.title.setText("화요일");
+                    break;
+                case 3:
+                    holder.title.setText("수요일");
+                    break;
+                case 4:
+                    holder.title.setText("목요일");
+                    break;
+                case 5:
+                    holder.title.setText("금요일");
+                    break;
+                case 6:
+                    holder.title.setText("토요일");
+                    break;
+                case 7:
+                    holder.title.setText("일요일");
+                    break;
+                case 0:
+                    holder.title.setText("완결");
+                    break;
+            }
+            holder.imageView.setImageResource(R.drawable.main_addmark);
             holder.artist.setText(null);
             holder.starscore.setText(null);
-            holder.imageView.setImageResource(R.drawable.main_addmark);
+            holder.latest.setVisibility(v.GONE);
         } else {
             holder.title.setText(arrayList.get(position).getTitle());
             holder.artist.setText(arrayList.get(position).getArtist());
             holder.starscore.setText(String.valueOf(arrayList.get(position).getStarScore()));
             Glide.with(mContext).load(arrayList.get(position).getThumbURL()).into(holder.imageView);
+            holder.latest.setVisibility(v.VISIBLE);
 
             if(arrayList.get(position).getToonType() == 'C') {      // 컷툰 여부
                 holder.cuttoon.setVisibility(View.VISIBLE);

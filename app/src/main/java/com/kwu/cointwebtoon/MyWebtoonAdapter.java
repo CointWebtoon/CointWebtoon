@@ -90,11 +90,11 @@ public class MyWebtoonAdapter extends BaseAdapter {
             viewHolder.cuttoon.setVisibility(convertView.GONE);
         }
         if(currentItem.isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
-            viewHolder.update.setVisibility(View.VISIBLE);
+            viewHolder.update.setVisibility(convertView.VISIBLE);
             viewHolder.update.setBackgroundResource(R.drawable.week_icon_update);
             viewHolder.update.setText("UP");
         }else if(currentItem.isUpdated()==2){
-            viewHolder.update.setVisibility(View.VISIBLE);
+            viewHolder.update.setVisibility(convertView.VISIBLE);
             viewHolder.update.setBackgroundResource(R.drawable.week_icon_dormant);
             viewHolder.update.setText("휴재");
             viewHolder.update.setTextColor(Color.parseColor("#ffffff"));

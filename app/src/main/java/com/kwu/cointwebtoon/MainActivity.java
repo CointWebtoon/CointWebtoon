@@ -47,7 +47,7 @@ public class MainActivity extends TypeKitActivity
             myToonAdapter5,myToonAdapter6,myToonAdapter7,myToonAdapter8;
     private COINT_SQLiteManager coint_sqLiteManager;
     private EditText search;
-    private int dateday=0;
+    private int[] dateday={0,0,0,0,0,0,0};
     private static OAuthLogin loginInstance;
     Button navHeader;
 
@@ -90,7 +90,6 @@ public class MainActivity extends TypeKitActivity
 
         try{
             dateday = getDateDay();
-            Toast.makeText(this, Integer.toString(dateday), Toast.LENGTH_SHORT).show();
         }catch (Exception e){}
 
         //1번
@@ -100,7 +99,7 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter = new Main_MyToonAdapter(this, 1);
+        myToonAdapter = new Main_MyToonAdapter(this, dateday[0]);
         recyclerView.setAdapter(myToonAdapter);
 
         //2번
@@ -110,7 +109,7 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter2 = new Main_MyToonAdapter(this, 2);
+        myToonAdapter2 = new Main_MyToonAdapter(this, dateday[1]);
         recyclerView.setAdapter(myToonAdapter2);
 
 
@@ -121,7 +120,7 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter3 = new Main_MyToonAdapter(this, 3);
+        myToonAdapter3 = new Main_MyToonAdapter(this, dateday[2]);
         recyclerView.setAdapter(myToonAdapter3);
 
 
@@ -132,7 +131,7 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter4 = new Main_MyToonAdapter(this, 4);
+        myToonAdapter4 = new Main_MyToonAdapter(this, dateday[3]);
         recyclerView.setAdapter(myToonAdapter4);
 
 
@@ -143,7 +142,7 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter5 = new Main_MyToonAdapter(this, 5);
+        myToonAdapter5 = new Main_MyToonAdapter(this, dateday[4]);
         recyclerView.setAdapter(myToonAdapter5);
 
 
@@ -154,7 +153,7 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter6 = new Main_MyToonAdapter(this, 6);
+        myToonAdapter6 = new Main_MyToonAdapter(this, dateday[5]);
         recyclerView.setAdapter(myToonAdapter6);
 
 
@@ -165,7 +164,7 @@ public class MainActivity extends TypeKitActivity
         layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-        myToonAdapter7 = new Main_MyToonAdapter(this, 7);
+        myToonAdapter7 = new Main_MyToonAdapter(this, dateday[6]);
         recyclerView.setAdapter(myToonAdapter7);
 
         //8번
@@ -179,12 +178,12 @@ public class MainActivity extends TypeKitActivity
         recyclerView.setAdapter(myToonAdapter8);
     }
 
-    public static int getDateDay() throws Exception {
+    public static int[] getDateDay() throws Exception {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN);
         String str_date = dateFormat.format(new Date());
         Date nDate = dateFormat.parse(str_date);
-
+        int[] arr = {0,0,0,0,0,0,0};
         Calendar cal = Calendar.getInstance();
         cal.setTime(nDate);
 
@@ -196,7 +195,16 @@ public class MainActivity extends TypeKitActivity
         }else{
             dayNum-=1;
         }
-        return dayNum;
+
+        for(int i=0;i<7;i++){
+            if(dayNum%8!=0){
+                arr[i]=dayNum%8;
+            }else{
+                i--;
+            }
+            dayNum++;
+        }
+        return arr;
     }
     @Override
     protected void attachBaseContext(Context newBase){
