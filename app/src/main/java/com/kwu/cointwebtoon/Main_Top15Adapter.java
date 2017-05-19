@@ -3,7 +3,9 @@ package com.kwu.cointwebtoon;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +46,8 @@ public class Main_Top15Adapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, final int position) {
         View view;
         ImageView imgTop, imgMid, imgBot;
-        TextView rankTop, rankMid, rankBot, starTop, starMid, starBot, artistTop, artistMid, artistBot, titleTop, titleMid, titleBot;
+        TextView rankTop, rankMid, rankBot, starTop, starMid, starBot, artistTop, artistMid, artistBot, titleTop, titleMid, titleBot,
+                cuttoonTop, cuttoonMid, cuttoonBot, upTop, upMid, upBot;
         returnPosition = position;
 
         c = coint_sqLiteManager.topHits(position);             //현재 페이지에 맞는 순위 세개를 가져옴
@@ -116,6 +119,14 @@ public class Main_Top15Adapter extends PagerAdapter {
         ImageView botPlusBtn = (ImageView)view.findViewById(R.id.addBotBtn);
         botPlusBtn.setTag(Integer.valueOf(position));
 
+        cuttoonTop = (TextView)view.findViewById(R.id.cuttonTop);
+        cuttoonMid = (TextView)view.findViewById(R.id.cuttonMid);
+        cuttoonBot = (TextView)view.findViewById(R.id.cuttonBot);
+
+        upTop = (TextView)view.findViewById(R.id.upTop);
+        upMid = (TextView)view.findViewById(R.id.upMid);
+        upBot = (TextView)view.findViewById(R.id.upBot);
+
         imgTop = (ImageView) view.findViewById(R.id.webtoonImg);
         imgMid = (ImageView) view.findViewById(R.id.webtoonImg1);
         imgBot = (ImageView) view.findViewById(R.id.webtoonImg2);
@@ -150,8 +161,35 @@ public class Main_Top15Adapter extends PagerAdapter {
             titleTop.setText(c.getString(1));
             artistTop.setText(c.getString(2));
             starTop.setText(String.valueOf(c.getFloat(3)));
-            if(c.getInt(11)==1){
+            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+                topPlusBtn.setImageResource(R.drawable.main_minus_button_state);
+            }else{
+                topPlusBtn.setImageResource(R.drawable.main_add_button_state);
+            }
 
+            if(c.getString(7).equals("C")){
+                cuttoonTop.setVisibility(view.VISIBLE);
+                cuttoonTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonTop.setText("컷툰");
+            }else{
+                cuttoonTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonTop.setText(null);
+                cuttoonTop.setVisibility(view.GONE);
+            }
+
+            if(c.getString(11).equals("1")) {
+                upTop.setVisibility(view.VISIBLE);
+                upTop.setBackgroundResource(R.drawable.week_icon_update);
+                upTop.setText("UP");
+            }else if(c.getString(11).equals("2")){
+                upTop.setVisibility(view.VISIBLE);
+                upTop.setBackgroundResource(R.drawable.week_icon_dormant);
+                upTop.setText("휴재");
+                upTop.setTextColor(Color.parseColor("#ffffff"));
+            }else{
+                upTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                upTop.setText(null);
+                upTop.setVisibility(view.GONE);
             }
             c.moveToNext();
 
@@ -159,12 +197,74 @@ public class Main_Top15Adapter extends PagerAdapter {
             titleMid.setText(c.getString(1));
             artistMid.setText(c.getString(2));
             starMid.setText(String.valueOf(c.getFloat(3)));
+
+            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+                midPlusBtn.setImageResource(R.drawable.main_minus_button_state);
+            }else{
+                midPlusBtn.setImageResource(R.drawable.main_add_button_state);
+            }
+
+            if(c.getString(7).equals("C")){
+                cuttoonMid.setVisibility(view.VISIBLE);
+                cuttoonMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonMid.setText("컷툰");
+            }else{
+                cuttoonMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonMid.setText(null);
+                cuttoonMid.setVisibility(view.GONE);
+            }
+
+            if(c.getString(11).equals("1")) {       //업데이트, 휴재, 연재일 아닌 날
+                upMid.setVisibility(view.VISIBLE);
+                upMid.setBackgroundResource(R.drawable.week_icon_update);
+                upMid.setText("UP");
+            }else if(c.getString(11).equals("2")){
+                upMid.setVisibility(view.VISIBLE);
+                upMid.setBackgroundResource(R.drawable.week_icon_dormant);
+                upMid.setText("휴재");
+                upMid.setTextColor(Color.parseColor("#ffffff"));
+            }else{
+                upMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                upMid.setText(null);
+                upMid.setVisibility(view.GONE);
+            }
             c.moveToNext();
 
             Glide.with(mContext).load(c.getString(5)).into(imgBot);
             titleBot.setText(c.getString(1));
             artistBot.setText(c.getString(2));
             starBot.setText(String.valueOf(c.getFloat(3)));
+
+            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+                botPlusBtn.setImageResource(R.drawable.main_minus_button_state);
+            }else{
+                botPlusBtn.setImageResource(R.drawable.main_add_button_state);
+            }
+
+            if(c.getString(7).equals("C")){
+                cuttoonBot.setVisibility(view.VISIBLE);
+                cuttoonBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonBot.setText("컷툰");
+            }else{
+                cuttoonBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonBot.setText(null);
+                cuttoonBot.setVisibility(view.GONE);
+            }
+
+            if(c.getString(11).equals("1")) {
+                upBot.setVisibility(view.VISIBLE);
+                upBot.setBackgroundResource(R.drawable.week_icon_update);
+                upBot.setText("UP");
+            }else if(c.getString(11).equals("2")){
+                upBot.setVisibility(view.VISIBLE);
+                upBot.setBackgroundResource(R.drawable.week_icon_dormant);
+                upBot.setText("휴재");
+                upBot.setTextColor(Color.parseColor("#ffffff"));
+            }else{
+                upBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                upBot.setText(null);
+                upBot.setVisibility(view.GONE);
+            }
         }
 
         //ViewPager에 만들어 낸 View 추가
@@ -195,6 +295,9 @@ public class Main_Top15Adapter extends PagerAdapter {
         return returnPosition;
     }
 
+    public int getItemPosition(Object object){
+        return POSITION_NONE;
+    }
     /*
     *  지니처럼 옆 화면이 보이는 뷰 페이저 구현을 위해 추가
     * */

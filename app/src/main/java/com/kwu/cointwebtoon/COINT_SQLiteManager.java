@@ -317,6 +317,15 @@ public class COINT_SQLiteManager {
     public Cursor Top100Ranking() {
         return db.rawQuery("SELECT * FROM WEBTOON ORDER BY Hits DESC LIMIT 100", null);
     }
+
+    public ArrayList<Genre> getGenreAll(){
+        Cursor cursor = db.rawQuery("SELECT * FROM Genre", null);
+        ArrayList<Genre> genreArrayList = new ArrayList<>();
+        while(cursor.moveToNext()){
+            genreArrayList.add(new Genre(cursor.getInt(0), cursor.getString(1)));
+        }
+        return genreArrayList;
+    }
     /**
      * 1차 통합 은주 부분 추가 메소드 end
      */

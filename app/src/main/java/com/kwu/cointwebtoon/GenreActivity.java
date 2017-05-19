@@ -2,6 +2,7 @@ package com.kwu.cointwebtoon;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
+import com.nhn.android.naverlogin.OAuthLogin;
 
 import java.util.ArrayList;
 
@@ -49,11 +52,13 @@ public class GenreActivity extends TypeKitActivity
     private TextView[] textViews = new TextView[11];
     private HorizontalScrollView titleBar;
     private FloatingActionButton fab;
+    private Button navHeader;
 
     /**
      * Data
      */
     private COINT_SQLiteManager manager;
+    private static OAuthLogin loginInstance;
     private float x, y;
     private int layoutWidth;
 
@@ -74,7 +79,7 @@ public class GenreActivity extends TypeKitActivity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//키보드 숨김
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -83,6 +88,15 @@ public class GenreActivity extends TypeKitActivity
         navigationView.setNavigationItemSelectedListener(this);
         getSupportActionBar().setDisplayShowTitleEnabled(false);            // 액션바에서 앱 이름 보이지 않게 함
         getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+        View headerview = navigationView.getHeaderView(0);
+        navHeader = (Button)headerview.findViewById(R.id.nav_login);
+        navHeader.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                startActivity(new Intent(GenreActivity.this, LoginActivity.class));
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
         search = (EditText) findViewById(R.id.searchbar);
         search.setOnKeyListener(this);
         /**
@@ -374,4 +388,17 @@ public class GenreActivity extends TypeKitActivity
     /**
      * Nav 공통 요소 end
      */
+
+    protected void onResume() {
+        super.onResume();
+
+        loginInstance = Application_UserInfo.getLoginInstance();
+        if(Application_UserInfo.isLogin()){
+            navHeader.setBackgroundResource(R.drawable.logout);
+            Application_UserInfo.onLogOut(this);
+            loginInstance.logoutAndDeleteToken(this);
+        }else{
+            navHeader.setBackgroundResource(R.drawable.login);
+        }
+    }
 }
