@@ -6,7 +6,8 @@
     android:paddingBottom="100dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="30dp">
+    android:paddingTop="30dp"
+    android:background="@drawable/background_bricks">
 
     <ImageView
         android:id="@+id/LoginActivity_Logo"
@@ -14,15 +15,7 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
-        android:src="@drawable/episode_placeholder" />
-
-    <TextView
-        android:id="@+id/LoginActivity_Description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/LoginActivity_Logo"
-        android:gravity="center"
-        android:textSize="20dp" />
+        android:src="@drawable/splash" />
 
     <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
         android:id="@+id/LoginActivity_LoginBtn"
@@ -31,4 +24,13 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center" />
+
+    <TextView
+        android:layout_marginBottom="30dp"
+        android:id="@+id/LoginActivity_Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/LoginActivity_LoginBtn"
+        android:gravity="center"
+        android:textSize="14dp" />
 </RelativeLayout>

@@ -21,7 +21,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
-            android:src="@drawable/splash_mdpi" />
+            android:src="@drawable/splash" />
 
         <TextView
             android:id="@+id/starScore"
@@ -144,7 +144,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
-            android:src="@drawable/splash_mdpi" />
+            android:src="@drawable/splash" />
 
         <TextView
             android:id="@+id/starScore1"
@@ -227,7 +227,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
-            android:src="@drawable/splash_mdpi" />
+            android:src="@drawable/splash" />
 
         <TextView
             android:id="@+id/starScore2"
