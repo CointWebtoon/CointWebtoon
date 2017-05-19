@@ -16,7 +16,6 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/nav_bag_on_head"
         android:paddingTop="@dimen/nav_header_vertical_spacing" />
 
     <LinearLayout
@@ -26,11 +25,13 @@
         android:weightSum="2">
 
         <TextView
+            android:id="@+id/nav_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="로그인을 해주세요"
+            android:text="로그인 해주세요"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <Button

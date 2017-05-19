@@ -1,6 +1,8 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -47,7 +49,7 @@ public class Main_Top15Adapter extends PagerAdapter {
         View view;
         ImageView imgTop, imgMid, imgBot;
         TextView rankTop, rankMid, rankBot, starTop, starMid, starBot, artistTop, artistMid, artistBot, titleTop, titleMid, titleBot,
-                cuttoonTop, cuttoonMid, cuttoonBot, upTop, upMid, upBot;
+                cuttoonTop, cuttoonMid, cuttoonBot, upTop, upMid, upBot, adultTop, adultMid, adultBot;
         returnPosition = position;
 
         c = coint_sqLiteManager.topHits(position);             //현재 페이지에 맞는 순위 세개를 가져옴
@@ -127,6 +129,10 @@ public class Main_Top15Adapter extends PagerAdapter {
         upMid = (TextView)view.findViewById(R.id.upMid);
         upBot = (TextView)view.findViewById(R.id.upBot);
 
+        adultTop = (TextView)view.findViewById(R.id.adultTop);
+        adultMid = (TextView)view.findViewById(R.id.adultMid);
+        adultBot = (TextView)view.findViewById(R.id.adultBot);
+
         imgTop = (ImageView) view.findViewById(R.id.webtoonImg);
         imgMid = (ImageView) view.findViewById(R.id.webtoonImg1);
         imgBot = (ImageView) view.findViewById(R.id.webtoonImg2);
@@ -160,7 +166,7 @@ public class Main_Top15Adapter extends PagerAdapter {
             Glide.with(mContext).load(c.getString(5).toString()).into(imgTop);
             titleTop.setText(c.getString(1));
             artistTop.setText(c.getString(2));
-            starTop.setText(String.valueOf(c.getFloat(3)));
+            starTop.setText("★ "+String.valueOf(c.getFloat(3)));
             if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
                 topPlusBtn.setImageResource(R.drawable.main_minus_button_state);
             }else{
@@ -175,6 +181,16 @@ public class Main_Top15Adapter extends PagerAdapter {
                 cuttoonTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonTop.setText(null);
                 cuttoonTop.setVisibility(view.GONE);
+            }
+
+            if(c.getString(8).equals("1")){
+                adultTop.setVisibility(view.VISIBLE);
+                adultTop.setBackgroundResource(R.drawable.main_icon_adult);
+                adultTop.setText("성인");
+            }else{
+                adultTop.setBackgroundResource(R.drawable.main_icon_adult);
+                adultTop.setText(null);
+                adultTop.setVisibility(view.GONE);
             }
 
             if(c.getString(11).equals("1")) {
@@ -196,7 +212,7 @@ public class Main_Top15Adapter extends PagerAdapter {
             Glide.with(mContext).load(c.getString(5)).into(imgMid);
             titleMid.setText(c.getString(1));
             artistMid.setText(c.getString(2));
-            starMid.setText(String.valueOf(c.getFloat(3)));
+            starMid.setText("★ "+String.valueOf(c.getFloat(3)));
 
             if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
                 midPlusBtn.setImageResource(R.drawable.main_minus_button_state);
@@ -212,6 +228,16 @@ public class Main_Top15Adapter extends PagerAdapter {
                 cuttoonMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonMid.setText(null);
                 cuttoonMid.setVisibility(view.GONE);
+            }
+
+            if(c.getString(8).equals("1")){
+                adultMid.setVisibility(view.VISIBLE);
+                adultMid.setBackgroundResource(R.drawable.main_icon_adult);
+                adultMid.setText("성인");
+            }else{
+                adultMid.setBackgroundResource(R.drawable.main_icon_adult);
+                adultMid.setText(null);
+                adultMid.setVisibility(view.GONE);
             }
 
             if(c.getString(11).equals("1")) {       //업데이트, 휴재, 연재일 아닌 날
@@ -233,7 +259,7 @@ public class Main_Top15Adapter extends PagerAdapter {
             Glide.with(mContext).load(c.getString(5)).into(imgBot);
             titleBot.setText(c.getString(1));
             artistBot.setText(c.getString(2));
-            starBot.setText(String.valueOf(c.getFloat(3)));
+            starBot.setText("★ "+String.valueOf(c.getFloat(3)));
 
             if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
                 botPlusBtn.setImageResource(R.drawable.main_minus_button_state);
@@ -249,6 +275,16 @@ public class Main_Top15Adapter extends PagerAdapter {
                 cuttoonBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonBot.setText(null);
                 cuttoonBot.setVisibility(view.GONE);
+            }
+
+            if(c.getString(8).equals("1")){
+                adultBot.setVisibility(view.VISIBLE);
+                adultBot.setBackgroundResource(R.drawable.main_icon_adult);
+                adultBot.setText("성인");
+            }else{
+                adultBot.setBackgroundResource(R.drawable.main_icon_adult);
+                adultBot.setText(null);
+                adultBot.setVisibility(view.GONE);
             }
 
             if(c.getString(11).equals("1")) {

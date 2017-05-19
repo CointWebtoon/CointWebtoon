@@ -41,6 +41,7 @@ public class SearchActivity extends TypeKitActivity
     private FloatingActionButton fab;
     private Application_UserInfo userInfo;
     Button navHeader;
+    TextView navStatus;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +65,7 @@ public class SearchActivity extends TypeKitActivity
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         View headerview = navigationView.getHeaderView(0);
+        navStatus = (TextView)headerview.findViewById(R.id.nav_status);
         navHeader = (Button)headerview.findViewById(R.id.nav_login);
         navHeader.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -71,6 +73,7 @@ public class SearchActivity extends TypeKitActivity
                     userInfo.onLogOut(SearchActivity.this);
                     Toast.makeText(SearchActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                     navHeader.setBackgroundResource(R.drawable.login);
+                    navStatus.setText("로그인 해주세요");
                 }else{
                     startActivity(new Intent(SearchActivity.this, LoginActivity.class));
                     drawer.closeDrawer(GravityCompat.START);
@@ -246,9 +249,10 @@ public class SearchActivity extends TypeKitActivity
         super.onResume();
         if(userInfo.isLogin()){
             navHeader.setBackgroundResource(R.drawable.logout);
-            //TODO : 로그인 되었을 경우 로그인을 해주세요 말고 유저 정보로 세팅
+            navStatus.setText(userInfo.getUserName()+"님");
         }else{
             navHeader.setBackgroundResource(R.drawable.login);
+            navStatus.setText("로그인 해주세요");
         }
     }
 }

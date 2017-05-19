@@ -1,9 +1,12 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +39,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
     private int lastPosition = -1;
     private Main_MyToonAdapter adapter;
     private int day;                // day는 0:완결, 1- 7 까지 차례로 요일.
+    private Application_UserInfo userInfo;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
@@ -44,7 +48,9 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         TextView starscore;
         TextView up;
         TextView cuttoon;
+        TextView adult;
         Button latest;
+        CardView cardView;
 
         public ViewHolder(View view) {
             super(view);
@@ -54,7 +60,9 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
             starscore = (TextView) view.findViewById(R.id.mainStarScore);
             up = (TextView)view.findViewById(R.id.recycle_update);
             cuttoon = (TextView)view.findViewById(R.id.recycle_cuttoon);
+            adult = (TextView)view.findViewById(R.id.recycle_adult);
             latest = (Button)view.findViewById(R.id.latest);
+            cardView = (CardView)view.findViewById(R.id.cardview);
         }
     }
 
@@ -87,40 +95,44 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         if (position == 0) {
             switch (day){
                 case 1:
-                    holder.title.setText("월요일");
+                    holder.imageView.setImageResource(R.drawable.main_mon_d2);
                     break;
                 case 2:
-                    holder.title.setText("화요일");
+                    holder.imageView.setImageResource(R.drawable.main_tue_d2);
                     break;
                 case 3:
-                    holder.title.setText("수요일");
+                    holder.imageView.setImageResource(R.drawable.main_wed_d2);
                     break;
                 case 4:
-                    holder.title.setText("목요일");
+                    holder.imageView.setImageResource(R.drawable.main_thu_d2);
                     break;
                 case 5:
-                    holder.title.setText("금요일");
+                    holder.imageView.setImageResource(R.drawable.main_fri_d2);
                     break;
                 case 6:
-                    holder.title.setText("토요일");
+                    holder.imageView.setImageResource(R.drawable.main_sat_d2);
                     break;
                 case 7:
-                    holder.title.setText("일요일");
+                    holder.imageView.setImageResource(R.drawable.main_sun_d2);
                     break;
                 case 0:
-                    holder.title.setText("완결");
+                    holder.imageView.setImageResource(R.drawable.main_finish_d2);
                     break;
             }
-            holder.imageView.setImageResource(R.drawable.main_addmark);
+            holder.cardView.setCardBackgroundColor(0);
+            holder.title.setTextColor(Color.parseColor("#5f5f5f"));
+            holder.title.setText("더 보기");
             holder.artist.setText(null);
-            holder.starscore.setText(null);
+            holder.starscore.setVisibility(v.GONE);
             holder.latest.setVisibility(v.GONE);
         } else {
+            holder.starscore.setVisibility(v.VISIBLE);
+            holder.latest.setVisibility(v.VISIBLE);
+
             holder.title.setText(arrayList.get(position).getTitle());
             holder.artist.setText(arrayList.get(position).getArtist());
-            holder.starscore.setText(String.valueOf(arrayList.get(position).getStarScore()));
+            holder.starscore.setText("★ "+String.valueOf(arrayList.get(position).getStarScore()));
             Glide.with(mContext).load(arrayList.get(position).getThumbURL()).into(holder.imageView);
-            holder.latest.setVisibility(v.VISIBLE);
 
             if(arrayList.get(position).getToonType() == 'C') {      // 컷툰 여부
                 holder.cuttoon.setVisibility(View.VISIBLE);
@@ -131,6 +143,18 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                 holder.cuttoon.setText(null);
                 holder.cuttoon.setVisibility(v.GONE);
             }
+
+            if(arrayList.get(position).isAdult()==true) {      // 성인툰 여부
+                holder.adult.setVisibility(View.VISIBLE);
+                holder.adult.setBackgroundResource(R.drawable.main_icon_adult);
+                holder.adult.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.adult.setText("성인");
+            }else{
+                holder.adult.setBackgroundResource(R.drawable.main_icon_adult);
+                holder.adult.setText(null);
+                holder.adult.setVisibility(v.GONE);
+            }
+
             if(arrayList.get(position).isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
                 holder.up.setVisibility(View.VISIBLE);
                 holder.up.setBackgroundResource(R.drawable.week_icon_update);
@@ -169,14 +193,33 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                         break;
                     case R.id.latest:
                         Episode episode = coint_sqLiteManager.getLatestEpisode(arrayList.get(position).getId());
+                        userInfo = (Application_UserInfo)mContext.getApplicationContext();
+                        if(arrayList.get(position).isAdult()){
+                            if(userInfo.isLogin()){
+                                if(!userInfo.isUserAdult()){
+                                    Toast.makeText(mContext, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
+                            }else{
+                                new AlertDialog.Builder(mContext)
+                                        .setTitle("로그인")
+                                        .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                mContext.startActivity(new Intent(mContext, LoginActivity.class));
+                                            }
+                                        }).setNegativeButton("아니요", null).show();
+                                break;
+                            }
+
+                        }
                         if(episode==null){
                             Toast.makeText(mContext,"한개도 안봄!",Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(mContext,"이어보기!",Toast.LENGTH_SHORT).show();
                             switch (arrayList.get(position).getToonType()) {
                                 case 'G': {//일반툰
-                                    Toast.makeText(mContext,Integer.toString(arrayList.get(position).getId()),Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(mContext,Integer.toString(episode.getId()), Toast.LENGTH_SHORT).show();
                                     Intent generalIntent = new Intent(mContext, ViewerGerneralActivity.class);
                                     generalIntent.putExtra("id", episode.getId());
                                     generalIntent.putExtra("ep_id", episode.getEpisode_id());
@@ -206,7 +249,6 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                                 }
                             }
                         }
-                        episode = null;
                         break;
                 }
             }
