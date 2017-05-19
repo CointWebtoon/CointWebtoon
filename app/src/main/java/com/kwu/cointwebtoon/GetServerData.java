@@ -13,12 +13,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOError;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+
+import static android.R.attr.id;
 
 public class GetServerData extends Observable{
     private static ArrayList<Observer> observers = new ArrayList<>();
@@ -51,7 +56,7 @@ public class GetServerData extends Observable{
     }
     //--------------Observer Pattern-----------end---//
 
-    /*
+    /**
      * 메인 액티비티에서 스플래시 액티비티를 띄우기 전에 실행해놓아야 할 웹툰 목록 업데이트 메소드
      * 액티비티를 Observer 를 구현한 클래스로 만들고 update 메소드에 목록 업데이트가 완료되면 할 행동을 지정해주면 되겠다!
      */
@@ -60,7 +65,7 @@ public class GetServerData extends Observable{
         webtoon.execute();
     }
 
-    /*
+    /**
      * 서버에서 SQLite 로 회차정보 가져오는 메소드
      * Input Parameter : 회차정보를 얻어올 웹툰의 고유 ID
      * Episode Activity 에서 밖에 사용할 일이 없음!!
@@ -70,13 +75,51 @@ public class GetServerData extends Observable{
         episode.execute(toonId);
     }
 
+    /**
+     * 서버에서 이미지 목록을 가져오는 메소드 --> Viewer 에서 사용
+     * @param toonId : 웹툰 고유 ID
+     * @param episodeId : 에피소드 ID
+     */
     public void getImagesFromServer(int toonId, int episodeId){
         String url = "http://coint.iptime.org:8080/Image_Client.jsp?id="  + String.valueOf(toonId) + "&ep_id=" + String.valueOf(episodeId);
         GetImage getImage = new GetImage();
         getImage.execute(url);
     }
 
-    /*
+    /**
+     * 서버의 웹툰의 조회수를 올려주는 메소드
+     * @param id : 웹툰 고유 ID
+     */
+    public void plusHit(int id){
+        String url = "http://coint.iptime.org:8080/Hits.jsp?id=" + id;
+        URLRequest request = new URLRequest();
+        request.execute(url);
+    }
+
+    /**
+     * 서버의 웹툰의 좋아요를 올리고 내리는 메소드
+     * @param id : 웹툰 고유 ID
+     * @param plusMinus : 좋아요를 올리는 행동이면 'plus' 내리는 행동이면 'minus'
+     */
+    public void likeWebtoon(int id, String plusMinus){
+        String url = "http://coint.iptime.org:8080/Likes.jsp?type=webtoon&id=" + id + "&value=" + plusMinus;
+        URLRequest request = new URLRequest();
+        request.execute(url);
+    }
+
+    /**
+     *서버의 에피소드의 좋아요를 올리고 내리는 메소드
+     * @param id : 웹툰 고유 ID
+     * @param ep_id : 에피소드 ID
+     * @param plusMinus : 좋아요를 올리는 행동이면 'plus' 내리는 행동이면 'minus'
+     */
+    public void likeEpisode(int id, int ep_id, String plusMinus){
+        String url = "http://coint.iptime.org:8080/Likes.jsp?type=episode&id=" + id  + "&ep_id=" + ep_id + "&value=" + plusMinus;
+        URLRequest request = new URLRequest();
+        request.execute(url);
+    }
+
+    /**
         GetWebtoon 클래스, GetWeekday 클래스, GetGenre 클래스는 연쇄적으로 호출되도록 구성하였다.
         GetWebtoon의 AsyncTask를 execute하게 되면 연쇄적으로 GetWeekday, GetGenre가 자동으로 호출되므로
         따로 호출해줄 필요 없다! 이 과정은 getWebtoonFromServer라는 메소드를 통해서만 진행하도록 하자.
@@ -392,6 +435,29 @@ public class GetServerData extends Observable{
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             updateObservers(imageUrls);
+        }
+    }
+
+    /**
+     * 조회수를 올린다던지, 좋아요를 올리고 내리는 등 페이지에 요청만 하고
+     * 데이터를 따로 받아올 필요가 없는 것들을 처리
+     */
+    private class URLRequest extends AsyncTask<String, Void, Void>{
+        @Override
+        protected Void doInBackground(String... params) {
+            try{
+                URL url = new URL(params[0]); //연결 url 설정
+                HttpURLConnection connection = (HttpURLConnection)url.openConnection(); //커넥션 객체 생성
+                if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+                    Log.i("coint", "접속 성공");
+                    connection.disconnect();
+                }else{
+                    throw new Exception(params[0] + " 접속 중 Exception 발생");
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+            return null;
         }
     }
 }

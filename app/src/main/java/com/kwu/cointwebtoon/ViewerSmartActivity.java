@@ -188,6 +188,10 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     }
 
     public void previousBtnClick(View v) {
+        if(v.getId() == R.id.smart_menuBtn){
+            showToolbars(true);
+            return;
+        }
         if (imageIndex > 0) {
             imageFlipper.setInAnimation(null);
             imageFlipper.setOutAnimation(null);

@@ -36,7 +36,7 @@ public class LoginActivity extends TypeKitActivity {
         loginBtn = (OAuthLoginButton)findViewById(R.id.LoginActivity_LoginBtn);
         loginBtn.setOnClickListener(new onClick());
         descTextView = (TextView)findViewById(R.id.LoginActivity_Description);
-        descTextView.setText("COINT 웹툰 로그인 화면입니다.\n\n네이버 아이디로 로그인해주세요.");
+        descTextView.setText("COINT 웹툰은 네이버 아이디로 이용하실 수 있습니다.\n네이버 아이디로 로그인해주세요.");
     }
 
     private void getLoginInstance(){
