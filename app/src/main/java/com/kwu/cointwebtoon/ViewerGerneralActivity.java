@@ -23,6 +23,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kwu.cointwebtoon.DataStructure.Episode;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -37,13 +39,14 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private Thread myTread;
     private float x, y;
     private int count = 0;
+    private String general_artist, general_mention;
     private ImageView scrollbar;
     private LinearLayout linearLayout;
     private RelativeLayout relativeLayout;
     private RelativeLayout scrollSection;
     private GetServerData serverData;
     private Toolbar GeneralToonTopToolbar, GeneralToonBottomToolbar;
-    private TextView episodeTitleTextView, episodeIdTextView, mention, artist ,starScore;
+    private TextView episodeTitleTextView, episodeIdTextView;
     private COINT_SQLiteManager manager;
     private Button good;
     private boolean runMode;
@@ -81,9 +84,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
         runMode = false;
-        mention = (TextView) findViewById(R.id.mention);
-        artist = (TextView) findViewById(R.id.artist);
-        starScore = (TextView) findViewById(R.id.textview_starScore);
         episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
         episodeIdTextView = (TextView)findViewById(R.id.GeneralToont_current_pos);
         GeneralToonTopToolbar = (Toolbar) findViewById(R.id.GeneralToontoptoolbar);
@@ -135,6 +135,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         Intent getIntent = getIntent();
         id = getIntent.getIntExtra("id", -1);
         ep_id = getIntent.getIntExtra("ep_id", -1);
+        general_mention = getIntent.getStringExtra("mention");
         if(id == -1 | ep_id == -1){
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
@@ -142,6 +143,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
+        manager.getEpisodes(id);
     }
 
     private void initializeThread() {
@@ -206,6 +208,8 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             manager.updateEpisodeRead(id, ep_id);
             episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
             episodeIdTextView.setText(String.valueOf(ep_id));
+            System.out.println("작가의말" + general_mention);
+            adapter.mention.setText(general_mention);
         }
     }
     public void Next(View v) {
@@ -215,6 +219,8 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             manager.updateEpisodeRead(id, ep_id);
             episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
             episodeIdTextView.setText(String.valueOf(ep_id));
+            System.out.println("작가의말" + general_mention);
+
         }
     }
     public void givingStarBtnClick(View v) {
@@ -295,6 +301,8 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     episodeIdTextView.setText(String.valueOf(ep_id));
                 }
                 else{
+
+
                     showToolbars(true);
                 }
             }

@@ -20,6 +20,8 @@ public class ViewerGeneralAdapter extends BaseAdapter{
     AppCompatActivity mContext;
     LayoutInflater inflater = null;
     public TextView starTV = null;
+    public TextView artist = null;
+    public TextView mention = null;
     public RatingBar ratingbar = null;
     public Button givingstar = null;
 
@@ -56,6 +58,8 @@ public class ViewerGeneralAdapter extends BaseAdapter{
         if(position == bitmaps.size()){
             view = inflater.inflate(R.layout.viewer_general_rating_item, null);
             starTV = (TextView)view.findViewById(R.id.textview_starScore);
+            artist = (TextView)view.findViewById(R.id.artist);
+            mention = (TextView)view.findViewById(R.id.mention);
             ratingbar = (RatingBar)view.findViewById(R.id.rating_bar);
             givingstar = (Button) view.findViewById(R.id.giving_star);
         }else {

@@ -145,7 +145,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
      * 1. 현재 툴바가 보이는 상태일 경우 툴바를 보이지 않게 설정하고 return
      * 2. 현재 툴바가 보이지 않는 상태이고,
      */
-    public void flipperClick() {
+    public void flipperClick(View v) {
         if(imageURLs == null)
             return;
         if (topToolbar.getVisibility() == View.VISIBLE) {
@@ -278,7 +278,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                flipperClick();
+                                flipperClick(imageFlipper);
                             }
                         });
                     } catch (InterruptedException intex) {
