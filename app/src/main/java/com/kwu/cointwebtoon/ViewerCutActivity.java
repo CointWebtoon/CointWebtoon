@@ -2,6 +2,7 @@ package com.kwu.cointwebtoon;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -59,6 +60,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private Button givingStar;
     public static final int REQUEST_CODE_RATING = 1001;
     Application_UserInfo userInfo;
+    private SharedPreferences likePreference;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,6 +115,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             Toast.makeText(this, "이미지 로드를 실패하였습니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        likePreference = getSharedPreferences("episode_like", MODE_PRIVATE);
         getServerData = new GetServerData(this);
         getServerData.registerObserver(this);
         getServerData.getImagesFromServer(toonId, episodeId);
@@ -127,13 +130,20 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         this.imageURLs = (ArrayList<String>) o;
         imageIndex = 0;
         if (imageURLs != null) {
-            for (String imageURL : imageURLs) {
+            for(int i = 0 ; i < imageURLs.size(); i++){
                 Smart_Cut_ImageView newImageView = new Smart_Cut_ImageView(this);
-                Glide.with(this)
-                        .load(imageURL)
-                        .asBitmap()
-                        .placeholder(R.drawable.view_placeholder)
-                        .into(newImageView);
+                if(i==0){
+                    Glide.with(this)
+                            .load(imageURLs.get(i))
+                            .asBitmap()
+                            .placeholder(R.drawable.viewer_sc_placeholder)
+                            .into(newImageView);
+                }else{
+                    Glide.with(this)
+                            .load(imageURLs.get(i))
+                            .asBitmap()
+                            .into(newImageView);
+                }
                 flipper.addView(newImageView);
             }
             view = inflater.inflate(R.layout.viewer_rating_item, null);
@@ -224,13 +234,6 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                         }
                     }).setNegativeButton("아니요", null).show();
             return;
-        }
-        Toast.makeText(this, "좋아요 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
-        count++;
-        if (count % 2 != 0) {
-            good.setBackgroundResource(R.drawable.view_heartcolor);
-        } else {
-            good.setBackgroundResource(R.drawable.view_heartempty);
         }
     }
 
@@ -379,13 +382,18 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             episode_instance = manager.getEpisodeInstance(toonId, episodeId);
             return null;
         }
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            ratingbar.setRating(episode_instance.getEp_starScore()/2);
+            if(!userInfo.isLogin()){
+                likePreference.edit().putBoolean(String.valueOf(toonId), false).commit();
+            }
+            if (likePreference.getBoolean(String.valueOf(toonId), false)) {
+                good.setBackgroundResource(R.drawable.view_heartcolor);
+            }
+            ratingbar.setRating(0);
+            starTV.setText(String.valueOf(0.0));
             mention.setText(episode_instance.getMention());
-            starTV.setText(String.valueOf(episode_instance.getEp_starScore()));
         }
     }
 }

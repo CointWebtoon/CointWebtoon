@@ -122,15 +122,21 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         progressSeekBar.setMax(imageURLs.size());
         progressSeekBar.setProgress(1);
         progressTextView.setText("1 / " + imageURLs.size());
-        for (String imageURL : imageURLs) {
-            Smart_Cut_ImageView smartCut = new Smart_Cut_ImageView(this);
-            Glide.with(this)
-                    .load(imageURL)
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .placeholder(getDrawable(R.drawable.view_placeholder))
-                    .centerCrop()
-                    .into(smartCut);
-            imageFlipper.addView(smartCut);
+        for(int i = 0 ; i < imageURLs.size(); i++){
+            Smart_Cut_ImageView newImageView = new Smart_Cut_ImageView(this);
+            if(i==0){
+                Glide.with(this)
+                        .load(imageURLs.get(i))
+                        .asBitmap()
+                        .placeholder(R.drawable.viewer_sc_placeholder)
+                        .into(newImageView);
+            }else{
+                Glide.with(this)
+                        .load(imageURLs.get(i))
+                        .asBitmap()
+                        .into(newImageView);
+            }
+            imageFlipper.addView(newImageView);
         }
         view = inflater.inflate(R.layout.viewer_rating_item, null);
         imageFlipper.addView(view);
@@ -353,9 +359,9 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            ratingbar.setRating(episode_instance.getEp_starScore()/2);
+            ratingbar.setRating(0);
             mention.setText(episode_instance.getMention());
-            starTV.setText(String.valueOf(episode_instance.getEp_starScore()));
+            starTV.setText(String.valueOf(0.0));
         }
     }
 

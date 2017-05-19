@@ -2,6 +2,8 @@ package com.kwu.cointwebtoon;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -57,6 +59,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private int maxTopMargin = 0;               //스크롤바 좌표 계산
     private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
     private int id, ep_id;
+    private SharedPreferences likePreference;
     Application_UserInfo userInfo;
 
     @Override
@@ -78,6 +81,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             isFirst = false;
         }
         episode_instance = manager.getEpisodeInstance(id,ep_id);
+        new ViewerGerneralActivity.GetCurrentToonInfo().execute();
         maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
         serverData.plusHit(id);
     }
@@ -145,6 +149,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        likePreference = getSharedPreferences("episode_like", MODE_PRIVATE);
         userInfo = (Application_UserInfo)getApplication();
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
@@ -206,16 +211,19 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     }).setNegativeButton("아니요", null).show();
             return;
         }
-        Toast.makeText(this, "좋아요 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+        SharedPreferences.Editor editor = likePreference.edit();
         count++;
         if(count % 2 != 0) {
-            goodCount.setText(String.valueOf(episode_instance.getLikes_E()));
+            serverData.likeWebtoon(id, "plus");
+            editor.putBoolean(String.valueOf(id), true);
             good.setBackgroundResource(R.drawable.view_heartcolor);
         }
-        else{
-            goodCount.setText(String.valueOf(episode_instance.getLikes_E()));
+        else if(count % 2 ==0 && likePreference.getBoolean(String.valueOf(id), false)){
+            serverData.likeWebtoon(id, "minus");
+            editor.putBoolean(String.valueOf(id), false);
             good.setBackgroundResource(R.drawable.view_heartempty);
         }
+        editor.commit();
     }
     public void Dat(View v){
         startActivity(new Intent(this, ViewerCommentActivity.class));
@@ -318,8 +326,8 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                 }
                 else{
                     if(adapter != null){
-                        adapter.ratingbar.setRating(episode_instance.getEp_starScore()/2);
-                        adapter.starTV.setText(String.valueOf(episode_instance.getEp_starScore()));
+                        adapter.ratingbar.setRating(0);
+                        adapter.starTV.setText(String.valueOf(0.0));
                         adapter.mention.setText(episode_instance.getMention());
                     }
                     showToolbars(true);
@@ -377,5 +385,23 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     protected void onDestroy() {
         serverData.removeObserver(this);
         super.onDestroy();
+    }
+    private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            episode_instance = manager.getEpisodeInstance(id, ep_id);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(!userInfo.isLogin()){
+                likePreference.edit().putBoolean(String.valueOf(id), false).commit();
+            }
+            if (likePreference.getBoolean(String.valueOf(id), false)) {
+                good.setBackgroundResource(R.drawable.view_heartcolor);
+            }
+        }
     }
 }
