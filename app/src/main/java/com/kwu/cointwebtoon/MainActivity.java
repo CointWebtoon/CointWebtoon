@@ -205,8 +205,9 @@ public class MainActivity extends TypeKitActivity
 
         int dayNum = cal.get(Calendar.DAY_OF_WEEK);
 
+        System.out.println(dayNum);
         //일요일 : 1 , 월- 토 : 2-7 이라서 바꿔서 넘겨줌
-        if(dayNum == 0) {//일요일인 경우
+        if(dayNum == 1) {//일요일인 경우
             dayNum = 7;
         }else{
             dayNum-=1;
@@ -214,7 +215,8 @@ public class MainActivity extends TypeKitActivity
 
         for(int i=0;i<7;i++){
             if(dayNum%8!=0){
-                arr[i]=dayNum%8;
+                arr[i]=dayNum%8;/*
+                System.out.println(arr[i]);*/
             }else{
                 i--;
             }
