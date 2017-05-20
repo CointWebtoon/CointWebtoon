@@ -1,6 +1,7 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v4.widget.TextViewCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ public class WeekdayActivity extends TypeKitActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = DataBindingUtil.setContentView(this, R.layout.weekday_activity);
         btnWeekdays[0] = binding.btnMon;
         btnWeekdays[1] = binding.btnTue;
@@ -39,9 +42,19 @@ public class WeekdayActivity extends TypeKitActivity {
         btnWeekdays[6] = binding.btnSun;
         btnWeekdays[7] = binding.btnMy;
 
-        //현재 요일 설정
-        Calendar calendar = Calendar.getInstance();
-        selectedDay = (calendar.get(Calendar.DAY_OF_WEEK) + 5)%7;
+        Log.d("INTENT", "StartActivity");
+        Intent intent = getIntent();
+        if(intent.getExtras() == null){
+            //현재 요일 설정
+            Log.d("INTENT", "Not Empty");
+            Calendar calendar = Calendar.getInstance();
+            selectedDay = (calendar.get(Calendar.DAY_OF_WEEK) + 5)%7;
+        }
+        else {
+            //요청 요일 설정
+            Log.d("INTENT", "Empty");
+            selectedDay = intent.getExtras().getInt("requestDay");
+        }
         changeBtnDayState(btnWeekdays[selectedDay], true);
 
         //dayButtons(요일별 버튼) 태그 설정

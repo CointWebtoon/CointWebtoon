@@ -182,6 +182,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                              * Activity 연결부
                              */
                             intent = new Intent(mContext,WeekdayActivity.class);
+                            intent.putExtra("requestDay", day-1);
                             mContext.startActivity(intent);
                         } else {
                             Webtoon target = arrayList.get(position);
