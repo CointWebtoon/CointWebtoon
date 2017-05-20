@@ -78,6 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,16 +90,28 @@
                     android:layout_height="wrap_content"
                     android:background="#85FFFFFF"
                     android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:weightSum="30">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="28"
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp"
                         android:text="    조회수 TOP 15"
                         android:textColor="#5F5F5F"
                         android:textSize="20dp" />
+
+                    <Button
+                        android:id="@+id/top15More"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="2"
+                        android:onClick="onClick"
+                        android:text="more"
+                        android:textColor="@color/D2Gray"
+                        android:textSize="10dp" />
                 </LinearLayout>
 
                 <View
@@ -119,38 +132,58 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="141dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:weightSum="1">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#85FFFFFF"
-                    android:paddingBottom="2dp"
-                    android:paddingTop="2dp"
-                    android:text="    My Webtoon"
-                    android:textColor="#5F5F5F"
-                    android:textSize="20dp" />
+                    android:orientation="horizontal"
+                    android:weightSum="30">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="28"
+                        android:paddingBottom="2dp"
+                        android:paddingTop="2dp"
+                        android:text="    My Webtoon"
+                        android:textColor="#5F5F5F"
+                        android:textSize="20dp" />
+
+                    <Button
+                        android:id="@+id/myMore"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="2"
+                        android:onClick="onClick"
+                        android:text="more"
+                        android:textColor="@color/D2Gray"
+                        android:textSize="10dp" />
+
+                </LinearLayout>
 
                 <View
                     style="@style/Divider"
                     android:layout_marginBottom="1dp" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="117dp"
+                android:background="@drawable/main_shelf">
                 <!--즐겨찾는 웹툰 추가하는 부분-->
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/my_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:layout_weight="1.38"
-                    android:background="@drawable/main_shelf"
                     android:clipToPadding="false"
-                    android:paddingBottom="3dp"
                     android:paddingTop="3dp"
                     android:scrollbars="none" />
             </LinearLayout>
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -165,6 +198,7 @@
                     android:paddingTop="3dp"
                     android:scrollbars="none" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="114dp"

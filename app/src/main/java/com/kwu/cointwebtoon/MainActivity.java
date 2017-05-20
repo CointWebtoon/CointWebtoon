@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,6 +43,8 @@ import java.util.Locale;
 public class MainActivity extends TypeKitActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnKeyListener{
+
+    InputMethodManager imm;
     ViewPager pager;
     RecyclerView recyclerView;
     Main_Top15Adapter top15Adapter;
@@ -286,7 +289,7 @@ public class MainActivity extends TypeKitActivity
     }
 
     public void onClick(View view) {        // 베스트도전은 웹뷰로 띄우고, 나머지는 액티비티
-        int id = view.getId();
+         int id = view.getId();
         String result;
         Intent intent;
         int position;
@@ -303,9 +306,6 @@ public class MainActivity extends TypeKitActivity
                  */
                 break;
             case R.id.weekdayBtn:
-                /**
-                 * 요일별 웹툰 Activity 연결부
-                 */
                 startActivity(new Intent(this, WeekdayActivity.class));
                 break;
             case R.id.bestBtn:
@@ -406,6 +406,13 @@ public class MainActivity extends TypeKitActivity
                     intent.putExtra("Intent",search.getText().toString());
                     startActivity(intent);
                 }
+                break;
+            case R.id.top15More:
+                startActivity(new Intent(this, Top100Activity.class));
+                break;
+            case R.id.myMore:
+                startActivity(new Intent(this, MyWebtoonActivity.class));
+                break;
         }
         cursor = coint_sqLiteManager.getMyWebtoons();
         while (cursor.moveToNext()) {
@@ -425,6 +432,8 @@ public class MainActivity extends TypeKitActivity
 
     protected void onResume() {
         super.onResume();
+        search.clearFocus();
+
         if(userInfo.isLogin()){
             navHeader.setBackgroundResource(R.drawable.logout);
             navStatus.setText(userInfo.getUserName()+"님");

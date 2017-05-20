@@ -93,6 +93,13 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (position == 0) {
+            holder.cardView.setCardBackgroundColor(0);
+            holder.title.setTextColor(Color.parseColor("#5f5f5f"));
+            holder.title.setText("더 보기");
+            holder.artist.setText(null);
+            holder.starscore.setVisibility(v.GONE);
+            holder.latest.setVisibility(v.GONE);
+
             switch (day){
                 case 1:
                     holder.imageView.setImageResource(R.drawable.main_mon_d2);
@@ -117,14 +124,9 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                     break;
                 case 0:
                     holder.imageView.setImageResource(R.drawable.main_finish_d2);
+                    holder.title.setText(null);
                     break;
             }
-            holder.cardView.setCardBackgroundColor(0);
-            holder.title.setTextColor(Color.parseColor("#5f5f5f"));
-            holder.title.setText("더 보기");
-            holder.artist.setText(null);
-            holder.starscore.setVisibility(v.GONE);
-            holder.latest.setVisibility(v.GONE);
         } else {
             holder.starscore.setVisibility(v.VISIBLE);
             holder.latest.setVisibility(v.VISIBLE);
@@ -181,9 +183,11 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                             /**
                              * Activity 연결부
                              */
+                        if(day!=0){
                             intent = new Intent(mContext,WeekdayActivity.class);
                             intent.putExtra("requestDay", day-1);
                             mContext.startActivity(intent);
+                        }
                         } else {
                             Webtoon target = arrayList.get(position);
                             intent = new Intent(mContext, EpisodeActivity.class);
@@ -215,10 +219,54 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                             }
 
                         }
+
                         if(episode==null){
                             Toast.makeText(mContext,"한개도 안봄!",Toast.LENGTH_SHORT).show();
+
+                            /*하나도 안읽은 경우엔 안드로이드 디비에 에피소드가 없어서 바로 첫화를 가져올 수 없음.*/
+
+ /*                           Toast.makeText(mContext,Integer.toString(arrayList.get(position).getId()),Toast.LENGTH_SHORT).show();
+
+                            GetServerData getServerData;
+                            getServerData = new GetServerData(mContext);
+                            getServerData.registerObserver();
+                            getServerData.getEpisodesFromServer(arrayList.get(position).getId());
+
+                            switch (arrayList.get(position).getToonType()) {
+                                case 'G': {//일반툰
+                                    coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
+                                    Intent generalIntent = new Intent(mContext, ViewerGerneralActivity.class);
+                                    generalIntent.putExtra("id", arrayList.get(position).getId());
+                                    generalIntent.putExtra("ep_id", 1);
+                                    mContext.startActivity(generalIntent);
+                                    break;
+                                }
+                                case 'C': {//컷툰
+                                    coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
+                                    Intent cutIntent = new Intent(mContext, ViewerCutActivity.class);
+                                    cutIntent.putExtra("id", arrayList.get(position).getId());
+                                    cutIntent.putExtra("ep_id", 1);
+                                    mContext.startActivity(cutIntent);
+                                    break;
+                                }
+                                case 'S': {//스마트툰
+                                    coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
+                                    Intent smartIntent = new Intent(mContext, ViewerSmartActivity.class);
+                                    smartIntent.putExtra("id", arrayList.get(position).getId());
+                                    smartIntent.putExtra("ep_id", 1);
+                                    mContext.startActivity(smartIntent);
+                                    break;
+                                }
+                                case 'M': {//모션툰
+                                    coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
+                                    Intent motionIntent = new Intent(mContext, ViewerMotionActivity.class);
+                                    motionIntent.putExtra("id", arrayList.get(position).getId());
+                                    motionIntent.putExtra("ep_id", 1);
+                                    mContext.startActivity(motionIntent);
+                                    break;
+                                }
+                            }*/
                         }else{
-                            Toast.makeText(mContext,"이어보기!",Toast.LENGTH_SHORT).show();
                             switch (arrayList.get(position).getToonType()) {
                                 case 'G': {//일반툰
                                     Intent generalIntent = new Intent(mContext, ViewerGerneralActivity.class);
