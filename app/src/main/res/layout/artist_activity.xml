@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:id="@+id/activity_artist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/background_bricks"
+        tools:context="com.kwu.cointwebtoon.ArtistActivity">
+
+        <com.kwu.cointwebtoon.Views.FastScrollRecyclerView
+            android:id="@+id/artist_recycler_view"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        </com.kwu.cointwebtoon.Views.FastScrollRecyclerView>
+
+
+    </LinearLayout>
+
+</layout>
