@@ -89,10 +89,6 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
         ep_id = getIntent.getIntExtra("ep_id", -1);
         cutNumber = getIntent.getIntExtra("cutnum", -1);
 
-        //삭제
-        id = 20853;
-        ep_id = 1;
-
         if (id == -1 | ep_id == -1) {
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();

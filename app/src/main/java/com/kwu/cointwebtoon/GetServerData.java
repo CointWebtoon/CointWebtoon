@@ -137,6 +137,9 @@ public class GetServerData extends Observable{
     public void addComment(Comment comment){
         String url = "http://coint.iptime.org:8080/Comment_Add.jsp?id=" + comment.getId() + "&ep_id=" + comment.getEp_id() +
                 "&writer=" + comment.getWriter() + "&nickname=" + URLEncoder.encode(comment.getNickname()) + "&content=" + URLEncoder.encode(comment.getContent());
+        if(comment.getCutNumber() != -1){
+            url += "&cutnumber=" + comment.getCutNumber();
+        }
         URLRequest request = new URLRequest();
         request.execute(url);
     }
@@ -456,7 +459,11 @@ public class GetServerData extends Observable{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            updateObservers(imageUrls);
+            for(int  i  = 0 ; i < observers.size(); i++){
+                if(!(observers.get(i) instanceof ViewerCommentActivity)){
+                    observers.get(i).update(GetServerData.this, imageUrls);
+                }
+            }
         }
     }
 
@@ -528,7 +535,7 @@ public class GetServerData extends Observable{
                         }
                     }
                 }else {
-                    throw new Exception("IMAGE CONNECTION ERROR");
+                    throw new Exception("COMMENT CONNECTION ERROR");
                 }
             }catch (Exception ex){
                 ex.printStackTrace();
@@ -538,7 +545,11 @@ public class GetServerData extends Observable{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            updateObservers(comments);
+            for(int  i  = 0 ; i < observers.size(); i++){
+                if(observers.get(i) instanceof ViewerCommentActivity){
+                    observers.get(i).update(GetServerData.this, comments);
+                }
+            }
         }
     }
 }
