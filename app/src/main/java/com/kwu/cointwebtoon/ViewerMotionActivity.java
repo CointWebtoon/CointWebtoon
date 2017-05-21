@@ -1,5 +1,6 @@
 package com.kwu.cointwebtoon;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,12 +9,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,27 +36,17 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
     private Toolbar MotionToonTopToolbar, MotionToonBottomToolbar;
     private Thread toolbarHideThread;
     private float x, y;
+    private GetServerData serverData;
     private static final float clickCriteria = 10;
     private boolean runMode = false;
-    private TextView episodeTitleTextView, episodeIdTextView, starScore;
+    private TextView episodeTitleTextView, episodeIdTextView, goodCount;
     private Button good;
     private int count = 0;
     private ImageView scrollbar;
-    private RelativeLayout relativeLayout;
     private RelativeLayout scrollSection;
-    private GetServerData serverData;
-    private Toolbar GeneralToonTopToolbar, GeneralToonBottomToolbar;
     private COINT_SQLiteManager manager;
-    private ImageButton autoscroll;
-    private boolean isFirst = true;             //읽은 화까지 스크롤할 때 사용
-    private int yDelta, ys= 0;                          //스크롤바 좌표 계산
-    private int maxTopMargin = 0;               //스크롤바 좌표 계산
-    private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
     private SharedPreferences likePreference;
     private Application_UserInfo userInfo;
-    private Thread autoScrollThread;
-    private boolean autoScroll = false;
-    private LayoutInflater inflater = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,28 +58,30 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        serverData = new GetServerData(this);
         url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
         episodeTitleTextView = (TextView)findViewById(R.id.MotionToontEpisodeTitle);
         episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView)findViewById(R.id.MotionToont_current_pos);
-        autoscroll = (ImageButton) findViewById(R.id.Motion_auto_scroll);
         good = (Button)findViewById(R.id.MotionToontgood);
-        inflater = LayoutInflater.from(this);
         viewer = (WebView) findViewById(R.id.motion_viewer_webView);
         manager = COINT_SQLiteManager.getInstance(this);
+        goodCount = (TextView) findViewById(R.id.MotionToont_count_txt);
         scrollSection = (RelativeLayout) findViewById(R.id.scrollSection);
         scrollbar = (ImageView) findViewById(R.id.scrollbar);
-        scrollbar.setOnTouchListener(new ScrollBarOnTouchListener());
         MotionToonTopToolbar = (Toolbar) findViewById(R.id.MotionToontoptoolbar);
         MotionToonBottomToolbar = (Toolbar) findViewById(R.id.MotionToontbottomtoolbar);
         viewer.getSettings().setJavaScriptEnabled(true);
         viewer.setOnTouchListener(this);
+        viewer.setVerticalScrollBarEnabled(false);
         myUpdate(url);
         initializeThread();
         episode_instance = manager.getEpisodeInstance(id,ep_id);
+        new ViewerMotionActivity.GetCurrentToonInfo().execute();
         userInfo = (Application_UserInfo)getApplication();
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
+        goodCount.setText(String.valueOf(manager.getEpisodeInstance(id, ep_id).getLikes_E()));
     }
     private void myUpdate(String url){
         viewer.setWebViewClient(new WebViewClient() {
@@ -106,6 +101,7 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
             }
         });
         viewer.loadUrl(url);
+        viewer.getContentHeight();
     }
 
     private void initializeThread() {
@@ -161,12 +157,12 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                         showToolbars(true);
                         initializeThread();
                     }
+                    return true;
                 }
                 break;
         }
         return false;
     }
-
     @Override
     protected void onDestroy() {
         try{
@@ -259,42 +255,24 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
             }
         }
     }
-    private class ScrollBarOnTouchListener implements View.OnTouchListener {
+    private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
         @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            if(url == null)
-                return false;
-            ys = (int) event.getRawY();
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                    yDelta = ys - lParams.topMargin;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    scrollManually = true;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                    if (scrollSection.getHeight() - (ys - yDelta) > view.getHeight()) {
-                        layoutParams.topMargin = ys - yDelta;
-                        if (ys - yDelta < 0) {
-                            layoutParams.topMargin = 0;
-                        }
-                    } else {
-                        layoutParams.topMargin = maxTopMargin;
-                    }
-                    scrollManually = false;
-                    try{
-                        //여기에 뭐가 들어가기는해야하거든
-                    }catch(ArithmeticException e){
-                        //Divided By Zero Excpetion 처리 --> 아직 아이템들이 로드되지 않았을 때 스크롤을 하면 이렇게 됨
-                        return true;
-                    }
-                    view.setLayoutParams(layoutParams);
-                    break;
-            }
-            scrollSection.invalidate();
-            return true;
+        protected Void doInBackground(Void... params) {
+            episode_instance = manager.getEpisodeInstance(id, ep_id);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                if (!userInfo.isLogin()) {
+                    likePreference.edit().putBoolean(String.valueOf(id), false).commit();
+                }
+                if (likePreference.getBoolean(String.valueOf(id), false)) {
+                    good.setBackgroundResource(R.drawable.view_heartcolor);
+                }
+            }catch (NullPointerException ex) {ex.printStackTrace();}
         }
     }
 }

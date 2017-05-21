@@ -77,10 +77,12 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:scaleType="fitCenter"
+                android:padding="5dp"
                 android:src="@drawable/run_inactive" />
             <ImageButton android:id="@+id/viewer_timer"
                 android:layout_width="38dp"
                 android:layout_height="match_parent"
+                android:padding="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/smart_jung"
                 android:scaleType="fitCenter"

@@ -45,31 +45,6 @@
                 android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textSize="15dp" />
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <ImageButton
-                    android:id="@+id/Motion_run"
-                    android:background="#333333"
-                    android:onClick="runButtonClick"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/run_inactive"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true" />
-                <ImageButton
-                    android:onClick="runButtonClick"
-                    android:id="@+id/Motion_auto_scroll"
-                    android:background="@drawable/viewer_auto_scroll_inactive"
-                    android:layout_marginRight="15dp"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toLeftOf="@+id/Motion_run" />
-            </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -142,5 +117,4 @@
                 android:layout_weight="0.2"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
-
 </RelativeLayout>

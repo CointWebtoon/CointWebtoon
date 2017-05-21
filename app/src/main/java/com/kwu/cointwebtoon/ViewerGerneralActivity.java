@@ -117,7 +117,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     case MotionEvent.ACTION_UP:
                         float xGap = x - motionEvent.getX();
                         float yGap = y - motionEvent.getY();
-                        if ((xGap < 10 && xGap > -10) && (yGap < 10 && yGap > -10)) {
+                        if ((xGap < 20 && xGap > -20) && (yGap < 20 && yGap > -20)) {
                             if(GeneralToonTopToolbar.getVisibility() == View.VISIBLE) {
                                 showToolbars(false);
                                 showUIs(false);
@@ -305,6 +305,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         }
     }
     public void autoScroll(){
+        showToolbars(false);
         showUIs(false);
         try{
             autoScrollThread.interrupt();
@@ -358,10 +359,18 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             lastItemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
             final int currentFirstVisibleItem = viewerListView.getFirstVisiblePosition();
             if (currentFirstVisibleItem < this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.GONE) {
+                showToolbars(false);
                 showUIs(false);
-            } else if (currentFirstVisibleItem > this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.VISIBLE) {
-                if (scrollManually)
+            }
+            else if(currentFirstVisibleItem < this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.VISIBLE){
+                showToolbars(false);
+                showUIs(false);
+            }
+            else if (currentFirstVisibleItem > this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.VISIBLE) {
+                if (scrollManually) {
+                    showToolbars(false);
                     showUIs(false);
+                }
             }
             initializeThread();
             if (scrollManually) {
@@ -404,8 +413,12 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             case R.id.general_auto_scroll:
                 if(autoScroll){
                     try{autoScrollThread.interrupt();}catch(Exception e){}
+                    ImageButton target = (ImageButton)v;
+                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_active));
                     autoScroll = false;
                 }else{
+                    ImageButton target = (ImageButton)v;
+                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_inactive));
                     autoScroll();
                     autoScroll = true;
                 }
@@ -428,12 +441,14 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(!userInfo.isLogin()){
-                likePreference.edit().putBoolean(String.valueOf(id), false).commit();
-            }
-            if (likePreference.getBoolean(String.valueOf(id), false)) {
-                good.setBackgroundResource(R.drawable.view_heartcolor);
-            }
+            try {
+                if (!userInfo.isLogin()) {
+                    likePreference.edit().putBoolean(String.valueOf(id), false).commit();
+                }
+                if (likePreference.getBoolean(String.valueOf(id), false)) {
+                    good.setBackgroundResource(R.drawable.view_heartcolor);
+                }
+            }catch (NullPointerException ex) { ex.printStackTrace(); }
         }
     }
 }

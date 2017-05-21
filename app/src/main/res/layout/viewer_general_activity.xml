@@ -61,13 +61,15 @@
                     android:layout_height="38dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-
+                    android:padding="5dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/run_inactive" />
                 <ImageButton
                     android:onClick="runButtonClick"
+                    android:background="#333333"
                     android:id="@+id/general_auto_scroll"
-                    android:background="@drawable/viewer_auto_scroll_inactive"
+                    android:padding="5dp"
+                    android:src="@drawable/viewer_auto_scroll_inactive"
                     android:layout_marginRight="15dp"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
