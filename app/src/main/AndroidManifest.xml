@@ -14,55 +14,56 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
-        <!--은주-->
         <activity android:name=".MainActivity"
-            android:theme="@style/MainActivity">
-        </activity>
+            android:theme="@style/MainActivity"/>
+
         <activity
             android:name=".SearchActivity"
             android:theme="@style/SearchActivity"
             android:label="Search List"/>
+
         <activity
             android:name=".Top100Activity"
             android:label="Top 100"/>
+
         <activity
             android:name=".FavoriteChartAcivity"
             android:label="Favorite Chart"/>
+
         <activity
             android:name=".MyWebtoonActivity"
             android:label="My Webtoon"/>
+
         <activity
             android:name=".BestChallengeActivity"
             android:label="Best Challenge"/>
-        <!--은주 end-->
 
-        <!--원형-->
         <activity android:name=".WeekdayActivity"/>
-        <!--원형 end-->
 
-        <!--석희-->
         <activity android:name=".ViewerCutActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".ViewerGerneralActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".ViewerStarScoreActivity"
             android:theme="@style/Theme.AppCompat.Dialog"/>
+
         <activity android:name=".ViewerCommentActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <!--석희 end-->
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".LoginActivity"
-            android:theme="@style/LoginActivity">
-        </activity>
+            android:theme="@style/LoginActivity"/>
+
         <activity android:name=".EpisodeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".ViewerSmartActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".GenreActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -70,8 +71,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ViewerMotionActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ArtistActivity"/>
+
+        <activity android:name=".ViewerCommentWriteActivity"
+            android:theme="@style/ViewerActivity"/>
+
         <!-- 네이버 아이디로 로그인 API 사용을 위해 추가한 액티비티들 -->
         <activity android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
