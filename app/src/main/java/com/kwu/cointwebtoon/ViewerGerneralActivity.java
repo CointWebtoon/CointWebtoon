@@ -55,7 +55,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private COINT_SQLiteManager manager;
     private Button good;
     private boolean runMode;
-    private boolean isFirst = true;             //읽은 화까지 스크롤할 때 사용
+    private boolean twoEpisodes = false;             //정주행모드 두개 건너뛰는것 방지
     private int yDelta, ys= 0;                          //스크롤바 좌표 계산
     private int maxTopMargin = 0;               //스크롤바 좌표 계산
     private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
@@ -74,6 +74,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         new ViewerGerneralActivity.GetCurrentToonInfo().execute();
         maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
         serverData.plusHit(id);
+        twoEpisodes = true;
         if(autoScroll)
             autoScroll();
     }
@@ -304,6 +305,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         }
     }
     public void autoScroll(){
+        showUIs(false);
         try{
             autoScrollThread.interrupt();
         }catch (Exception e){}
@@ -313,7 +315,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            viewerListView.smoothScrollBy(12, 10);
+                            viewerListView.smoothScrollBy(10, 10);
                         }
                     });
                     try{Thread.sleep(10);}catch (Exception e){break;}
@@ -328,9 +330,11 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         @Override
         public void onScrollStateChanged(AbsListView view, int event) {
             if(event == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag) {
-                if (runMode && (ep_id < manager.maxEpisodeId(id))) {
+                if (runMode && (ep_id < manager.maxEpisodeId(id)) && twoEpisodes) {
+                    twoEpisodes = false;
                     try{autoScrollThread.interrupt();}catch (Exception e){}
                     //정주행 모드일 때, List View의 바닥에 닿으면 다음 회차가 존재할 경우에 다음 회차로 넘어감
+                    Log.i("coint", "다음");
                     imageUrls.clear();
                     ep_id += 1;
                     serverData.getImagesFromServer(id, ep_id);
