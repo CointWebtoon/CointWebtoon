@@ -71,15 +71,36 @@
                     android:layout_marginLeft="5dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
-
-                    <TextView
-
-                        android:id="@+id/tv_title"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Title"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:id="@+id/tv_adult_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            android:textSize="9sp"
+
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:paddingBottom="3dp"
+                            android:paddingTop="3dp"
+                            />
+                        <TextView
+                            android:id="@+id/tv_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="marquee"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:singleLine="true"
+                            android:text="Title"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -131,11 +152,7 @@
                             android:paddingTop="3dp"
                             />
                     </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+
                         <TextView
                             android:id="@+id/tv_artist"
                             android:layout_marginRight="2dp"
@@ -143,20 +160,7 @@
                             android:layout_height="wrap_content"
                             android:text="Artist"
                             android:textSize="12sp" />
-                        <TextView
-                            android:id="@+id/tv_adult_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="center"
-                            android:gravity="center"
-                            android:textSize="9sp"
 
-                            android:paddingLeft="4dp"
-                            android:paddingRight="4dp"
-                            android:paddingBottom="3dp"
-                            android:paddingTop="3dp"
-                            />
-                    </LinearLayout>
 
 
 

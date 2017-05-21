@@ -38,42 +38,20 @@ public class ArtistActivity extends TypeKitActivity {
             }; // 28
 
     ArtistActivityBinding binding;
-    private Weekday_ListItem listItem;
     private ArrayList<Webtoon> dataSet;
     private ArtistActivityAdapter artistAdapter;
     private RecyclerView.LayoutManager artistLayoutManager;
-
-    /*public class WebttoonByArtist{
-        public String artist;
-        public ArrayList<Webtoon> webtoons;
-
-        public WebttoonByArtist(String artist, ArrayList<Webtoon> webtoons) {
-            this.artist = artist;
-            this.webtoons = webtoons;
-        }
-    }*/
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.artist_activity);
 
-        //listItem 생성
+        //dataSet 생성 및 업데이트
         dataSet = new ArrayList<>();
-        for(int i = 0; i<8; i++){
-            dataSet.addAll(new Weekday_ListItem(this, i).getList());
-        }
-        HashSet hashSet = new HashSet(dataSet);
-        dataSet = new ArrayList<>(hashSet);
+        updateDataset(dataSet);
 
-        //작가기준 오름차순 정렬
-        Collections.sort(dataSet, new Comparator<Webtoon>() {
-            @Override
-            public int compare(Webtoon lhs, Webtoon rhs) {
-                return  lhs.getArtist().compareTo(rhs.getArtist());
-            }
-        });
 
-        //Recyler view 설정
+        //Recycler view 설정
         binding.artistRecyclerView.setHasFixedSize(true);
 
         //Layout manager 설정
@@ -92,6 +70,36 @@ public class ArtistActivity extends TypeKitActivity {
 
 
     }
+
+    private void updateDataset(ArrayList<Webtoon> dataSet){
+        dataSet.clear();
+        //listItem 생성
+        for(int i = 0; i<8; i++){
+            dataSet.addAll(new Weekday_ListItem(this, i).getList());
+        }
+        //중복 제거
+        HashSet hashSet = new HashSet(dataSet);
+        dataSet = new ArrayList<>(hashSet);
+
+        //작가기준 오름차순 정렬
+        Collections.sort(dataSet, new Comparator<Webtoon>() {
+            @Override
+            public int compare(Webtoon lhs, Webtoon rhs) {
+                return  lhs.getArtist().compareTo(rhs.getArtist());
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateDataset(dataSet);
+        artistAdapter.setDataSet(dataSet);
+        artistAdapter.notifyDataSetChanged();
+    }
+
+
+
     private HashMap<String, Integer> calculateIndexesForName(ArrayList<Webtoon> items){
         HashMap<String, Integer> mapIndex = new LinkedHashMap<String, Integer>();
         for (int i = 0; i<items.size(); i++){
