@@ -75,8 +75,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         new ViewerGerneralActivity.GetCurrentToonInfo().execute();
         maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
         serverData.plusHit(id);
-        if(autoScroll)
+        if(autoScroll) {
             autoScroll();
+        }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
         runMode = false;
-        autoscroll = (ImageButton) findViewById(R.id.autoscroll);
+        autoscroll = (ImageButton) findViewById(R.id.general_auto_scroll);
         episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
         episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView)findViewById(R.id.GeneralToont_current_pos);
@@ -331,7 +332,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         public void onScrollStateChanged(AbsListView view, int event) {
             if(event == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag) {
                 if (runMode && (ep_id < manager.maxEpisodeId(id))) {
-                    try{autoScrollThread.interrupt();}catch (Exception e){}
                     //정주행 모드일 때, List View의 바닥에 닿으면 다음 회차가 존재할 경우에 다음 회차로 넘어감
                     imageUrls.clear();
                     ep_id += 1;
@@ -346,8 +346,10 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                         adapter.starTV.setText(String.valueOf(0.0));
                         adapter.mention.setText(episode_instance.getMention());
                     }
-                    showToolbars(true);
+                    showToolbars(false);
                 }
+                try{
+                    autoScrollThread.interrupt();}catch (Exception e){}
             }
         }
         @Override
@@ -402,21 +404,17 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             case R.id.general_auto_scroll:
                 if(autoScroll){
                     try{autoScrollThread.interrupt();}catch(Exception e){}
+                    ImageButton target = (ImageButton)v;
+                    target.setBackground(getDrawable(R.drawable.viewer_auto_scroll_inactive));
                     autoScroll = false;
                 }else{
                     autoScroll();
                     autoScroll = true;
+                    ImageButton target = (ImageButton)v;
+                    target.setBackground(getDrawable(R.drawable.viewer_auto_scroll_active));
                 }
                 break;
         }
-    }
-    public void autoScroll(View v) {
-        viewerListView.post(new Runnable() {
-            @Override
-            public void run() {
-                viewerListView.smoothScrollToPosition(adapter.getCount() - 1);
-            }
-        });
     }
     @Override
     protected void onDestroy() {
