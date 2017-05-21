@@ -1,6 +1,7 @@
 package com.kwu.cointwebtoon;
 
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,13 +75,17 @@ public class ViewerGeneralAdapter extends BaseAdapter{
                 holder = (ViewHolder)view.getTag();
 
             //이미지 뷰에 Glide를 사용해서 url 이미지 뿌리는 부분
-            if(holder.oneImage != null){
-                Glide.with(mContext)
-                        .load(bitmaps.get(position))
-                        .asBitmap()
-                        .override(width, com.bumptech.glide.request.target.Target.SIZE_ORIGINAL)
-                        .placeholder(R.drawable.view_placeholder)
-                        .into(holder.oneImage);
+            try{
+                if(holder.oneImage != null){
+                    Glide.with(mContext)
+                            .load(bitmaps.get(position))
+                            .asBitmap()
+                            .override(width, com.bumptech.glide.request.target.Target.SIZE_ORIGINAL)
+                            .placeholder(R.drawable.view_placeholder)
+                            .into(holder.oneImage);
+                }
+            }catch (IndexOutOfBoundsException iobex){
+                Log.i("coint","Episode Changing..");
             }
         }
         return view;
