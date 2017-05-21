@@ -330,9 +330,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         @Override
         public void onScrollStateChanged(AbsListView view, int event) {
             if(event == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag) {
+                try{autoScrollThread.interrupt();}catch (Exception e){}
                 if (runMode && (ep_id < manager.maxEpisodeId(id)) && twoEpisodes) {
                     twoEpisodes = false;
-                    try{autoScrollThread.interrupt();}catch (Exception e){}
                     //정주행 모드일 때, List View의 바닥에 닿으면 다음 회차가 존재할 경우에 다음 회차로 넘어감
                     Log.i("coint", "다음");
                     imageUrls.clear();
