@@ -54,9 +54,8 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private TextView episodeTitleTextView, episodeIdTextView, goodCount;
     private COINT_SQLiteManager manager;
     private Button good;
-    private ImageButton autoscroll;
     private boolean runMode;
-    private boolean isFirst = true;             //읽은 화까지 스크롤할 때 사용
+    private boolean twoEpisodes = false;             //정주행모드 두개 건너뛰는것 방지
     private int yDelta, ys= 0;                          //스크롤바 좌표 계산
     private int maxTopMargin = 0;               //스크롤바 좌표 계산
     private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
@@ -75,9 +74,9 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         new ViewerGerneralActivity.GetCurrentToonInfo().execute();
         maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
         serverData.plusHit(id);
-        if(autoScroll) {
+        twoEpisodes = true;
+        if(autoScroll)
             autoScroll();
-        }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
         runMode = false;
-        autoscroll = (ImageButton) findViewById(R.id.general_auto_scroll);
         episodeTitleTextView = (TextView)findViewById(R.id.GeneralToontEpisodeTitle);
         episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView)findViewById(R.id.GeneralToont_current_pos);
@@ -307,6 +305,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         }
     }
     public void autoScroll(){
+        showUIs(false);
         try{
             autoScrollThread.interrupt();
         }catch (Exception e){}
@@ -316,7 +315,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            viewerListView.smoothScrollBy(12, 10);
+                            viewerListView.smoothScrollBy(10, 10);
                         }
                     });
                     try{Thread.sleep(10);}catch (Exception e){break;}
@@ -331,8 +330,11 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         @Override
         public void onScrollStateChanged(AbsListView view, int event) {
             if(event == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag) {
-                if (runMode && (ep_id < manager.maxEpisodeId(id))) {
+                try{autoScrollThread.interrupt();}catch (Exception e){}
+                if (runMode && (ep_id < manager.maxEpisodeId(id)) && twoEpisodes) {
+                    twoEpisodes = false;
                     //정주행 모드일 때, List View의 바닥에 닿으면 다음 회차가 존재할 경우에 다음 회차로 넘어감
+                    Log.i("coint", "다음");
                     imageUrls.clear();
                     ep_id += 1;
                     serverData.getImagesFromServer(id, ep_id);
@@ -346,10 +348,8 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                         adapter.starTV.setText(String.valueOf(0.0));
                         adapter.mention.setText(episode_instance.getMention());
                     }
-                    showToolbars(false);
+                    showToolbars(true);
                 }
-                try{
-                    autoScrollThread.interrupt();}catch (Exception e){}
             }
         }
         @Override
@@ -404,14 +404,10 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             case R.id.general_auto_scroll:
                 if(autoScroll){
                     try{autoScrollThread.interrupt();}catch(Exception e){}
-                    ImageButton target = (ImageButton)v;
-                    target.setBackground(getDrawable(R.drawable.viewer_auto_scroll_inactive));
                     autoScroll = false;
                 }else{
                     autoScroll();
                     autoScroll = true;
-                    ImageButton target = (ImageButton)v;
-                    target.setBackground(getDrawable(R.drawable.viewer_auto_scroll_active));
                 }
                 break;
         }

@@ -65,8 +65,6 @@ public class FavoriteChartAcivity extends TypeKitActivity {
                 // display msg when value selected
                 if (entry == null)
                     return;
-
-                Toast.makeText(FavoriteChartAcivity.this, xData[entry.getXIndex()] + "=" + entry.getVal() + "%", Toast.LENGTH_SHORT).show();
                 //startActivity(new Intent(mContext, GenreActivity.class));
                 //누르면 해당 장르로 이동!!!하도록 구현
             }
@@ -128,13 +126,13 @@ public class FavoriteChartAcivity extends TypeKitActivity {
         }
 
         if(totalread==0){
+            Toast.makeText(mContext,"좋아하는 웹툰을 즐겨찾기 해보세요",Toast.LENGTH_SHORT).show();
             startActivity(new Intent(mContext, GenreActivity.class));
             finish();
         }else {
 
             for(int i=0;i<count.length;i++){
                 yData[i] = (float)count[i]/totalread*100;
-                Log.i("들어왔다", Integer.toString(totalread));
             }
 
             for (int i = 0; i < yData.length; i++){

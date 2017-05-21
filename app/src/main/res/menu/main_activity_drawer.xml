@@ -12,11 +12,6 @@
                 android:title="마이웹툰 전체보기" />
 
             <item
-                android:id="@+id/bookmark"
-                android:title="책갈피" />
-
-
-            <item
                 android:id="@+id/personalFavorite"
                 android:title="취향 분석" />
 

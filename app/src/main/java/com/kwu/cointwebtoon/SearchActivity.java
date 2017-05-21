@@ -86,6 +86,7 @@ public class SearchActivity extends TypeKitActivity
         search = (EditText) findViewById(R.id.searchbar);
         search.setOnKeyListener(this);
         search.setText(something);
+        search.clearFocus();
         resultview = (TextView) findViewById(R.id.noresult);
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(this);
         gridView = (GridView) findViewById(R.id.searchView);
