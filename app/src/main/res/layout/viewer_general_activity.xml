@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
-        />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
     <android.support.v7.widget.Toolbar
         android:id="@+id/GeneralToontoptoolbar"
         android:background="#333333"
@@ -20,43 +21,62 @@
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <Button android:id="@+id/GeneralToontgotoepi"
-                android:layout_width="15dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/view_button_state_bback"
-                android:onClick="BackBtn"/>
-            <TextView android:id="@+id/GeneralToontEpisodeTitle"
-                android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/GeneralToontgotoepi"
+            android:layout_width="15dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:onClick="BackBtn"
+            android:scaleType="fitCenter"
+            android:src="@drawable/view_button_state_bback" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/GeneralToontEpisodeTitle"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="웹툰 제목"
+                android:layout_weight="1.3"
                 android:ellipsize="marquee"
-                android:layout_marginLeft="5dp"
-                android:gravity="center|left"
-                android:layout_toRightOf="@+id/GeneralToontgotoepi"
-                android:textColor="#FFFFFF"
-                android:onClick="BackBtn" />
-            <ImageButton
-                android:id="@+id/general_run"
-                android:background="#333333"
-                android:onClick="runButtonClick"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/run_inactive" />
-            <ImageButton
-                android:onClick="runButtonClick"
-                android:layout_toLeftOf="@id/general_run"
-                android:id="@+id/general_auto_scroll"
-                android:layout_width="38dp"
-                android:layout_height="38dp" />
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="5"
+                android:onClick="BackBtn"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="15dp" />
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/general_run"
+                    android:background="#333333"
+                    android:onClick="runButtonClick"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/run_inactive" />
+                <ImageButton
+                    android:onClick="runButtonClick"
+                    android:background="#333333"
+                    android:id="@+id/general_auto_scroll"
+                    android:padding="5dp"
+                    android:src="@drawable/viewer_auto_scroll_inactive"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toStartOf="@+id/general_run" />
+            </RelativeLayout>
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.Toolbar
@@ -145,5 +165,6 @@
             android:scaleType="fitXY"
             android:src="@drawable/viewer_scrollbars" />
     </RelativeLayout>
-</RelativeLayout>
 
+
+</RelativeLayout>

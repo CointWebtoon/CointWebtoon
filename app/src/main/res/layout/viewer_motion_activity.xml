@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/motion_layout">
     <WebView
         android:id="@+id/motion_viewer_webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/MotionToontoptoolbar"
@@ -15,35 +18,34 @@
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <Button android:id="@+id/MotionToontgotoepi"
-                android:layout_width="15dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/view_button_state_bback"
-                android:onClick="BackBtn"/>
-            <TextView android:id="@+id/MotionToontEpisodeTitle"
-                android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/MotionToontgotoepi"
+            android:layout_width="15dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:onClick="BackBtn"
+            android:scaleType="fitCenter"
+            android:src="@drawable/view_button_state_bback" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/MotionToontEpisodeTitle"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="웹툰 제목"
-                android:layout_marginLeft="5dp"
-                android:gravity="center|left"
-                android:layout_toRightOf="@+id/MotionToontgotoepi"
-                android:textColor="#FFFFFF"
+                android:layout_weight="1.3"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="5"
                 android:onClick="BackBtn"
-                />
-            <ImageButton
-                android:background="#333333"
-                android:onClick="runButtonClick"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/run_inactive" />
-        </RelativeLayout>
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="15dp" />
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.Toolbar

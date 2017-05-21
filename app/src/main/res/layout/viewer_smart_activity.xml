@@ -39,9 +39,11 @@
         android:id="@+id/topToolbar_smart"
         android:layout_width="match_parent"
         android:layout_height="@dimen/viewer_actionbar_height"
+        android:background="#333333"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_alignParentTop="true"
-        android:layout_margin="0dp"
-        android:background="#333333">
+        android:layout_alignParentStart="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -59,6 +61,7 @@
                 android:layout_height="match_parent"
                 android:ellipsize="marquee"
                 android:onClick="BackBtn"
+                android:singleLine="true"
                 android:text="웹툰 제목"
                 android:layout_marginLeft="5dp"
                 android:gravity="center|left"
@@ -73,11 +76,13 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:scaleType="fitXY"
+                android:scaleType="fitCenter"
+                android:padding="5dp"
                 android:src="@drawable/run_inactive" />
             <ImageButton android:id="@+id/viewer_timer"
                 android:layout_width="38dp"
                 android:layout_height="match_parent"
+                android:padding="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/smart_jung"
                 android:scaleType="fitCenter"
@@ -117,7 +122,7 @@
                     android:text="Loading..."
                     android:id="@+id/cutProgressTextView"
                     android:textColor="@android:color/white"
-                    android:textSize="10dp"
+                    android:textSize="13dp"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
