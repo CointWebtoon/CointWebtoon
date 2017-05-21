@@ -306,6 +306,7 @@ public class MainActivity extends TypeKitActivity
                 /**
                  * 작가별 웹툰 Activity 연결부
                  */
+                startActivity((new Intent(this, ArtistActivity.class)));
                 break;
             case R.id.weekdayBtn:
                 startActivity(new Intent(this, WeekdayActivity.class));
