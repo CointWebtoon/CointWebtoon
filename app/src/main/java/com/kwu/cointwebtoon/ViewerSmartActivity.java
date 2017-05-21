@@ -262,9 +262,10 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     }
 
     public void commentClick(View v) {
-        /**
-         * 댓글 액티비티 연결
-         */
+        Intent comment_intent = new Intent(this, ViewerCommentActivity.class);
+        comment_intent.putExtra("id", toonId);
+        comment_intent.putExtra("ep_id", episodeId);
+        startActivity(comment_intent);
     }
 
     public void runButtonClick(View v){

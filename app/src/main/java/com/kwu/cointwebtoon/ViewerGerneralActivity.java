@@ -225,8 +225,10 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         editor.commit();
     }
     public void Dat(View v){
-        startActivity(new Intent(this, ViewerCommentActivity.class));
-        Toast.makeText(this, "댓글 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+        Intent comment_intent = new Intent(this, ViewerCommentActivity.class);
+        comment_intent.putExtra("id", id);
+        comment_intent.putExtra("ep_id", ep_id);
+        startActivity(comment_intent);
     }
     public void Previous(View v) {
         if(ep_id > 1 ){

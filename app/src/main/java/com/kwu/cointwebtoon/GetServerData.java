@@ -535,7 +535,6 @@ public class GetServerData extends Observable{
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);

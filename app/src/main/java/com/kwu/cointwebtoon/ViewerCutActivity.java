@@ -136,7 +136,6 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         imageIndex = 0;
         if (imageURLs != null) {
             for(int i = 0 ; i < imageURLs.size(); i++){
-                System.out.println("사이즈는 " + imageURLs.size());
                 Smart_Cut_ImageView newImageView = new Smart_Cut_ImageView(this);
                 if(i==0){
                     Glide.with(this)
@@ -263,9 +262,14 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
 
     public void Dat(View v) {
-        Toast.makeText(this, "댓글 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+        Intent comment_intent = new Intent(this, ViewerCommentActivity.class);
+        comment_intent.putExtra("id", toonId);
+        comment_intent.putExtra("ep_id", episodeId);
+        if(!(imageIndex == imageURLs.size())){
+            comment_intent.putExtra("cutnum", imageIndex + 1);
+        }
+        startActivity(comment_intent);
     }
-
     public void Previous(View v) {
         if(episodeId > 1){
             flipper.removeAllViews();
@@ -275,7 +279,6 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             manager.updateEpisodeRead(toonId, episodeId);
         }
     }
-
     public void Next(View v) {
         if(episodeId > 0 ){
             flipper.removeAllViews();
@@ -285,7 +288,6 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             manager.updateEpisodeRead(toonId, episodeId);
         }
     }
-
     public void timerClick(View v) {
         ImageButton my = (ImageButton) v;
         if(sleepTime == -1) {
