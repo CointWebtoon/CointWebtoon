@@ -76,7 +76,19 @@ public class ViewerGeneralAdapter extends BaseAdapter{
 
             //이미지 뷰에 Glide를 사용해서 url 이미지 뿌리는 부분
             try{
-                if(holder.oneImage != null){
+                if(holder == null){
+                        view = inflater.inflate(R.layout.viewer_general_image_item, null);//view를 inflate하고
+                        holder = new ViewHolder();//뷰 홀더를 통해 최적화
+                        holder.oneImage = (GeneralToonImageView) view.findViewById(R.id.GeneralToonImageView);
+                        view.setTag(holder);
+                    Glide.with(mContext)
+                            .load(bitmaps.get(position))
+                            .asBitmap()
+                            .override(width, com.bumptech.glide.request.target.Target.SIZE_ORIGINAL)
+                            .placeholder(R.drawable.view_placeholder)
+                            .into(holder.oneImage);
+                }
+                else{
                     Glide.with(mContext)
                             .load(bitmaps.get(position))
                             .asBitmap()

@@ -132,9 +132,11 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                         .placeholder(R.drawable.viewer_sc_placeholder)
                         .into(newImageView);
             }else{
+                System.out.println(i);
                 Glide.with(this)
                         .load(imageURLs.get(i))
                         .asBitmap()
+                        .skipMemoryCache(true)
                         .placeholder(R.drawable.view_placeholder_testing)
                         .into(newImageView);
             }

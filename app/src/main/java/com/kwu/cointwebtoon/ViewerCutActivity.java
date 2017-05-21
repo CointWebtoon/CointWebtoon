@@ -24,6 +24,7 @@ import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
 import com.kwu.cointwebtoon.DataStructure.Episode;
+import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
 
 import org.w3c.dom.Text;
@@ -41,6 +42,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
 
     private ArrayList<String> imageURLs;//imageURL 담을 ArrayList
+    private Webtoon webtoon_instance;
     private Episode episode_instance;
     private ViewFlipper flipper;//이미지를 넘기면서 볼 수 있는 뷰
     private int imageIndex = 0;//현재 보고 있는 컷이 몇 번째 컷인가?
@@ -50,9 +52,10 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private Button good;
     private Toolbar topToolbar, bottomToolbar;
     private COINT_SQLiteManager manager;
-    private TextView episodeTitleTextView, episodeIdTextView;
+    private TextView episodeTitleTextView, episodeIdTextView, good_count;
     private boolean runMode, autoMode;
     private Thread autoThread;
+    private int cut_like;
     private int sleepTime = -1;
     private RatingBar ratingbar;
     private TextView mention, starTV;
@@ -73,6 +76,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView) findViewById(R.id.current_pos);
         manager = COINT_SQLiteManager.getInstance(this);
+        good_count = (TextView) findViewById(R.id.count_txt);
         runMode = false;
         autoMode = false;
         setSupportActionBar(topToolbar);
@@ -119,6 +123,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         getServerData = new GetServerData(this);
         getServerData.registerObserver(this);
         getServerData.getImagesFromServer(toonId, episodeId);
+        good_count.setText(String.valueOf(manager.getWebtoonInstance(toonId).getLikes()));
     }
 
     @Override
@@ -131,6 +136,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         imageIndex = 0;
         if (imageURLs != null) {
             for(int i = 0 ; i < imageURLs.size(); i++){
+                System.out.println("사이즈는 " + imageURLs.size());
                 Smart_Cut_ImageView newImageView = new Smart_Cut_ImageView(this);
                 if(i==0){
                     Glide.with(this)
@@ -142,6 +148,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                     Glide.with(this)
                             .load(imageURLs.get(i))
                             .asBitmap()
+                            .skipMemoryCache(true)
                             .placeholder(R.drawable.view_placeholder_testing)
                             .into(newImageView);
                 }
@@ -236,6 +243,23 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                     }).setNegativeButton("아니요", null).show();
             return;
         }
+        SharedPreferences.Editor editor = likePreference.edit();
+        count++;
+        if(count % 2 != 0) {
+            getServerData.likeWebtoon(toonId, "plus");
+            editor.putBoolean(String.valueOf(toonId), true);
+            good.setBackgroundResource(R.drawable.view_heartcolor);
+            good_count.setText(String.valueOf(cut_like + 1));
+        }
+        else if(count % 2 == 0 && likePreference.getBoolean(String.valueOf(toonId), false)){
+            getServerData.likeWebtoon(toonId, "minus");
+            editor.putBoolean(String.valueOf(toonId), false);
+            good.setBackgroundResource(R.drawable.view_heartempty);
+            if(cut_like >= 0) {
+                good_count.setText(String.valueOf(cut_like));
+            }
+        }
+        editor.commit();
     }
 
     public void Dat(View v) {
@@ -381,10 +405,13 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         @Override
         protected Void doInBackground(Void... params) {
             episode_instance = manager.getEpisodeInstance(toonId, episodeId);
+            webtoon_instance = manager.getWebtoonInstance(toonId);
             return null;
         }
         @Override
         protected void onPostExecute(Void aVoid) {
+            cut_like = webtoon_instance.getLikes();
+            good_count.setText(String.valueOf(cut_like));
             super.onPostExecute(aVoid);
             if(!userInfo.isLogin()){
                 likePreference.edit().putBoolean(String.valueOf(toonId), false).commit();

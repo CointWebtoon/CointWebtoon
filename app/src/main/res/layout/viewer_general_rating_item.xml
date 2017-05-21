@@ -4,10 +4,16 @@
     android:layout_height="wrap_content"
     android:id="@+id/mylayout"
     android:orientation="vertical">
+<View
+    android:layout_width="match_parent"
+    android:layout_height="2dp"
+    android:background="@color/D2Gray">
+</View>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:weightSum="3">
 
         <RatingBar
             android:id="@+id/rating_bar"
@@ -15,6 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_weight="0"
             android:isIndicator="true"
             android:numStars="5" />
 
@@ -22,20 +29,28 @@
             android:id="@+id/textview_starScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="현재 별점"
-            android:textColor="#FF69B4" />
+            android:layout_weight="2"
+            android:textColor="#FF69B4"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/giving_star"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/view_button_state_confirm"
             android:onClick="givingStarBtnClick"
             android:text="별점주기" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/D2Gray">
+    </View>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -73,5 +88,10 @@
             android:layout_margin="20dp"
             android:layout_centerHorizontal="true"/>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/D2Gray">
+    </View>
 
 </LinearLayout>

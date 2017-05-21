@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Episode;
+import com.kwu.cointwebtoon.DataStructure.Webtoon;
 
 import org.w3c.dom.Text;
 
@@ -42,6 +43,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private ViewerGeneralAdapter adapter;
     public static final int REQUEST_CODE_RATING = 1001;
     private Episode episode_instance;
+    private Webtoon webtoon_instance;
     private Thread myTread;
     private float x, y;
     private int count = 0;
@@ -59,7 +61,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private int yDelta, ys= 0;                          //스크롤바 좌표 계산
     private int maxTopMargin = 0;               //스크롤바 좌표 계산
     private boolean scrollManually = true;      //스크롤바로 스크롤했는지, 제스처로 스크롤했는지
-    private int id, ep_id;
+    private int id, ep_id, like;
     private SharedPreferences likePreference;
     private Application_UserInfo userInfo;
     private Thread autoScrollThread;
@@ -148,7 +150,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
-        goodCount.setText(String.valueOf(manager.getEpisodeInstance(id, ep_id).getLikes_E()));
+
     }
 
     private void initializeThread() {
@@ -210,11 +212,15 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             serverData.likeWebtoon(id, "plus");
             editor.putBoolean(String.valueOf(id), true);
             good.setBackgroundResource(R.drawable.view_heartcolor);
+            goodCount.setText(String.valueOf(like + 1));
         }
-        else if(count % 2 ==0 && likePreference.getBoolean(String.valueOf(id), false)){
+        else if(count % 2 == 0 && likePreference.getBoolean(String.valueOf(id), false)){
             serverData.likeWebtoon(id, "minus");
             editor.putBoolean(String.valueOf(id), false);
             good.setBackgroundResource(R.drawable.view_heartempty);
+            if(like >= 0) {
+                goodCount.setText(String.valueOf(like));
+            }
         }
         editor.commit();
     }
@@ -434,6 +440,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            webtoon_instance = manager.getWebtoonInstance(id);
             episode_instance = manager.getEpisodeInstance(id, ep_id);
             return null;
         }
@@ -441,6 +448,8 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            like = webtoon_instance.getLikes();
+            goodCount.setText(String.valueOf(like));
             try {
                 if (!userInfo.isLogin()) {
                     likePreference.edit().putBoolean(String.valueOf(id), false).commit();

@@ -25,13 +25,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:textColor="#000000"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:paddingBottom="50dp"/>
 
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/D2Gray"
+            />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp">
+            android:layout_height="wrap_content">
 
             <RatingBar
                 android:id="@+id/cut_rating_bar"
@@ -57,5 +61,10 @@
                 android:onClick="cut_givingStarBtnClick"
                 android:text="별점주기" />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/D2Gray"
+            />
     </LinearLayout>
 </LinearLayout>
