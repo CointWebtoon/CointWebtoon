@@ -43,13 +43,13 @@
 
         <!--석희-->
         <activity android:name=".ViewerCutActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/ViewerActivity"/>
         <activity android:name=".ViewerGerneralActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/ViewerActivity"/>
         <activity android:name=".ViewerStarScoreActivity"
             android:theme="@style/Theme.AppCompat.Dialog"/>
         <activity android:name=".ViewerCommentActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/ViewerActivity">
         </activity>
         <!--석희 end-->
 
@@ -60,7 +60,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".ViewerSmartActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/ViewerActivity"/>
         <activity android:name=".GenreActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".SplashActivity"
@@ -70,8 +70,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ViewerCommentWriteActivity"
+            android:theme="@style/ViewerActivity"/>
         <activity android:name=".ViewerMotionActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/ViewerActivity"/>
         <!-- 네이버 아이디로 로그인 API 사용을 위해 추가한 액티비티들 -->
         <activity android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>

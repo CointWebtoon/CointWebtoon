@@ -2,6 +2,7 @@ package com.kwu.cointwebtoon;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.nhn.android.naverlogin.OAuthLogin;
@@ -60,6 +61,14 @@ public class Application_UserInfo extends Application {
     }
 
     public void onLogOut(Context mContext){
+        SharedPreferences preferences = getSharedPreferences("episode_like", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+        preferences = getSharedPreferences("comment_like", MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.clear();
+        editor.apply();
         login = false;
         userID = null;
         userName = null;
