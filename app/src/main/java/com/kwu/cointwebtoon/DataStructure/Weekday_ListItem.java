@@ -37,7 +37,8 @@ public class Weekday_ListItem {
             cursor.close();
         }
     }
-    public void orderByHits(){ //조회순 정렬
+    public void orderByHits(){
+        //조회순 정렬
         Collections.sort(this.list, new Comparator<Webtoon>() {
             @Override
             public int compare(Webtoon lhs, Webtoon rhs) {
