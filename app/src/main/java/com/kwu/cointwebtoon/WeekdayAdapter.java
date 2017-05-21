@@ -80,10 +80,9 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
         swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
-                YoYo.with(Techniques.Tada).duration(800).delay(100).playOn(layout.findViewById(R.id.btn_my));
+                YoYo.with(Techniques.Tada).duration(400).delay(100).playOn(layout.findViewById(R.id.btn_my));
             }
         });
-
         v.findViewById(R.id.btn_my).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -95,12 +94,12 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
 
                 if(result.equals("마이 웹툰 설정")){
                     item.setIs_mine(true);
-                    YoYo.with(Techniques.Flash).duration(800).delay(100).playOn(v);
+                    YoYo.with(Techniques.Flash).duration(500).delay(100).playOn(v);
                     v.setBackgroundResource(R.drawable.my_set);
                     swipeLayout.setBackgroundResource(R.drawable.week_background_my);
                 }else if(result.equals("마이 웹툰 해제")){
                     item.setIs_mine(false);
-                    YoYo.with(Techniques.Wobble).duration(800).delay(100).playOn(v);
+                    YoYo.with(Techniques.Wobble).duration(500).delay(100).playOn(v);
                     v.setBackgroundResource(R.drawable.my_release);
                     swipeLayout.setBackgroundResource(0);
                 }
@@ -146,6 +145,7 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
                 .placeholder(R.drawable.week_placeholder)
                 .into(ivThumbnail);
         tvTitle.setText(currentItem.getTitle());
+        tvTitle.setSelected(true);
         tvStarPoint.setText("★" + String.valueOf(currentItem.getStarScore()));
         tvArtist.setText(currentItem.getArtist());
 
@@ -191,7 +191,7 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
             case 'M':
             {
                 //모션툰
-                setToonIcon(tvToontypeIcon, R.drawable.week_icon_motiontoon, "모션", "#0050b4");
+                setToonIcon(tvToontypeIcon, R.drawable.week_icon_motiontoon, "모션", "#6d1daf");
                 break;
             }
             case 'S':
@@ -212,13 +212,13 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
 
     }
 
-
     public void setToonIcon(TextView icon, int resId, String text, String textColorString){
         icon.setVisibility(View.VISIBLE);
         icon.setBackgroundResource(resId);
         icon.setText(text);
         icon.setTextColor(Color.parseColor(textColorString));
     }
+
     public void setItemList(Weekday_ListItem listItem){
         this.webtoons = listItem.getList();
     }

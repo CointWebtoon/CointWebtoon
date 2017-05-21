@@ -1,65 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_bricks">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/comment_toolbar"
-        android:background="#333333"
         android:layout_width="match_parent"
         android:layout_height="@dimen/viewer_actionbar_height"
-        android:gravity="center"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:background="#333333"
+        android:gravity="center">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <Button android:id="@+id/comment_back"
+
+            <Button
+                android:clickable="true"
+                android:id="@+id/comment_back"
                 android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/view_button_state_bback"
-                android:onClick="Comment_BackBtn"/>
-            <TextView android:id="@+id/Comment_title"
+                android:onClick="Comment_BackBtn" />
+
+            <TextView
+                android:clickable="true"
+                android:id="@+id/Comment_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:onClick="Comment_BackBtn"
-                android:text="댓글 수"
                 android:layout_marginLeft="5dp"
-                android:gravity="center|left"
                 android:layout_toRightOf="@+id/comment_back"
+                android:gravity="center|left"
+                android:onClick="Comment_BackBtn"
+                android:text="돌아가기"
                 android:textColor="#FFFFFF"
-                />
+                android:textSize="20dp" />
+
+            <TextView
+                android:onClick="CommentTitleClick"
+                android:clickable="true"
+                android:id="@+id/comment_write"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:paddingRight="10dp"
+                android:text="댓글 쓰기"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
-    <HorizontalScrollView
-        android:layout_below="@id/comment_toolbar"
-        android:id="@+id/genre_titlebar"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@android:color/white"
-        android:scrollbars="none">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:weightSum="9">
-            <Button
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textColor="#FFFFFF"
-                android:background="@color/D2Light"
-                android:text="My 댓글"/>
-            <Button
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:background="@drawable/testing"
-                android:text="Best 댓글"/>
-            <Button
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:background="@drawable/testing"
-                android:text="전체 댓글"/>
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:onClick="CommentTitleClick"
+            android:id="@+id/allcomment"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@color/D2Light"
+            android:text="댓글"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/mycomment"
+            android:onClick="CommentTitleClick"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:text="내가 쓴 댓글"
+            android:textColor="#AA000000" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/comment_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

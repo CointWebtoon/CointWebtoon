@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.kwu.cointwebtoon.DataStructure.Comment;
 import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.DataStructure.Genre;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -107,14 +109,34 @@ public class GetServerData extends Observable{
         request.execute(url);
     }
 
+    public void getComments(String url){
+        GetComment comment = new GetComment();
+        comment.execute(url);
+    }
+
     /**
-     *서버의 에피소드의 좋아요를 올리고 내리는 메소드
-     * @param id : 웹툰 고유 ID
-     * @param ep_id : 에피소드 ID
-     * @param plusMinus : 좋아요를 올리는 행동이면 'plus' 내리는 행동이면 'minus'
+     * 서버의 댓글의 좋아요를 올리는 메소드
+     * @param commentID : 댓글 고유 ID
      */
-    public void likeEpisode(int id, int ep_id, String plusMinus){
-        String url = "http://coint.iptime.org:8080/Likes.jsp?type=episode&id=" + id  + "&ep_id=" + ep_id + "&value=" + plusMinus;
+    public void likeComment(int commentID){
+        String url = "http://coint.iptime.org:8080/Comment_Like.jsp?comment_id=" + commentID;
+        URLRequest request = new URLRequest();
+        request.execute(url);
+    }
+
+    /**
+     * 서버의 댓글을 삭제하는 메소드
+     * @param commentID : 댓글 고유 ID
+     */
+    public void deleteComment(int commentID){
+        String url = "http://coint.iptime.org:8080/Comment_Delete.jsp?comment_id=" + commentID;
+        URLRequest request = new URLRequest();
+        request.execute(url);
+    }
+
+    public void addComment(Comment comment){
+        String url = "http://coint.iptime.org:8080/Comment_Add.jsp?id=" + comment.getId() + "&ep_id=" + comment.getEp_id() +
+                "&writer=" + comment.getWriter() + "&nickname=" + URLEncoder.encode(comment.getNickname()) + "&content=" + URLEncoder.encode(comment.getContent());
         URLRequest request = new URLRequest();
         request.execute(url);
     }
@@ -458,6 +480,66 @@ public class GetServerData extends Observable{
                 ex.printStackTrace();
             }
             return null;
+        }
+    }
+
+    /**
+     * 댓글을 받아오는 Task
+     */
+    private class GetComment extends AsyncTask<String, Void, Void>{
+        private ArrayList<Comment> comments = new ArrayList<>();
+        protected Void doInBackground(String... urls){
+            StringBuilder jsonHtml = new StringBuilder();
+            String commentid, id, ep_id, writer, nickname, content, like, time, cutnumber;
+            try{
+                URL url = new URL(urls[0]); //연결 url 설정
+                HttpURLConnection connection = (HttpURLConnection)url.openConnection(); //커넥션 객체 생성
+                if(connection!=null){
+                    connection.setConnectTimeout(10000);
+                    connection.setUseCaches(false);
+                    if(connection.getResponseCode()==HttpURLConnection.HTTP_OK){
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(),"EUC-KR"));
+                        for(;;){
+                            //웹상에 보여지는 텍스트를 라인단위로 읽어 저장
+                            String line = bufferedReader.readLine();
+                            if (line == null)
+                                break;
+                            jsonHtml.append(line+"\n");
+                        }
+                        bufferedReader.close();
+                    }
+                    connection.disconnect();
+                    JSONObject root = new JSONObject(jsonHtml.toString());
+                    if(root.isNull("result") != true){
+                        JSONArray jsonArray = root.getJSONArray("result");
+                        for(int i=0; i<jsonArray.length();i++){
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            commentid = jsonObject.getString("Comment_id");
+                            id = jsonObject.getString("Id_C");
+                            ep_id = jsonObject.getString("Ep_id");
+                            writer = jsonObject.getString("Writer");
+                            nickname = jsonObject.getString("Nickname");
+                            content = jsonObject.getString("Content");
+                            like = jsonObject.getString("Likes_C");
+                            time = jsonObject.getString("Time");
+                            cutnumber = jsonObject.getString("Cutnumber");
+                            comments.add(new Comment(Integer.parseInt(commentid), Integer.parseInt(id),
+                                    Integer.parseInt(ep_id), writer, nickname, content, Integer.parseInt(like), time, Integer.parseInt(cutnumber), false));
+                        }
+                    }
+                }else {
+                    throw new Exception("IMAGE CONNECTION ERROR");
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            updateObservers(comments);
         }
     }
 }
