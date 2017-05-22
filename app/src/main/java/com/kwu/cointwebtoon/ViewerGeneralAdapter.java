@@ -63,6 +63,8 @@ public class ViewerGeneralAdapter extends BaseAdapter{
             mention = (TextView)view.findViewById(R.id.mention);
             ratingbar = (RatingBar)view.findViewById(R.id.rating_bar);
             givingstar = (Button) view.findViewById(R.id.giving_star);
+            artist.setText("작가의 말 (" + mContext.getWebtoon_instance().getArtist() + ")");
+            mention.setText(mContext.getEpisode_instance().getMention());
             if(mContext.getMyStar() != -1) {
                 givingstar.setEnabled(false);
                 ratingbar.setMax(10);
@@ -71,6 +73,7 @@ public class ViewerGeneralAdapter extends BaseAdapter{
             }else{
                 givingstar.setEnabled(true);
                 ratingbar.setRating(0);
+                starTV.setText("0.0");
             }
         }else {
             view = convertView;

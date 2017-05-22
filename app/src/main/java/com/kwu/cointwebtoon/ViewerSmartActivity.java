@@ -23,6 +23,7 @@ import android.widget.ViewFlipper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.kwu.cointwebtoon.DataStructure.Episode;
+import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
 
 import java.util.ArrayList;
@@ -49,8 +50,9 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     private Thread autoThread;
     private LayoutInflater inflater = null;
     private Episode episode_instance;
+    private Webtoon webtoon_instance;
     private RatingBar ratingbar;
-    private TextView mention, starTV;
+    private TextView mention, starTV, artistTV;
     private Button givingStar;
     public static final int REQUEST_CODE_RATING = 1001;
     private float myStar = -1;
@@ -149,6 +151,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         mention = (TextView) view.findViewById(R.id.cut_mention);
         starTV = (TextView) view.findViewById(R.id.cut_starScore);
         givingStar = (Button) view.findViewById(R.id.cut_giving_star);
+        artistTV = (TextView)view.findViewById(R.id.cut_artist);
         new ViewerSmartActivity.GetCurrentToonInfo().execute();
         serverData.plusHit(toonId);
     }
@@ -359,6 +362,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         @Override
         protected Void doInBackground(Void... params) {
             episode_instance = manager.getEpisodeInstance(toonId, episodeId);
+            webtoon_instance = manager.getWebtoonInstance(toonId);
             myStar = manager.getMyStar(toonId, episodeId);
             return null;
         }
@@ -370,12 +374,14 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                 ratingbar.setMax(10);
                 ratingbar.setRating(myStar/2);
                 givingStar.setEnabled(false);
+                starTV.setText(String.valueOf(myStar));
             }else{
                 givingStar.setEnabled(true);
                 ratingbar.setRating(0);
+                starTV.setText("0.0");
             }
+            artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
             mention.setText(episode_instance.getMention());
-            starTV.setText(String.valueOf(0.0));
         }
     }
 

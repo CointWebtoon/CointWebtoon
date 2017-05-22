@@ -151,7 +151,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
-
     }
 
     private void initializeThread() {
@@ -243,6 +242,12 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
 
     public float getMyStar(){
         return myStar;
+    }
+    public Episode getEpisode_instance(){
+        return episode_instance;
+    }
+    public Webtoon getWebtoon_instance(){
+        return webtoon_instance;
     }
 
     public void Next(View v) {

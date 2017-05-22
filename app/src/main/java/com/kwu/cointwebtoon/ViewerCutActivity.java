@@ -58,7 +58,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private int cut_like;
     private int sleepTime = -1;
     private RatingBar ratingbar;
-    private TextView mention, starTV;
+    private TextView mention, starTV, artistTV;
     private LayoutInflater inflater = null;
     private Button givingStar;
     public static final int REQUEST_CODE_RATING = 1001;
@@ -156,6 +156,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             }
             view = inflater.inflate(R.layout.viewer_rating_item, null);
             flipper.addView(view);
+            artistTV = (TextView)view.findViewById(R.id.cut_artist);
             ratingbar = (RatingBar) view.findViewById(R.id.cut_rating_bar);
             mention = (TextView) view.findViewById(R.id.cut_mention);
             starTV = (TextView) view.findViewById(R.id.cut_starScore);
@@ -429,12 +430,14 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 ratingbar.setMax(10);
                 ratingbar.setRating(myStar / 2);
                 givingStar.setEnabled(false);
+                starTV.setText(String.valueOf(myStar));
             }else{
                 ratingbar.setRating(0);
                 givingStar.setEnabled(true);
+                starTV.setText("0.0");
             }
-            starTV.setText(String.valueOf(0.0));
             mention.setText(episode_instance.getMention());
+            artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
         }
     }
 }
