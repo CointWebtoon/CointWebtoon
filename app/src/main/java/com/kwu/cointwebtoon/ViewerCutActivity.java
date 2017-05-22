@@ -64,6 +64,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     public static final int REQUEST_CODE_RATING = 1001;
     Application_UserInfo userInfo;
     private SharedPreferences likePreference;
+    public float myStar = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -387,11 +388,13 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             if(resultCode == RESULT_OK) {
                 try {
                     float SCORE = data.getExtras().getFloat("SCORE");
-                    Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
                     if(starTV != null && ratingbar != null){
                         starTV.setText(String.valueOf(SCORE));
                         ratingbar.setMax(10);
                         ratingbar.setRating((SCORE)/2);
+                        myStar = SCORE;
+                        manager.updateMyStarScore(toonId, episodeId, SCORE);
+                        Log.i("coint", String.valueOf(manager.getMyStar(toonId, episodeId)));
                         givingStar.setEnabled(false);
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}
@@ -408,6 +411,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         protected Void doInBackground(Void... params) {
             episode_instance = manager.getEpisodeInstance(toonId, episodeId);
             webtoon_instance = manager.getWebtoonInstance(toonId);
+            myStar = manager.getMyStar(toonId, episodeId);
             return null;
         }
         @Override
@@ -421,7 +425,14 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             if (likePreference.getBoolean(String.valueOf(toonId), false)) {
                 good.setBackgroundResource(R.drawable.view_heartcolor);
             }
-            ratingbar.setRating(0);
+            if(myStar != -1){
+                ratingbar.setMax(10);
+                ratingbar.setRating(myStar / 2);
+                givingStar.setEnabled(false);
+            }else{
+                ratingbar.setRating(0);
+                givingStar.setEnabled(true);
+            }
             starTV.setText(String.valueOf(0.0));
             mention.setText(episode_instance.getMention());
         }

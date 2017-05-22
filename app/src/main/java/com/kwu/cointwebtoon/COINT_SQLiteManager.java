@@ -58,6 +58,7 @@ public class COINT_SQLiteManager {
                 "Is_saved INTEGER DEFAULT 0," +
                 "Is_read INTEGER DEFAULT 0," +
                 "Location INTEGER DEFAULT 1," +
+                "My_star REAL DEFAULT -1," +
                 "PRIMARY KEY(Id_E, Episode_id)," +
                 "FOREIGN KEY(Id_E) REFERENCES WEBTOON(Id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
@@ -402,6 +403,36 @@ public class COINT_SQLiteManager {
             cursor.close();
         }
         return returnList;
+    }
+
+    /**
+     * 에피소드 내 별점 업데이트
+     * @param id
+     * @param ep_id
+     * @param score
+     * @return true : 성공 false : 실패
+     */
+    public boolean updateMyStarScore(int id, int ep_id, float score){
+        try{
+            db.execSQL("UPDATE EPISODE SET My_star=" + score + " WHERE Id_E=" + id + " AND Episode_id=" + ep_id + ";");
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 로그아웃 시 내 별점 초기화
+     */
+    public void initMyStar(){
+        db.execSQL("UPDATE EPISODE SET My_star=-1;");
+    }
+
+    public float getMyStar(int id, int ep_id){
+        Cursor c = db.rawQuery("SELECT My_star FROM EPISODE WHERE Id_E=" + id + " AND Episode_id=" + ep_id, null);
+        c.moveToNext();
+        return c.getFloat(0);
     }
 }
 

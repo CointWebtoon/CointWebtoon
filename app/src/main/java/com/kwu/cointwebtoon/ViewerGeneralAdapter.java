@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class ViewerGeneralAdapter extends BaseAdapter{
     ArrayList<String> bitmaps;
-    AppCompatActivity mContext;
+    ViewerGerneralActivity mContext;
     LayoutInflater inflater = null;
     public TextView starTV = null;
     public TextView artist = null;
@@ -32,7 +32,7 @@ public class ViewerGeneralAdapter extends BaseAdapter{
     }
     public ViewerGeneralAdapter(AppCompatActivity mContext, ArrayList<String> bitmaps) {
         this.bitmaps = bitmaps;
-        this.mContext = mContext;
+        this.mContext = (ViewerGerneralActivity)mContext;
         inflater = LayoutInflater.from(mContext);
         width = mContext.getWindowManager().getDefaultDisplay().getWidth();
     }
@@ -63,6 +63,15 @@ public class ViewerGeneralAdapter extends BaseAdapter{
             mention = (TextView)view.findViewById(R.id.mention);
             ratingbar = (RatingBar)view.findViewById(R.id.rating_bar);
             givingstar = (Button) view.findViewById(R.id.giving_star);
+            if(mContext.getMyStar() != -1) {
+                givingstar.setEnabled(false);
+                ratingbar.setMax(10);
+                ratingbar.setRating(mContext.getMyStar() / 2);
+                starTV.setText(String.valueOf(mContext.getMyStar()));
+            }else{
+                givingstar.setEnabled(true);
+                ratingbar.setRating(0);
+            }
         }else {
             view = convertView;
             ViewHolder holder = null;

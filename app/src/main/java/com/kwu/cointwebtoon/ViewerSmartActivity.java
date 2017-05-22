@@ -53,6 +53,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     private TextView mention, starTV;
     private Button givingStar;
     public static final int REQUEST_CODE_RATING = 1001;
+    private float myStar = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -169,6 +170,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                         ratingbar.setMax(10);
                         ratingbar.setRating((SCORE)/2);
                         givingStar.setEnabled(false);
+                        manager.updateMyStarScore(toonId, episodeId, SCORE);
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}
             }
@@ -357,13 +359,21 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         @Override
         protected Void doInBackground(Void... params) {
             episode_instance = manager.getEpisodeInstance(toonId, episodeId);
+            myStar = manager.getMyStar(toonId, episodeId);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            ratingbar.setRating(0);
+            if(myStar != -1){
+                ratingbar.setMax(10);
+                ratingbar.setRating(myStar/2);
+                givingStar.setEnabled(false);
+            }else{
+                givingStar.setEnabled(true);
+                ratingbar.setRating(0);
+            }
             mention.setText(episode_instance.getMention());
             starTV.setText(String.valueOf(0.0));
         }

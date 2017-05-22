@@ -16,6 +16,7 @@ public class Application_UserInfo extends Application {
     public static String API_CLIENT_NAME = "COINT 웹툰";
 
     private static OAuthLogin loginInstance;
+    private COINT_SQLiteManager manager;
 
     /**
      * User Info ( Save Login Data )
@@ -49,6 +50,7 @@ public class Application_UserInfo extends Application {
         LoginRequestApiTask apiTask = new LoginRequestApiTask(getApplicationContext(), this);
         apiTask.execute();
         super.onCreate();
+        manager = COINT_SQLiteManager.getInstance(this);
     }
 
     public void onLogIn(String ID, String name, boolean adult, char gender){
@@ -75,5 +77,6 @@ public class Application_UserInfo extends Application {
         userAdult = false;
         userGender = 'N';
         loginInstance.logoutAndDeleteToken(mContext);
+        manager.initMyStar();
     }
 }
