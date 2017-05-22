@@ -371,13 +371,23 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                 showUIs(false);
             }
             else if(currentFirstVisibleItem < this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.VISIBLE){
-                showToolbars(false);
-                showUIs(false);
+                if(scrollManually) {
+                    showToolbars(false);
+                    showUIs(false);
+                }
+                else{
+                    showToolbars(true);
+                    showUIs(true);
+                }
             }
             else if (currentFirstVisibleItem > this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.VISIBLE) {
                 if (scrollManually) {
                     showToolbars(false);
                     showUIs(false);
+                }
+                else {
+                    showToolbars(true);
+                    showUIs(true);
                 }
             }
             initializeThread();
