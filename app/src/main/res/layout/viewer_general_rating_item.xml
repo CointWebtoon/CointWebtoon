@@ -12,8 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="3">
+        android:layout_height="match_parent">
 
         <RatingBar
             android:id="@+id/rating_bar"
@@ -21,7 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0"
             android:isIndicator="true"
             android:numStars="5" />
 
@@ -32,15 +30,14 @@
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="2"
+            android:text="0.0"
             android:textColor="#FF69B4"
             android:textSize="20dp" />
 
         <Button
             android:id="@+id/giving_star"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/view_button_state_confirm"
             android:onClick="givingStarBtnClick"
             android:text="별점주기" />

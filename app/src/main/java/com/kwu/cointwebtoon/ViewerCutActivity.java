@@ -49,7 +49,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private int count = 0; // 좋아요 기능을 위한 변수
     private GetServerData getServerData;
     private int toonId, episodeId;
-    private Button good;
+    private ImageButton good;
     private Toolbar topToolbar, bottomToolbar;
     private COINT_SQLiteManager manager;
     private TextView episodeTitleTextView, episodeIdTextView, good_count;
@@ -69,7 +69,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewer_cut_activity);
-        good = (Button) findViewById(R.id.good);
+        good = (ImageButton) findViewById(R.id.good);
         topToolbar = (Toolbar) findViewById(R.id.toptoolbar);
         bottomToolbar = (Toolbar) findViewById(R.id.bottomtoolbar);
         episodeTitleTextView = (TextView) findViewById(R.id.CutToonTitle);
@@ -247,13 +247,13 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         if(count % 2 != 0) {
             getServerData.likeWebtoon(toonId, "plus");
             editor.putBoolean(String.valueOf(toonId), true);
-            good.setBackgroundResource(R.drawable.view_heartcolor);
+            good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
             good_count.setText(String.valueOf(cut_like + 1));
         }
         else if(count % 2 == 0 && likePreference.getBoolean(String.valueOf(toonId), false)){
             getServerData.likeWebtoon(toonId, "minus");
             editor.putBoolean(String.valueOf(toonId), false);
-            good.setBackgroundResource(R.drawable.view_heartempty);
+            good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
             if(cut_like >= 0) {
                 good_count.setText(String.valueOf(cut_like));
             }
@@ -419,7 +419,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 likePreference.edit().putBoolean(String.valueOf(toonId), false).commit();
             }
             if (likePreference.getBoolean(String.valueOf(toonId), false)) {
-                good.setBackgroundResource(R.drawable.view_heartcolor);
+                good.setBackgroundResource(R.drawable.episode_heart_active);
             }
             ratingbar.setRating(0);
             starTV.setText(String.valueOf(0.0));

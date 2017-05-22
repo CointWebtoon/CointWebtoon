@@ -25,12 +25,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Episode;
+import com.kwu.cointwebtoon.DataStructure.Webtoon;
 
 public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouchListener{
     private WebView viewer;
     public static final int REQUEST_CODE_RATING = 1001;
     private int id, ep_id;
     private String url;
+    private Webtoon webtoon_instance;
     private Episode episode_instance;
     private boolean loadComplete = true;
     private Toolbar MotionToonTopToolbar, MotionToonBottomToolbar;
@@ -40,10 +42,9 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
     private static final float clickCriteria = 10;
     private boolean runMode = false;
     private TextView episodeTitleTextView, episodeIdTextView, goodCount;
-    private Button good;
+    private ImageButton good;
     private int count = 0;
-    private ImageView scrollbar;
-    private RelativeLayout scrollSection;
+    private int motion_like = 0;
     private COINT_SQLiteManager manager;
     private SharedPreferences likePreference;
     private Application_UserInfo userInfo;
@@ -58,17 +59,16 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        likePreference = getSharedPreferences("episode_like", MODE_PRIVATE);
         serverData = new GetServerData(this);
         url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
         episodeTitleTextView = (TextView)findViewById(R.id.MotionToontEpisodeTitle);
         episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView)findViewById(R.id.MotionToont_current_pos);
-        good = (Button)findViewById(R.id.MotionToontgood);
+        good = (ImageButton)findViewById(R.id.MotionToontgood);
         viewer = (WebView) findViewById(R.id.motion_viewer_webView);
         manager = COINT_SQLiteManager.getInstance(this);
         goodCount = (TextView) findViewById(R.id.MotionToont_count_txt);
-        scrollSection = (RelativeLayout) findViewById(R.id.scrollSection);
-        scrollbar = (ImageView) findViewById(R.id.scrollbar);
         MotionToonTopToolbar = (Toolbar) findViewById(R.id.MotionToontoptoolbar);
         MotionToonBottomToolbar = (Toolbar) findViewById(R.id.MotionToontbottomtoolbar);
         viewer.getSettings().setJavaScriptEnabled(true);
@@ -204,12 +204,17 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
         if(count % 2 != 0) {
             serverData.likeWebtoon(id, "plus");
             editor.putBoolean(String.valueOf(id), true);
-            good.setBackgroundResource(R.drawable.view_heartcolor);
+            good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
+            goodCount.setText(String.valueOf(motion_like + 1));
+
         }
         else if(count % 2 ==0 && likePreference.getBoolean(String.valueOf(id), false)){
             serverData.likeWebtoon(id, "minus");
             editor.putBoolean(String.valueOf(id), false);
-            good.setBackgroundResource(R.drawable.view_heartempty);
+            good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
+            if(motion_like >= 0) {
+                goodCount.setText(String.valueOf(motion_like));
+            }
         }
         editor.commit();
     }
@@ -259,18 +264,21 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
         @Override
         protected Void doInBackground(Void... params) {
             episode_instance = manager.getEpisodeInstance(id, ep_id);
+            webtoon_instance = manager.getWebtoonInstance(id);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            motion_like = webtoon_instance.getLikes();
+            goodCount.setText(String.valueOf(motion_like));
             try {
                 if (!userInfo.isLogin()) {
                     likePreference.edit().putBoolean(String.valueOf(id), false).commit();
                 }
                 if (likePreference.getBoolean(String.valueOf(id), false)) {
-                    good.setBackgroundResource(R.drawable.view_heartcolor);
+                    good.setBackgroundResource(R.drawable.episode_heart_active);
                 }
             }catch (NullPointerException ex) {ex.printStackTrace();}
         }

@@ -87,16 +87,17 @@
         android:layout_alignParentBottom="true">
         <LinearLayout
             android:orientation="horizontal"
-            android:weightSum="1"
+            android:weightSum="7"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true">
-            <Button android:id="@+id/GeneralToontgood"
+            <ImageButton android:id="@+id/GeneralToontgood"
                 android:gravity="center"
                 android:layout_width="32dp"
-                android:layout_height="25dp"
-                android:background="@drawable/view_button_state_good"
-                android:layout_weight="0.01"
+                android:layout_height="match_parent"
+                android:background="#333333"
+                android:src="@drawable/episode_heart_inactive"
+                android:layout_weight="1"
                 android:onClick="HeartBtn"/>
             <TextView android:id="@+id/GeneralToont_count_txt"
                 android:gravity="center"
@@ -106,14 +107,14 @@
                 android:onClick="HeartBtn"
                 android:textColor="#FFFFFF"
                 android:background="@drawable/textview_color"
-                android:layout_weight="0.09"/>
+                android:layout_weight="1"/>
             <Button android:id="@+id/GeneralToont_datgule"
                 android:gravity="center"
-                android:layout_width="35dp"
-                android:layout_height="25dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:background="@drawable/view_button_state_dat"
                 android:onClick="Dat"
-                android:layout_weight="0.02"/>
+                android:layout_weight="1"/>
             <TextView android:id="@+id/GeneralToont_count_txt2"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -122,14 +123,14 @@
                 android:background="@drawable/textview_color"
                 android:onClick="Dat"
                 android:textColor="#FFFFFF"
-                android:layout_weight="0.08"/>
+                android:layout_weight="1"/>
             <Button android:id="@+id/GeneralToont_before"
                 android:gravity="center"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/view_button_state_previous"
                 android:onClick="Previous"
-                android:layout_weight="0.2"/>
+                android:layout_weight="1"/>
             <TextView android:id="@+id/GeneralToont_current_pos"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -138,14 +139,14 @@
                 android:background="@drawable/textview_color"
                 android:textColor="#FFFFFF"
                 android:onClick="Current"
-                android:layout_weight="0.2"/>
+                android:layout_weight="1"/>
             <Button android:id="@+id/GeneralToont_next"
                 android:gravity="center"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/view_button_state_nnext"
                 android:onClick="Next"
-                android:layout_weight="0.2"/>
+                android:layout_weight="1"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
     <RelativeLayout
