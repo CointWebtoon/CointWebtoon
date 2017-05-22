@@ -55,7 +55,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private Toolbar GeneralToonTopToolbar, GeneralToonBottomToolbar;
     private TextView episodeTitleTextView, episodeIdTextView, goodCount;
     private COINT_SQLiteManager manager;
-    private Button good;
+    private ImageButton good;
     private boolean runMode;
     private boolean twoEpisodes = false;             //정주행모드 두개 건너뛰는것 방지
     private int yDelta, ys= 0;                          //스크롤바 좌표 계산
@@ -95,7 +95,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         goodCount = (TextView) findViewById(R.id.GeneralToont_count_txt);
         GeneralToonTopToolbar = (Toolbar) findViewById(R.id.GeneralToontoptoolbar);
         GeneralToonBottomToolbar = (Toolbar) findViewById(R.id.GeneralToontbottomtoolbar);
-        good = (Button)findViewById(R.id.GeneralToontgood);
+        good = (ImageButton)findViewById(R.id.GeneralToontgood);
         scrollSection = (RelativeLayout) findViewById(R.id.scrollSection);
         scrollbar = (ImageView) findViewById(R.id.scrollbar);
         scrollbar.setOnTouchListener(new ScrollBarOnTouchListener());
@@ -152,10 +152,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
 
-    }
-
-    public Episode getEpisodeIntstance(){
-        return episode_instance;
     }
 
     private void initializeThread() {
@@ -216,13 +212,13 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         if(count % 2 != 0) {
             serverData.likeWebtoon(id, "plus");
             editor.putBoolean(String.valueOf(id), true);
-            good.setBackgroundResource(R.drawable.view_heartcolor);
+            good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
             goodCount.setText(String.valueOf(like + 1));
         }
         else if(count % 2 == 0 && likePreference.getBoolean(String.valueOf(id), false)){
             serverData.likeWebtoon(id, "minus");
             editor.putBoolean(String.valueOf(id), false);
-            good.setBackgroundResource(R.drawable.view_heartempty);
+            good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
             if(like >= 0) {
                 goodCount.setText(String.valueOf(like));
             }
@@ -466,7 +462,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     likePreference.edit().putBoolean(String.valueOf(id), false).commit();
                 }
                 if (likePreference.getBoolean(String.valueOf(id), false)) {
-                    good.setBackgroundResource(R.drawable.view_heartcolor);
+                    good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
                 }
             }catch (NullPointerException ex) { ex.printStackTrace(); }
         }
