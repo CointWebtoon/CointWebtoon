@@ -40,6 +40,16 @@
         android:weightSum="1">
 
         <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="0.5"
+            android:background="@drawable/view_button_state_cancle"
+            android:textColor="#000000"
+            android:text="취소하기" />
+
+        <Button
             android:id="@+id/btnConfirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,14 +60,5 @@
             android:text="별점주기"
             android:textColor="#000000" />
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_weight="0.5"
-            android:background="@drawable/view_button_state_cancle"
-            android:textColor="#000000"
-            android:text="취소하기" />
     </LinearLayout>
 </LinearLayout>

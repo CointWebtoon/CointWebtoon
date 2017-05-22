@@ -57,14 +57,16 @@ public class ViewerGeneralAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
         if(position == bitmaps.size()){
-            view = inflater.inflate(R.layout.viewer_general_rating_item, null);
-            starTV = (TextView)view.findViewById(R.id.textview_starScore);
-            artist = (TextView)view.findViewById(R.id.artist);
-            mention = (TextView)view.findViewById(R.id.mention);
-            ratingbar = (RatingBar)view.findViewById(R.id.rating_bar);
-            givingstar = (Button) view.findViewById(R.id.giving_star);
-            artist.setText("작가의 말 (" + mContext.getWebtoon_instance().getArtist() + ")");
-            mention.setText(mContext.getEpisode_instance().getMention());
+                view = inflater.inflate(R.layout.viewer_general_rating_item, null);
+            try {
+                starTV = (TextView) view.findViewById(R.id.textview_starScore);
+                artist = (TextView) view.findViewById(R.id.artist);
+                mention = (TextView) view.findViewById(R.id.mention);
+                ratingbar = (RatingBar) view.findViewById(R.id.rating_bar);
+                givingstar = (Button) view.findViewById(R.id.giving_star);
+                artist.setText("작가의 말 (" + mContext.getWebtoon_instance().getArtist() + ")");
+                mention.setText(mContext.getEpisode_instance().getMention());
+            }catch (NullPointerException ex) {ex.printStackTrace();}
             if(mContext.getMyStar() != -1) {
                 givingstar.setEnabled(false);
                 ratingbar.setMax(10);

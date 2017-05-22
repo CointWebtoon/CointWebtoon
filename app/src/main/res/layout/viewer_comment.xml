@@ -37,7 +37,7 @@
                 android:onClick="Comment_BackBtn"
                 android:text="돌아가기"
                 android:textColor="#FFFFFF"
-                android:textSize="20dp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:onClick="CommentTitleClick"
@@ -50,7 +50,7 @@
                 android:paddingRight="10dp"
                 android:text="댓글 쓰기"
                 android:textColor="#FFFFFF"
-                android:textSize="20dp" />
+                android:textSize="15dp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

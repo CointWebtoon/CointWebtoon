@@ -441,11 +441,11 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                 if(autoScroll){
                     try{autoScrollThread.interrupt();}catch(Exception e){}
                     ImageButton target = (ImageButton)v;
-                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_active));
+                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_inactive));
                     autoScroll = false;
                 }else{
                     ImageButton target = (ImageButton)v;
-                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_inactive));
+                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_active));
                     autoScroll();
                     autoScroll = true;
                 }
