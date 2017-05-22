@@ -1,6 +1,9 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
 import android.view.LayoutInflater;
@@ -21,12 +24,14 @@ public class MyWebtoonAdapter extends BaseAdapter {
     Context context = null;
     ArrayList<Webtoon> resultQuery = null;
     LayoutInflater layoutInflater = null;
+    private Application_UserInfo userInfo;
 
     public MyWebtoonAdapter(Context context, ArrayList<Webtoon> arrayList) {
         this.context = context;
         this.resultQuery = arrayList;
         this.layoutInflater = LayoutInflater.from(this.context);
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(this.context);
+        userInfo = (Application_UserInfo)context.getApplicationContext();
     }
 
     public int getCount() {
@@ -41,7 +46,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
         return resultQuery.get(position);
     }
 
-    public View getView(int position, final View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
 
         View itemLayout = convertView;
         ViewHolder viewHolder = null;
@@ -123,6 +128,26 @@ public class MyWebtoonAdapter extends BaseAdapter {
         addWebtoon.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
+
+                    if(resultQuery.get(position).isAdult()){
+                        if(userInfo.isLogin()){
+                            if(!userInfo.isUserAdult()){
+                                Toast.makeText(context, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }else{
+                            new AlertDialog.Builder(context)
+                                    .setTitle("로그인")
+                                    .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                                    .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            context.startActivity(new Intent(context, LoginActivity.class));
+                                        }
+                                    }).setNegativeButton("아니요", null).show();
+                            return;
+                        }
+                    }
                     String result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
                     Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
                     if(result.equals("마이 웹툰 설정")){

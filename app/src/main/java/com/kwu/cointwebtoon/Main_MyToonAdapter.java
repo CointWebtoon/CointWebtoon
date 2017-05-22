@@ -78,7 +78,9 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                     cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
                     cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
         }
+
         addRemoveItem(mList);
+
         weekday_listItem = new Weekday_ListItem(mContext, num);
         weekdayList = weekday_listItem.getList();
         Log.i("weekday list size : ", Integer.toString(weekdayList.size()));
@@ -128,6 +130,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                     break;
             }
         } else {
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#5f5f5f"));
             holder.starscore.setVisibility(v.VISIBLE);
             holder.latest.setVisibility(v.VISIBLE);
 
@@ -225,7 +228,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
 
                             /*하나도 안읽은 경우엔 안드로이드 디비에 에피소드가 없어서 바로 첫화를 가져올 수 없음.*/
 
- /*                           Toast.makeText(mContext,Integer.toString(arrayList.get(position).getId()),Toast.LENGTH_SHORT).show();
+/*                            Toast.makeText(mContext,Integer.toString(arrayList.get(position).getId()),Toast.LENGTH_SHORT).show();
 
                             GetServerData getServerData;
                             getServerData = new GetServerData(mContext);
@@ -237,7 +240,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                                     coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
                                     Intent generalIntent = new Intent(mContext, ViewerGerneralActivity.class);
                                     generalIntent.putExtra("id", arrayList.get(position).getId());
-                                    generalIntent.putExtra("ep_id", 1);
+                                    generalIntent.putExtra("ep_id", 1);;;;;;;;;;
                                     mContext.startActivity(generalIntent);
                                     break;
                                 }
@@ -320,7 +323,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         //여기 position0에 들어가는 웹툰 따로 넣고 돌리기
         Webtoon resultQuery = new Webtoon();
         resultQuery.setId(0);
-        resultQuery.setTitle("웹툰 추가");
+        resultQuery.setTitle("더 보기");
         resultQuery.setArtist("");
         resultQuery.setThumbURL("");
         resultQuery.setStarScore(0.0f);
@@ -335,6 +338,11 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
             }
         }
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     private void setAnimation(View viewToAnimate, int position) {
