@@ -58,12 +58,13 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private int cut_like;
     private int sleepTime = -1;
     private RatingBar ratingbar;
-    private TextView mention, starTV;
+    private TextView mention, starTV, artistTV;
     private LayoutInflater inflater = null;
     private Button givingStar;
     public static final int REQUEST_CODE_RATING = 1001;
     Application_UserInfo userInfo;
     private SharedPreferences likePreference;
+    public float myStar = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,6 +156,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             }
             view = inflater.inflate(R.layout.viewer_rating_item, null);
             flipper.addView(view);
+            artistTV = (TextView)view.findViewById(R.id.cut_artist);
             ratingbar = (RatingBar) view.findViewById(R.id.cut_rating_bar);
             mention = (TextView) view.findViewById(R.id.cut_mention);
             starTV = (TextView) view.findViewById(R.id.cut_starScore);
@@ -387,11 +389,13 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             if(resultCode == RESULT_OK) {
                 try {
                     float SCORE = data.getExtras().getFloat("SCORE");
-                    Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
                     if(starTV != null && ratingbar != null){
                         starTV.setText(String.valueOf(SCORE));
                         ratingbar.setMax(10);
                         ratingbar.setRating((SCORE)/2);
+                        myStar = SCORE;
+                        manager.updateMyStarScore(toonId, episodeId, SCORE);
+                        Log.i("coint", String.valueOf(manager.getMyStar(toonId, episodeId)));
                         givingStar.setEnabled(false);
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}
@@ -408,6 +412,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         protected Void doInBackground(Void... params) {
             episode_instance = manager.getEpisodeInstance(toonId, episodeId);
             webtoon_instance = manager.getWebtoonInstance(toonId);
+            myStar = manager.getMyStar(toonId, episodeId);
             return null;
         }
         @Override
@@ -421,9 +426,18 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             if (likePreference.getBoolean(String.valueOf(toonId), false)) {
                 good.setBackgroundResource(R.drawable.episode_heart_active);
             }
-            ratingbar.setRating(0);
-            starTV.setText(String.valueOf(0.0));
+            if(myStar != -1){
+                ratingbar.setMax(10);
+                ratingbar.setRating(myStar / 2);
+                givingStar.setEnabled(false);
+                starTV.setText(String.valueOf(myStar));
+            }else{
+                ratingbar.setRating(0);
+                givingStar.setEnabled(true);
+                starTV.setText("0.0");
+            }
             mention.setText(episode_instance.getMention());
+            artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
         }
     }
 }

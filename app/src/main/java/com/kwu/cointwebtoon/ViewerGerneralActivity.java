@@ -66,13 +66,14 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
     private Application_UserInfo userInfo;
     private Thread autoScrollThread;
     private boolean autoScroll = false;
+    private float myStar = -1;
 
     @Override
     public void update(Observable observable, Object o) {
         this.imageUrls = (ArrayList<String>) o;
         adapter = new ViewerGeneralAdapter(this, imageUrls);
         viewerListView.setAdapter(adapter);
-        //episode_instance = manager.getEpisodeInstance(id,ep_id);
+        episode_instance = manager.getEpisodeInstance(id,ep_id);
         new ViewerGerneralActivity.GetCurrentToonInfo().execute();
         maxTopMargin = scrollSection.getHeight() - scrollbar.getHeight();
         serverData.plusHit(id);
@@ -150,7 +151,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         serverData.getImagesFromServer(id, ep_id);
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
-
     }
 
     private void initializeThread() {
@@ -239,6 +239,17 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             episodeIdTextView.setText(String.valueOf(ep_id));
         }
     }
+
+    public float getMyStar(){
+        return myStar;
+    }
+    public Episode getEpisode_instance(){
+        return episode_instance;
+    }
+    public Webtoon getWebtoon_instance(){
+        return webtoon_instance;
+    }
+
     public void Next(View v) {
         if(ep_id > 0 && (ep_id < manager.maxEpisodeId(id))){
             ep_id += 1;
@@ -260,12 +271,15 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
             if(resultCode == RESULT_OK) {
                 try {
                     float SCORE = data.getExtras().getFloat("SCORE");
-                    Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
                     if(adapter.starTV != null && adapter.ratingbar != null){
                         adapter.starTV.setText(String.valueOf(SCORE));
                         adapter.ratingbar.setMax(10);
                         adapter.ratingbar.setRating((SCORE)/2);
                         adapter.givingstar.setEnabled(false);
+                        if(manager.updateMyStarScore(id, ep_id, SCORE)){
+                            System.out.println("=================================성공");
+                        }
+                        myStar = SCORE;
                     }
                 }catch (NullPointerException ex) {ex.printStackTrace();}
             }
@@ -352,11 +366,6 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     episodeIdTextView.setText(String.valueOf(ep_id));
                 }
                 else{
-                    if(adapter != null){
-                        adapter.ratingbar.setRating(0);
-                        //adapter.starTV.setText(String.valueOf(0.0));
-                        adapter.mention.setText(episode_instance.getMention());
-                    }
                     showToolbars(true);
                 }
             }
@@ -454,6 +463,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
         protected Void doInBackground(Void... params) {
             webtoon_instance = manager.getWebtoonInstance(id);
             episode_instance = manager.getEpisodeInstance(id, ep_id);
+            myStar = manager.getMyStar(id, ep_id);
             return null;
         }
 
@@ -467,7 +477,7 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                     likePreference.edit().putBoolean(String.valueOf(id), false).commit();
                 }
                 if (likePreference.getBoolean(String.valueOf(id), false)) {
-                    good.setBackgroundResource(R.drawable.episode_heart_active);
+                    good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
                 }
             }catch (NullPointerException ex) { ex.printStackTrace(); }
         }
