@@ -38,12 +38,11 @@
             android:name=".BestChallengeActivity"
             android:label="Best Challenge"/>
 
-        <activity android:name=".WeekdayActivity"/>
+        <activity android:name=".WeekdayActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
 
         <activity android:name=".ViewerCutActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".ViewerGerneralActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".ViewerStarScoreActivity"
@@ -66,19 +65,26 @@
 
         <activity android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".ViewerMotionActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".ArtistActivity"/>
+        <activity android:name=".ArtistActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
 
         <activity android:name=".ViewerCommentWriteActivity"
             android:theme="@style/ViewerActivity"/>
+
+        <activity android:name=".ViewerGeneralActivity"
+            android:theme="@style/ViewerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!-- 네이버 아이디로 로그인 API 사용을 위해 추가한 액티비티들 -->
         <activity android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"

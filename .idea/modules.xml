@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/coint_test.iml" filepath="$PROJECT_DIR$/coint_test.iml" />
       <module fileurl="file://$PROJECT_DIR$/cointwebtoon.iml" filepath="$PROJECT_DIR$/cointwebtoon.iml" />
     </modules>
   </component>

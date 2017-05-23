@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:id="@+id/coint_layout"
     tools:context="com.kwu.cointwebtoon.ViewerGerneralActivity">
-    <ListView android:id="@+id/list_view"
-        android:background="#FFFFFF"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/viewer_general_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:nestedScrollingEnabled="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="match_parent" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/GeneralToontoptoolbar"
-        android:background="#333333"
         android:layout_width="match_parent"
         android:layout_height="@dimen/viewer_actionbar_height"
-        android:gravity="center"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:background="#333333"
+        android:gravity="center">
+
         <ImageView
             android:id="@+id/GeneralToontgotoepi"
             android:layout_width="15dp"
@@ -28,13 +28,15 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
-            android:onClick="BackBtn"
+            android:onClick="general_onClick"
             android:scaleType="fitCenter"
             android:src="@drawable/view_button_state_bback" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/GeneralToontEpisodeTitle"
                 android:layout_width="0dp"
@@ -43,7 +45,7 @@
                 android:ellipsize="marquee"
                 android:gravity="center_vertical"
                 android:marqueeRepeatLimit="5"
-                android:onClick="BackBtn"
+                android:onClick="general_onClick"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textSize="15dp" />
@@ -55,109 +57,132 @@
 
                 <ImageButton
                     android:id="@+id/general_run"
-                    android:background="#333333"
-                    android:onClick="runButtonClick"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:background="#333333"
+                    android:onClick="general_onClick"
                     android:padding="5dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/run_inactive" />
+
                 <ImageButton
-                    android:onClick="runButtonClick"
-                    android:background="#333333"
                     android:id="@+id/general_auto_scroll"
-                    android:padding="5dp"
-                    android:src="@drawable/viewer_auto_scroll_inactive"
-                    android:layout_marginRight="15dp"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:layout_alignParentTop="true"
-                    android:layout_toStartOf="@+id/general_run" />
+                    android:layout_marginRight="15dp"
+                    android:layout_toStartOf="@+id/general_run"
+                    android:background="#333333"
+                    android:onClick="general_onClick"
+                    android:padding="5dp"
+                    android:src="@drawable/viewer_auto_scroll_inactive" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/GeneralToontbottomtoolbar"
-        android:background="#333333"
         android:layout_width="match_parent"
         android:layout_height="@dimen/viewer_actionbar_height"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="#333333">
+
         <LinearLayout
-            android:orientation="horizontal"
-            android:weightSum="7"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true">
-            <ImageButton android:id="@+id/GeneralToontgood"
-                android:gravity="center"
-                android:layout_width="32dp"
-                android:layout_height="match_parent"
-                android:background="#333333"
-                android:src="@drawable/episode_heart_inactive"
-                android:layout_weight="1"
-                android:onClick="HeartBtn"/>
-            <TextView android:id="@+id/GeneralToont_count_txt"
-                android:gravity="center"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal"
+            android:weightSum="7">
+            <LinearLayout
+                android:layout_weight="2"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=" 좋아요수  "
-                android:onClick="HeartBtn"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/textview_color"
-                android:layout_weight="1"/>
-            <Button android:id="@+id/GeneralToont_datgule"
-                android:gravity="center"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/GeneralToontgood"
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:background="#333333"
+                    android:gravity="center"
+                    android:onClick="general_onClick"
+                    android:src="@drawable/episode_heart_inactive" />
+
+                <TextView
+                    android:id="@+id/GeneralToont_count_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/textview_color"
+                    android:gravity="center"
+                    android:onClick="general_onClick"
+                    android:text=" 좋아요수  "
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <ImageButton
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/GeneralToont_datgule"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:background="@drawable/view_button_state_dat"
-                android:onClick="Dat"
-                android:layout_weight="1"/>
-            <TextView android:id="@+id/GeneralToont_count_txt2"
+                android:layout_weight="1"
+                android:src="@drawable/view_button_state_dat"
+                android:scaleType="fitCenter"
+                android:background="#333333"
                 android:gravity="center"
+                android:onClick="general_onClick" />
+
+            <TextView
+                android:id="@+id/GeneralToont_count_txt2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/textview_color"
+                android:gravity="center"
+                android:onClick="general_onClick"
                 android:text="  댓글 보기  "
-                android:background="@drawable/textview_color"
-                android:onClick="Dat"
-                android:textColor="#FFFFFF"
-                android:layout_weight="1"/>
-            <Button android:id="@+id/GeneralToont_before"
-                android:gravity="center"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/GeneralToont_before"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/view_button_state_previous"
-                android:onClick="Previous"
-                android:layout_weight="1"/>
-            <TextView android:id="@+id/GeneralToont_current_pos"
                 android:gravity="center"
+                android:onClick="general_onClick" />
+
+            <TextView
+                android:id="@+id/GeneralToont_current_pos"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="현재회차"
+                android:layout_weight="1"
                 android:background="@drawable/textview_color"
-                android:textColor="#FFFFFF"
-                android:onClick="Current"
-                android:layout_weight="1"/>
-            <Button android:id="@+id/GeneralToont_next"
                 android:gravity="center"
+                android:text="현재회차"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/GeneralToont_next"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/view_button_state_nnext"
-                android:onClick="Next"
-                android:layout_weight="1"/>
+                android:gravity="center"
+                android:onClick="general_onClick" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+
     <RelativeLayout
         android:id="@+id/scrollSection"
         android:layout_width="25dp"
         android:layout_height="match_parent"
+        android:layout_above="@+id/GeneralToontbottomtoolbar"
         android:layout_alignParentRight="true"
         android:layout_below="@id/GeneralToontoptoolbar"
-        android:layout_above="@+id/GeneralToontbottomtoolbar"
         android:background="#22000000"
         android:padding="0dp">
+
         <ImageView
             android:id="@+id/scrollbar"
             android:layout_width="25dp"
@@ -166,6 +191,4 @@
             android:scaleType="fitXY"
             android:src="@drawable/viewer_scrollbars" />
     </RelativeLayout>
-
-
 </RelativeLayout>

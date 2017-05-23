@@ -81,44 +81,44 @@ public class MyWebtoonAdapter extends BaseAdapter {
         viewHolder.ranking.setText(Integer.toString(position + 1));
 
         if(currentItem.isMine()){           //마이웹툰일 경우 -로 설정
-            viewHolder.add.setImageResource(R.drawable.main_minus_button_state);
+            viewHolder.add.setImageResource(R.drawable.my_star_active);
         }else{
-            viewHolder.add.setImageResource(R.drawable.main_add_button_state);
+            viewHolder.add.setImageResource(R.drawable.my_star_unactive);
         }
 
         if(currentItem.getToonType() == 'C') {      // 컷툰 여부
-            viewHolder.cuttoon.setVisibility(View.VISIBLE);
+            viewHolder.cuttoon.setVisibility(itemLayout.VISIBLE);
             viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
             viewHolder.cuttoon.setText("컷툰");
         }else{
             viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
             viewHolder.cuttoon.setText(null);
-            viewHolder.cuttoon.setVisibility(convertView.GONE);
+            viewHolder.cuttoon.setVisibility(itemLayout.GONE);
         }
 
         if(currentItem.isAdult() == true) {      // 성인툰 여부
-            viewHolder.adult.setVisibility(View.VISIBLE);
+            viewHolder.adult.setVisibility(itemLayout.VISIBLE);
             viewHolder.adult.setBackgroundResource(R.drawable.main_icon_adult);
             viewHolder.adult.setText("성인");
         }else{
             viewHolder.adult.setBackgroundResource(R.drawable.main_icon_adult);
             viewHolder.adult.setText(null);
-            viewHolder.adult.setVisibility(convertView.GONE);
+            viewHolder.adult.setVisibility(itemLayout.GONE);
         }
 
         if(currentItem.isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
-            viewHolder.update.setVisibility(convertView.VISIBLE);
+            viewHolder.update.setVisibility(itemLayout.VISIBLE);
             viewHolder.update.setBackgroundResource(R.drawable.week_icon_update);
             viewHolder.update.setText("UP");
         }else if(currentItem.isUpdated()==2){
-            viewHolder.update.setVisibility(convertView.VISIBLE);
+            viewHolder.update.setVisibility(itemLayout.VISIBLE);
             viewHolder.update.setBackgroundResource(R.drawable.week_icon_dormant);
             viewHolder.update.setText("휴재");
             viewHolder.update.setTextColor(Color.parseColor("#ffffff"));
         }else{
             viewHolder.update.setBackgroundResource(R.drawable.week_icon_cuttoon);
             viewHolder.update.setText(null);
-            viewHolder.update.setVisibility(convertView.GONE);
+            viewHolder.update.setVisibility(itemLayout.GONE);
         }
         //버튼을 누르면 해당 웹툰의 id를 가져옴
         //버튼이나 이미지버튼을 사용 할 경우, 리스트뷰의 focus가 버튼에 가서 onClickListener가 동작하지 않음
@@ -151,9 +151,9 @@ public class MyWebtoonAdapter extends BaseAdapter {
                     String result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
                     Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
                     if(result.equals("마이 웹툰 설정")){
-                        addWebtoon.setImageResource(R.drawable.main_minus_button_state);
+                        addWebtoon.setImageResource(R.drawable.my_star_active);
                     }else{
-                        addWebtoon.setImageResource(R.drawable.main_add_button_state);
+                        addWebtoon.setImageResource(R.drawable.my_star_unactive);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

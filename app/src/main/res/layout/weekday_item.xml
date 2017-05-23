@@ -33,9 +33,9 @@
 
                 <ImageButton
                     android:id="@+id/btn_my"
-                    android:layout_width="56dp"
+                    android:layout_width="40dp"
                     android:layout_height="0dp"
-                    android:layout_weight="8"
+                    android:layout_weight="3"
                     android:background="@drawable/my_release"
                     android:focusable="false"
                     />
