@@ -131,10 +131,7 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
         Intent intent = getIntent();
         toonId = intent.getIntExtra("id", -1);
         episodeId = intent.getIntExtra("ep_id", -1);
-        //나중에 삭제---//
-        toonId = 641253;
-        episodeId = 131;
-        //나중에 삭제---//
+
         if (toonId == -1 | episodeId == -1) {
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
