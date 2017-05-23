@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.nhn.android.naverlogin.OAuthLogin;
 
 public class Application_UserInfo extends Application {
@@ -78,5 +79,16 @@ public class Application_UserInfo extends Application {
         userGender = 'N';
         loginInstance.logoutAndDeleteToken(mContext);
         manager.initMyStar();
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Glide.get(this).clearMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        Glide.get(this).trimMemory(level);
     }
 }

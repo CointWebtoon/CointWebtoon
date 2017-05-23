@@ -3,12 +3,16 @@ package com.kwu.cointwebtoon;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Comment;
+
+import org.w3c.dom.Text;
 
 public class ViewerCommentWriteActivity extends TypeKitActivity {
     /**
@@ -19,6 +23,8 @@ public class ViewerCommentWriteActivity extends TypeKitActivity {
     private TextView userNickname;
     private EditText content;
     private CointProgressDialog dialog;
+    private int num_of_comment = 0;
+    private TextView Num_of_comment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,8 +36,25 @@ public class ViewerCommentWriteActivity extends TypeKitActivity {
         ep_id = getIntent.getIntExtra("ep_id", -1);
         cutNumber = getIntent.getIntExtra("cutnumber", -1);
         userNickname = (TextView)findViewById(R.id.comment_write_userid);
-        userNickname.setText(userInfo.getUserName());
+        userNickname.setText(userInfo.getUserName() + "님");
         content = (EditText)findViewById(R.id.comment_write_edittext);
+        content.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Num_of_comment.setText(String.valueOf(s.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        Num_of_comment = (TextView)findViewById(R.id.num_of_comment);
         dialog = new CointProgressDialog(this);
     }
 

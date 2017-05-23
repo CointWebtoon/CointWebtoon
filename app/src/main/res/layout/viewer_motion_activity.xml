@@ -50,72 +50,93 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/MotionToontbottomtoolbar"
-        android:background="#333333"
         android:layout_width="match_parent"
         android:layout_height="@dimen/viewer_actionbar_height"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="#333333">
+
         <LinearLayout
-            android:orientation="horizontal"
-            android:weightSum="7"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true">
-            <ImageButton android:id="@+id/MotionToontgood"
-                android:gravity="center"
-                android:layout_width="32dp"
-                android:layout_height="match_parent"
-                android:background="#333333"
-                android:src="@drawable/episode_heart_inactive"
-                android:layout_weight="1"
-                android:onClick="HeartBtn"/>
-            <TextView android:id="@+id/MotionToont_count_txt"
-                android:gravity="center"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal"
+            android:weightSum="7">
+            <LinearLayout
+                android:layout_weight="2"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=" 좋아요수  "
-                android:onClick="HeartBtn"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/textview_color"
-                android:layout_weight="1"/>
-            <Button android:id="@+id/MotionToont_datgule"
-                android:gravity="center"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:id="@+id/MotionToontgood"
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:background="#333333"
+                    android:gravity="center"
+                    android:onClick="HeartBtn"
+                    android:src="@drawable/episode_heart_inactive" />
+
+                <TextView
+                    android:id="@+id/MotionToont_count_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/textview_color"
+                    android:gravity="center"
+                    android:onClick="HeartBtn"
+                    android:text=" 좋아요수  "
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <ImageButton
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/MotionToont_datgule"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:background="@drawable/view_button_state_dat"
-                android:onClick="Dat"
-                android:layout_weight="1"/>
-            <TextView android:id="@+id/MotionToont_count_txt2"
+                android:layout_weight="1"
+                android:src="@drawable/view_button_state_dat"
+                android:scaleType="fitCenter"
+                android:background="#333333"
                 android:gravity="center"
+                android:onClick="Dat" />
+
+            <TextView
+                android:id="@+id/MotionToont_count_txt2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="  댓글 수  "
+                android:layout_weight="1"
                 android:background="@drawable/textview_color"
-                android:onClick="Dat"
-                android:textColor="#FFFFFF"
-                android:layout_weight="1"/>
-            <Button android:id="@+id/MotionToont_before"
                 android:gravity="center"
+                android:onClick="Dat"
+                android:text="  댓글 보기  "
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/MotionToont_before"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/view_button_state_previous"
-                android:onClick="Previous"
-                android:layout_weight="1"/>
-            <TextView android:id="@+id/MotionToont_current_pos"
                 android:gravity="center"
+                android:onClick="Previous" />
+
+            <TextView
+                android:id="@+id/MotionToont_current_pos"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="현재회차"
+                android:layout_weight="1"
                 android:background="@drawable/textview_color"
-                android:textColor="#FFFFFF"
-                android:onClick="Current"
-                android:layout_weight="1"/>
-            <Button android:id="@+id/MotionToont_next"
                 android:gravity="center"
+                android:text="현재회차"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/MotionToont_next"
                 android:layout_width="35dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/view_button_state_nnext"
-                android:onClick="Next"
-                android:layout_weight="1"/>
+                android:gravity="center"
+                android:onClick="Next" />
         </LinearLayout>
+
     </android.support.v7.widget.Toolbar>
 </RelativeLayout>

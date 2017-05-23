@@ -222,6 +222,7 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
                 writeIntent.putExtra("id", id);
                 writeIntent.putExtra("ep_id", ep_id);
                 writeIntent.putExtra("cutnumber", cutNumber);
+                writeIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(writeIntent);
                 break;
         }

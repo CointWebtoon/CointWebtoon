@@ -4,11 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,12 +27,9 @@ import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Handler;
 
 public class ViewerCutActivity extends TypeKitActivity implements Observer {
     public static enum Action {
@@ -53,7 +50,8 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private Toolbar topToolbar, bottomToolbar;
     private COINT_SQLiteManager manager;
     private TextView episodeTitleTextView, episodeIdTextView, good_count;
-    private boolean runMode, autoMode;
+    private boolean runMode, showtoolbar;
+    private int toolbarheight = 0;
     private Thread autoThread;
     private int cut_like;
     private int sleepTime = -1;
@@ -61,6 +59,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     private TextView mention, starTV, artistTV;
     private LayoutInflater inflater = null;
     private Button givingStar;
+    private Smart_Cut_ImageView newImageView;
     public static final int REQUEST_CODE_RATING = 1001;
     Application_UserInfo userInfo;
     private SharedPreferences likePreference;
@@ -76,10 +75,11 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         episodeTitleTextView = (TextView) findViewById(R.id.CutToonTitle);
         episodeTitleTextView.setSelected(true);
         episodeIdTextView = (TextView) findViewById(R.id.current_pos);
+        toolbarheight = dpToPixel(42);
         manager = COINT_SQLiteManager.getInstance(this);
         good_count = (TextView) findViewById(R.id.count_txt);
         runMode = false;
-        autoMode = false;
+        showtoolbar = true;
         setSupportActionBar(topToolbar);
         flipper = (ViewFlipper) findViewById(R.id.viewflipper);
         inflater = LayoutInflater.from(this);
@@ -101,11 +101,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                     }
                 } else {
                     //클릭 처리
-                    if (topToolbar.getVisibility() == View.VISIBLE) {
-                        showToolbars(false);
-                    } else if (topToolbar.getVisibility() == View.GONE) {
-                        showToolbars(true);
-                    }
+                    showToolbars(!showtoolbar);
                 }
             }
 
@@ -130,14 +126,15 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         View view;
-        Log.i("update", "되냐?");
-        episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
-        episodeIdTextView.setText(String.valueOf(episodeId));
+        try {
+            episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
+            episodeIdTextView.setText(String.valueOf(episodeId));
+        }catch (Exception ex){}
         this.imageURLs = (ArrayList<String>) o;
         imageIndex = 0;
         if (imageURLs != null) {
             for(int i = 0 ; i < imageURLs.size(); i++){
-                Smart_Cut_ImageView newImageView = new Smart_Cut_ImageView(this);
+                newImageView = new Smart_Cut_ImageView(this);
                 if(i==0){
                     Glide.with(this)
                             .load(imageURLs.get(i))
@@ -202,18 +199,19 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             }
         }
     }
+    public int dpToPixel(int dp) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
 
     private void showToolbars(boolean show) {
+        showtoolbar = show;
         if (show) {
-            topToolbar.setVisibility(View.VISIBLE);
-            bottomToolbar.setVisibility(View.VISIBLE);
             topToolbar.animate().translationY(0).withLayer();
             bottomToolbar.animate().translationY(0).withLayer();
         } else {
-            topToolbar.setVisibility(View.GONE);
-            bottomToolbar.setVisibility(View.GONE);
-            topToolbar.animate().translationY(-60).withLayer();
-            bottomToolbar.animate().translationY(60).withLayer();
+            topToolbar.animate().translationY(-1 * toolbarheight).withLayer();
+            bottomToolbar.animate().translationY(toolbarheight).withLayer();
         }
     }
 
@@ -266,31 +264,37 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
 
     public void Dat(View v) {
-        Intent comment_intent = new Intent(this, ViewerCommentActivity.class);
-        comment_intent.putExtra("id", toonId);
-        comment_intent.putExtra("ep_id", episodeId);
-        if(!(imageIndex == imageURLs.size())){
-            comment_intent.putExtra("cutnum", imageIndex + 1);
-        }
-        startActivity(comment_intent);
+        try {
+            Intent comment_intent = new Intent(this, ViewerCommentActivity.class);
+            comment_intent.putExtra("id", toonId);
+            comment_intent.putExtra("ep_id", episodeId);
+            comment_intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            if (!(imageIndex == imageURLs.size())) {
+                comment_intent.putExtra("cutnum", imageIndex + 1);
+            }
+            startActivity(comment_intent);
+        }catch (NullPointerException ex){}
     }
     public void Previous(View v) {
+        try{
         if(episodeId > 1){
             flipper.removeAllViews();
             imageURLs.clear();
             episodeId -= 1;
             getServerData.getImagesFromServer(toonId, episodeId);
             manager.updateEpisodeRead(toonId, episodeId);
-        }
+        }}catch (NullPointerException ex){}
     }
     public void Next(View v) {
-        if(episodeId > 0 ){
-            flipper.removeAllViews();
-            imageURLs.clear();
-            episodeId += 1;
-            getServerData.getImagesFromServer(toonId, episodeId);
-            manager.updateEpisodeRead(toonId, episodeId);
-        }
+        try {
+            if (episodeId > 0 && (episodeId < manager.maxEpisodeId(toonId))) {
+                flipper.removeAllViews();
+                imageURLs.clear();
+                episodeId += 1;
+                getServerData.getImagesFromServer(toonId, episodeId);
+                manager.updateEpisodeRead(toonId, episodeId);
+            }
+        }catch (NullPointerException ex){}
     }
     public void timerClick(View v) {
         ImageButton my = (ImageButton) v;
@@ -381,7 +385,21 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
     public void cut_givingStarBtnClick(View v) {
         try {
-            startActivityForResult(new Intent(this, ViewerStarScoreActivity.class), REQUEST_CODE_RATING);
+            if(!userInfo.isLogin()){
+                new AlertDialog.Builder(this)
+                        .setTitle("로그인")
+                        .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(ViewerCutActivity.this, LoginActivity.class));
+                            }
+                        }).setNegativeButton("아니요", null).show();
+                return;
+            }
+            Intent intent = new Intent(this, ViewerStarScoreActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivityForResult(intent, REQUEST_CODE_RATING);
         }catch (Exception e) { e.printStackTrace();}
     }
     @Override
@@ -428,20 +446,22 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 likePreference.edit().putBoolean(String.valueOf(toonId), false).commit();
             }
             if (likePreference.getBoolean(String.valueOf(toonId), false)) {
-                good.setBackgroundResource(R.drawable.episode_heart_active);
+                good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
             }
-            if(myStar != -1){
-                ratingbar.setMax(10);
-                ratingbar.setRating(myStar / 2);
-                givingStar.setEnabled(false);
-                starTV.setText(String.valueOf(myStar));
-            }else{
-                ratingbar.setRating(0);
-                givingStar.setEnabled(true);
-                starTV.setText("0.0");
-            }
-            mention.setText(episode_instance.getMention());
-            artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
+            try {
+                if (myStar != -1) {
+                    ratingbar.setMax(10);
+                    ratingbar.setRating(myStar / 2);
+                    givingStar.setEnabled(false);
+                    starTV.setText(String.valueOf(myStar));
+                } else {
+                    ratingbar.setRating(0);
+                    givingStar.setEnabled(true);
+                    starTV.setText("0.0");
+                }
+                mention.setText(episode_instance.getMention());
+                artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
+            }catch (NullPointerException ex){}
         }
     }
 }

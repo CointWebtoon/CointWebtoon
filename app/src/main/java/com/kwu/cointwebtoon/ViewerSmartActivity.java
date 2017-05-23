@@ -1,19 +1,19 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -21,7 +21,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.Target;
 import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
@@ -52,10 +51,13 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     private Episode episode_instance;
     private Webtoon webtoon_instance;
     private RatingBar ratingbar;
+    private int toolbarheight = 0;
     private TextView mention, starTV, artistTV;
     private Button givingStar;
+    private boolean showtoolbar;
     public static final int REQUEST_CODE_RATING = 1001;
     private float myStar = -1;
+    Application_UserInfo userInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,9 +105,12 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
+        toolbarheight = dpToPixel(42);
         serverData = new GetServerData(this);
         serverData.registerObserver(this);
         serverData.getImagesFromServer(toonId, episodeId);
+        userInfo = (Application_UserInfo)getApplication();
+        showtoolbar = true;
     }
 
     //이미지 로드가 완료되었을 때 수행할 행동
@@ -116,16 +121,20 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         if(imageURLs == null){
             return;
         }
-        episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
-        episodeIdTextView.setText(String.valueOf(episodeId));
+        try {
+            episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
+            episodeIdTextView.setText(String.valueOf(episodeId));
+        }catch (Exception ex) {}
         if(imageURLs.size() == 0) {
             Toast.makeText(this, "이미지 로드 에러", Toast.LENGTH_SHORT).show();
             return;
         }
         imageIndex = 0;
-        progressSeekBar.setMax(imageURLs.size());
-        progressSeekBar.setProgress(1);
-        progressTextView.setText("1 / " + imageURLs.size());
+        try {
+            progressSeekBar.setMax(imageURLs.size());
+            progressSeekBar.setProgress(1);
+            progressTextView.setText("1 / " + imageURLs.size());
+        }catch (Exception ex){}
         for(int i = 0 ; i < imageURLs.size(); i++){
             Smart_Cut_ImageView newImageView = new Smart_Cut_ImageView(this);
             if(i==0){
@@ -135,7 +144,6 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                         .placeholder(R.drawable.viewer_sc_placeholder)
                         .into(newImageView);
             }else{
-                System.out.println(i);
                 Glide.with(this)
                         .load(imageURLs.get(i))
                         .asBitmap()
@@ -145,20 +153,40 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
             }
             imageFlipper.addView(newImageView);
         }
-        view = inflater.inflate(R.layout.viewer_rating_item, null);
-        imageFlipper.addView(view);
-        ratingbar = (RatingBar) view.findViewById(R.id.cut_rating_bar);
-        mention = (TextView) view.findViewById(R.id.cut_mention);
-        starTV = (TextView) view.findViewById(R.id.cut_starScore);
-        givingStar = (Button) view.findViewById(R.id.cut_giving_star);
-        artistTV = (TextView)view.findViewById(R.id.cut_artist);
-        new ViewerSmartActivity.GetCurrentToonInfo().execute();
-        serverData.plusHit(toonId);
+        try {
+            view = inflater.inflate(R.layout.viewer_rating_item, null);
+            imageFlipper.addView(view);
+            ratingbar = (RatingBar) view.findViewById(R.id.cut_rating_bar);
+            mention = (TextView) view.findViewById(R.id.cut_mention);
+            starTV = (TextView) view.findViewById(R.id.cut_starScore);
+            givingStar = (Button) view.findViewById(R.id.cut_giving_star);
+            artistTV = (TextView) view.findViewById(R.id.cut_artist);
+            new ViewerSmartActivity.GetCurrentToonInfo().execute();
+            serverData.plusHit(toonId);
+        }catch (Exception ex){}
+    }
+    public int dpToPixel(int dp) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
     public void cut_givingStarBtnClick(View v) {
         try {
-            startActivityForResult(new Intent(this, ViewerStarScoreActivity.class), REQUEST_CODE_RATING);
-        }catch (Exception e) { e.printStackTrace();}
+            if(!userInfo.isLogin()){
+                new AlertDialog.Builder(this)
+                        .setTitle("로그인")
+                        .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(ViewerSmartActivity.this, LoginActivity.class));
+                            }
+                        }).setNegativeButton("아니요", null).show();
+                return;
+            }
+            Intent intent = new Intent(this, ViewerStarScoreActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivityForResult(intent, REQUEST_CODE_RATING);
+        }catch (Exception e) { }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -175,7 +203,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                         givingStar.setEnabled(false);
                         manager.updateMyStarScore(toonId, episodeId, SCORE);
                     }
-                }catch (NullPointerException ex) {ex.printStackTrace();}
+                }catch (NullPointerException ex) {}
             }
         }
     }
@@ -189,6 +217,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     }
 
     private void showToolbars(boolean show) {
+        showtoolbar = show;
         if (show) {
             topToolbar.setVisibility(View.VISIBLE);
             bottomToolbar.setVisibility(View.VISIBLE);
@@ -205,10 +234,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     public void flipperClick(View v) {
         if(imageURLs == null)
             return;
-        if (topToolbar.getVisibility() == View.VISIBLE) {
-            showToolbars(false);
-            return;
-        }
+        showToolbars(showtoolbar);
         int animationGenerator = rand.nextInt(4);
         switch (animationGenerator) {
             case 0:
@@ -228,48 +254,50 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                 imageFlipper.setOutAnimation(mContext, animations.get(R.anim.slide_in_right));
                 break;
         }
-        if (imageIndex < imageURLs.size()) {
-            imageFlipper.showNext();
-            imageIndex++;
-            progressSeekBar.setProgress(imageIndex + 1);
-        } else {
-            if (runMode && (episodeId < manager.maxEpisodeId(toonId))) {
-                //정주행 모드일 때, 마지막 컷에서 Flipper 를 클릭했을 경우 다음 회차가 존재할 경우에 다음 회차로 넘어감
-                imageFlipper.removeAllViews();
-                imageURLs.clear();
-                episodeId += 1;
-                serverData.getImagesFromServer(toonId, episodeId);
-                manager.updateEpisodeRead(toonId, episodeId);
+        try {
+            if (imageIndex < imageURLs.size()) {
+                imageFlipper.showNext();
+                imageIndex++;
+                progressSeekBar.setProgress(imageIndex + 1);
+            } else {
+                if (runMode && (episodeId < manager.maxEpisodeId(toonId))) {
+                    //정주행 모드일 때, 마지막 컷에서 Flipper 를 클릭했을 경우 다음 회차가 존재할 경우에 다음 회차로 넘어감
+                    imageFlipper.removeAllViews();
+                    imageURLs.clear();
+                    episodeId += 1;
+                    serverData.getImagesFromServer(toonId, episodeId);
+                    manager.updateEpisodeRead(toonId, episodeId);
+                }
             }
-        }
+        }catch (NullPointerException ex){}
     }
 
     public void previousBtnClick(View v) {
-        if(v.getId() == R.id.smart_menuBtn){
-            showToolbars(true);
-            return;
-        }
-        if (imageIndex > 0) {
-            imageFlipper.setInAnimation(null);
-            imageFlipper.setOutAnimation(null);
-            imageFlipper.showPrevious();
-            imageIndex--;
-            progressSeekBar.setProgress(imageIndex + 1);
-        }else {
-            if(runMode && episodeId > 1){   //정주행 모드 일 때, 첫 컷에서 이전 버튼을 클릭하면 이전 회차로 넘어감
-                imageFlipper.removeAllViews();
-                imageURLs.clear();
-                episodeId -= 1;
-                serverData.getImagesFromServer(toonId, episodeId);
-                manager.updateEpisodeRead(toonId, episodeId);
+        showToolbars(showtoolbar);
+        try {
+            if (imageIndex > 0) {
+                imageFlipper.setInAnimation(null);
+                imageFlipper.setOutAnimation(null);
+                imageFlipper.showPrevious();
+                imageIndex--;
+                progressSeekBar.setProgress(imageIndex + 1);
+            } else {
+                if (runMode && episodeId > 1) {   //정주행 모드 일 때, 첫 컷에서 이전 버튼을 클릭하면 이전 회차로 넘어감
+                    imageFlipper.removeAllViews();
+                    imageURLs.clear();
+                    episodeId -= 1;
+                    serverData.getImagesFromServer(toonId, episodeId);
+                    manager.updateEpisodeRead(toonId, episodeId);
+                }
             }
-        }
+        }catch (NullPointerException ex){}
     }
 
     public void commentClick(View v) {
         Intent comment_intent = new Intent(this, ViewerCommentActivity.class);
         comment_intent.putExtra("id", toonId);
         comment_intent.putExtra("ep_id", episodeId);
+        comment_intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(comment_intent);
     }
 
@@ -286,22 +314,26 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
         }
     }
     public void SmartToonPrevious(View v) {
-        if(episodeId > 1) {
-            imageFlipper.removeAllViews();
-            imageURLs.clear();
-            episodeId -= 1;
-            serverData.getImagesFromServer(toonId, episodeId);
-            manager.updateEpisodeRead(toonId, episodeId);
-        }
+        try {
+            if (episodeId > 1) {
+                imageFlipper.removeAllViews();
+                imageURLs.clear();
+                episodeId -= 1;
+                serverData.getImagesFromServer(toonId, episodeId);
+                manager.updateEpisodeRead(toonId, episodeId);
+            }
+        }catch (NullPointerException ex) {}
     }
     public void SmartToonNext(View v){
-        if(episodeId > 0){
-            imageFlipper.removeAllViews();
-            imageURLs.clear();
-            episodeId += 1;
-            serverData.getImagesFromServer(toonId, episodeId);
-            manager.updateEpisodeRead(toonId, episodeId);
-        }
+        try {
+            if (episodeId > 0 && (episodeId < manager.maxEpisodeId(toonId))) {
+                imageFlipper.removeAllViews();
+                imageURLs.clear();
+                episodeId += 1;
+                serverData.getImagesFromServer(toonId, episodeId);
+                manager.updateEpisodeRead(toonId, episodeId);
+            }
+        }catch (NullPointerException ex){}
     }
     public void timerClick(View v) {
         ImageButton my = (ImageButton) v;
@@ -354,34 +386,38 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     private class OnFlipperLongClick implements View.OnLongClickListener {
         @Override
         public boolean onLongClick(View v) {
-            showToolbars(true);
+            showToolbars(!showtoolbar);
             return true;
         }
     }
     private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            episode_instance = manager.getEpisodeInstance(toonId, episodeId);
-            webtoon_instance = manager.getWebtoonInstance(toonId);
-            myStar = manager.getMyStar(toonId, episodeId);
+            try {
+                episode_instance = manager.getEpisodeInstance(toonId, episodeId);
+                webtoon_instance = manager.getWebtoonInstance(toonId);
+                myStar = manager.getMyStar(toonId, episodeId);
+            }catch (NullPointerException ex){}
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(myStar != -1){
-                ratingbar.setMax(10);
-                ratingbar.setRating(myStar/2);
-                givingStar.setEnabled(false);
-                starTV.setText(String.valueOf(myStar));
-            }else{
-                givingStar.setEnabled(true);
-                ratingbar.setRating(0);
-                starTV.setText("0.0");
-            }
-            artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
-            mention.setText(episode_instance.getMention());
+            try {
+                if (myStar != -1) {
+                    ratingbar.setMax(10);
+                    ratingbar.setRating(myStar / 2);
+                    givingStar.setEnabled(false);
+                    starTV.setText(String.valueOf(myStar));
+                } else {
+                    givingStar.setEnabled(true);
+                    ratingbar.setRating(0);
+                    starTV.setText("0.0");
+                }
+                artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
+                mention.setText(episode_instance.getMention());
+            }catch (NullPointerException ex){}
         }
     }
 

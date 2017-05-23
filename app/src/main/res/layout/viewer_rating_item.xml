@@ -34,12 +34,6 @@
             android:background="@color/D2Gray"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/D2Gray"
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -69,6 +63,13 @@
                 android:background="@drawable/view_button_state_confirm"
                 android:onClick="cut_givingStarBtnClick"
                 android:text="별점주기" />
+
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/D2Gray"
+            />
+
     </LinearLayout>
 </LinearLayout>

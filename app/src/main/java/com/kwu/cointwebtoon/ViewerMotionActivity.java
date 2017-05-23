@@ -1,6 +1,5 @@
 package com.kwu.cointwebtoon;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,18 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,10 +31,12 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
     private Thread toolbarHideThread;
     private float x, y;
     private GetServerData serverData;
-    private static final float clickCriteria = 10;
+    private static final float clickCriteria = 15;
     private boolean runMode = false;
+    private int toolbarheight = 0;
     private TextView episodeTitleTextView, episodeIdTextView, goodCount;
     private ImageButton good;
+    private  boolean showtoolbar;
     private int count = 0;
     private int motion_like = 0;
     private COINT_SQLiteManager manager;
@@ -68,12 +62,14 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
         good = (ImageButton)findViewById(R.id.MotionToontgood);
         viewer = (WebView) findViewById(R.id.motion_viewer_webView);
         manager = COINT_SQLiteManager.getInstance(this);
+        showtoolbar = true;
         goodCount = (TextView) findViewById(R.id.MotionToont_count_txt);
         MotionToonTopToolbar = (Toolbar) findViewById(R.id.MotionToontoptoolbar);
         MotionToonBottomToolbar = (Toolbar) findViewById(R.id.MotionToontbottomtoolbar);
         viewer.getSettings().setJavaScriptEnabled(true);
         viewer.setOnTouchListener(this);
         viewer.setVerticalScrollBarEnabled(false);
+        toolbarheight = dpToPixel(42);
         myUpdate(url);
         initializeThread();
         episode_instance = manager.getEpisodeInstance(id,ep_id);
@@ -84,26 +80,30 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
         goodCount.setText(String.valueOf(manager.getEpisodeInstance(id, ep_id).getLikes_E()));
     }
     private void myUpdate(String url){
-        viewer.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                if(loadComplete){
-                    view.loadUrl("javascript:document.getElementById(\'cbox_module\').style.display=\'none\';" +
-                            "document.getElementsByClassName(\'end_sub_cont\')[0].style.display=\'none\';" +
-                            "document.getElementsByClassName(\'info_bottom\')[0].style.display=\'none\';" +
-                            "document.getElementsByClassName(\'relate_item\')[0].style.display=\'none\';" +
-                            "document.getElementsByClassName(\'toon_view_lst\')[0].style.display=\'none\';" +
-                            "document.getElementsByClassName(\'item_area\')[0].style.display=\'none\';" +
-                            "document.getElementById(\'adPostArea\').style.display=\'none\';void(0);");
-                    loadComplete = false;
+        try {
+            viewer.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if (loadComplete) {
+                        view.loadUrl("javascript:document.getElementById(\'cbox_module\').style.display=\'none\';" +
+                                "document.getElementsByClassName(\'info_bottom\')[0].style.display=\'none\';" +
+                                "document.getElementsByClassName(\'share_area\')[0].style.display=\'none\';" +
+                                "document.getElementsByClassName(\'btn_open\')[0].style.display=\'none\';" +
+                                "document.getElementsByClassName(\'navi_area\')[0].style.display=\'none\';" +
+                                "document.getElementsByClassName(\'relate_item\')[0].style.display=\'none\';" +
+                                "document.getElementsByClassName(\'toon_view_lst\')[0].style.display=\'none\';" +
+                                "document.getElementsByClassName(\'item_area\')[0].style.display=\'none\';" +
+                                "document.getElementById(\'starUser\').style.display=\'none\';" +
+                                "document.getElementById(\'adPostArea\').style.display=\'none\';void(0);");
+                        loadComplete = false;
+                    }
                 }
-            }
-        });
-        viewer.loadUrl(url);
-        viewer.getContentHeight();
+            });
+            viewer.loadUrl(url);
+            viewer.getContentHeight();
+        }catch (Exception ex){}
     }
-
     private void initializeThread() {
         try {
             toolbarHideThread.interrupt();
@@ -116,32 +116,32 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(MotionToonTopToolbar.getVisibility() == View.VISIBLE) {
-                                showToolbars(false);
+                            if(showtoolbar){
+                                showToolbars(!showtoolbar);
                             }
                         }
                     });
                 } catch (InterruptedException intex) {
-                    Log.i("thread", "Interrupted");
                 }
             }
         });
         toolbarHideThread.start();
     }
-    private void showToolbars(boolean show){
-        if(show){
-            MotionToonTopToolbar.setVisibility(View.VISIBLE);
-            MotionToonBottomToolbar.setVisibility(View.VISIBLE);
-            MotionToonTopToolbar.animate().translationY(0).withLayer();
-            MotionToonBottomToolbar.animate().translationY(0).withLayer();
-        }else{
-            MotionToonTopToolbar.animate().translationY(-60).withLayer();
-            MotionToonBottomToolbar.animate().translationY(60).withLayer();
-            MotionToonTopToolbar.setVisibility(View.GONE);
-            MotionToonBottomToolbar.setVisibility(View.GONE);
-        }
+    public int dpToPixel(int dp) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 
+    private void showToolbars(boolean show) {
+        showtoolbar = show;
+        if (show) {
+            MotionToonTopToolbar.animate().translationY(0).withLayer();
+            MotionToonBottomToolbar.animate().translationY(0).withLayer();
+        } else {
+            MotionToonTopToolbar.animate().translationY(-1 * toolbarheight).withLayer();
+            MotionToonBottomToolbar.animate().translationY(toolbarheight).withLayer();
+        }
+    }
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()){
@@ -151,12 +151,7 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                 break;
             case MotionEvent.ACTION_UP:
                 if(Math.abs(event.getX() - x) < clickCriteria && Math.abs(event.getY() - y) < clickCriteria){
-                    if(MotionToonTopToolbar.getVisibility() == View.VISIBLE){
-                        showToolbars(false);
-                    }else if(MotionToonTopToolbar.getVisibility() == View.GONE){
-                        showToolbars(true);
-                        initializeThread();
-                    }
+                    showToolbars(!showtoolbar);
                     return true;
                 }
                 break;
@@ -199,53 +194,66 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                     }).setNegativeButton("아니요", null).show();
             return;
         }
-        SharedPreferences.Editor editor = likePreference.edit();
-        count++;
-        if(count % 2 != 0) {
-            serverData.likeWebtoon(id, "plus");
-            editor.putBoolean(String.valueOf(id), true);
-            good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
-            goodCount.setText(String.valueOf(motion_like + 1));
+        try {
+            SharedPreferences.Editor editor = likePreference.edit();
+            count++;
+            if (count % 2 != 0) {
+                serverData.likeWebtoon(id, "plus");
+                editor.putBoolean(String.valueOf(id), true);
+                good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
+                goodCount.setText(String.valueOf(motion_like + 1));
 
-        }
-        else if(count % 2 ==0 && likePreference.getBoolean(String.valueOf(id), false)){
-            serverData.likeWebtoon(id, "minus");
-            editor.putBoolean(String.valueOf(id), false);
-            good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
-            if(motion_like >= 0) {
-                goodCount.setText(String.valueOf(motion_like));
+            } else if (count % 2 == 0 && likePreference.getBoolean(String.valueOf(id), false)) {
+                serverData.likeWebtoon(id, "minus");
+                editor.putBoolean(String.valueOf(id), false);
+                good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
+                if (motion_like >= 0) {
+                    goodCount.setText(String.valueOf(motion_like));
+                }
             }
-        }
-        editor.commit();
+            editor.commit();
+        }catch (NullPointerException ex){}
     }
     public void Dat(View v){
-        Toast.makeText(this, "댓글 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+        try {
+            Intent comment_intent = new Intent(this, ViewerCommentActivity.class);
+            comment_intent.putExtra("id", id);
+            comment_intent.putExtra("ep_id", ep_id);
+            comment_intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(comment_intent);
+        }catch (NullPointerException ex){}
     }
     public void Previous(View v) {
-        if(ep_id > 1 ){
-            ep_id -= 1;
-            url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
-            myUpdate(url);
-            manager.updateEpisodeRead(id, ep_id);
-            episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
-            episodeIdTextView.setText(String.valueOf(ep_id));
-        }
+        try {
+            if (ep_id > 1) {
+                ep_id -= 1;
+                url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
+                myUpdate(url);
+                manager.updateEpisodeRead(id, ep_id);
+                episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
+                episodeIdTextView.setText(String.valueOf(ep_id));
+            }
+        }catch (NullPointerException ex){}
     }
     public void Next(View v) {
-        url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
-        if(ep_id > 0 && (ep_id < manager.maxEpisodeId(id))){
-            ep_id += 1;
+        try {
             url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
-            myUpdate(url);
-            manager.updateEpisodeRead(id, ep_id);
-            episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
-            episodeIdTextView.setText(String.valueOf(ep_id));
-        }
+            if (ep_id > 0 && (ep_id < manager.maxEpisodeId(id))) {
+                ep_id += 1;
+                url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
+                myUpdate(url);
+                manager.updateEpisodeRead(id, ep_id);
+                episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
+                episodeIdTextView.setText(String.valueOf(ep_id));
+            }
+        }catch (NullPointerException ex){}
     }
     public void givingStarBtnClick(View v) {
         try {
-            startActivityForResult(new Intent(this, ViewerStarScoreActivity.class), REQUEST_CODE_RATING);
-        }catch (Exception e) { e.printStackTrace();}
+            Intent intent = new Intent(this, ViewerStarScoreActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivityForResult(intent, REQUEST_CODE_RATING);
+        }catch (Exception e) {}
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
