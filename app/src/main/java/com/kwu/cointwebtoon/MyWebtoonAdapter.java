@@ -153,7 +153,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
                     if(result.equals("마이 웹툰 설정")){
                         addWebtoon.setImageResource(R.drawable.main_minus_button_state);
                     }else{
-                        addWebtoon.setImageResource(R.drawable.main_add_button_state);
+                        addWebtoon.setImageResource(R.drawable.episode_star);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

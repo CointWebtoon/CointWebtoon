@@ -1,10 +1,12 @@
 package com.kwu.cointwebtoon;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +22,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -192,6 +195,28 @@ public class MainActivity extends TypeKitActivity
 
         myToonAdapter8 = new Main_MyToonAdapter(this, 0);
         recyclerView.setAdapter(myToonAdapter8);
+
+        onCoachMark();
+    }
+
+
+    public void onCoachMark(){
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.main_coachmark);
+        dialog.setCanceledOnTouchOutside(true);
+
+        //for dismissing anywhere you touch
+        View masterView = dialog.findViewById(R.id.coach);
+        masterView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                /*preferences.edit().putBoolean("COACH_MARK_MAIN_SHOWN", true).commit();*/
+            }
+        });
+        dialog.show();
     }
 
     public static int[] getDateDay() throws Exception {
