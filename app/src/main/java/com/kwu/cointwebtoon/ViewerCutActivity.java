@@ -155,13 +155,15 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 flipper.addView(newImageView);
             }
             view = inflater.inflate(R.layout.viewer_rating_item, null);
-            flipper.addView(view);
-            artistTV = (TextView)view.findViewById(R.id.cut_artist);
-            ratingbar = (RatingBar) view.findViewById(R.id.cut_rating_bar);
-            mention = (TextView) view.findViewById(R.id.cut_mention);
-            starTV = (TextView) view.findViewById(R.id.cut_starScore);
-            givingStar = (Button) view.findViewById(R.id.cut_giving_star);
-            new ViewerCutActivity.GetCurrentToonInfo().execute();
+            try {
+                flipper.addView(view);
+                artistTV = (TextView) view.findViewById(R.id.cut_artist);
+                ratingbar = (RatingBar) view.findViewById(R.id.cut_rating_bar);
+                mention = (TextView) view.findViewById(R.id.cut_mention);
+                starTV = (TextView) view.findViewById(R.id.cut_starScore);
+                givingStar = (Button) view.findViewById(R.id.cut_giving_star);
+                new ViewerCutActivity.GetCurrentToonInfo().execute();
+            }catch (NullPointerException ex){ ex.printStackTrace(); }
         }
         getServerData.plusHit(toonId);
     }
@@ -417,8 +419,10 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         }
         @Override
         protected void onPostExecute(Void aVoid) {
-            cut_like = webtoon_instance.getLikes();
-            good_count.setText(String.valueOf(cut_like));
+            try {
+                cut_like = webtoon_instance.getLikes();
+                good_count.setText(String.valueOf(cut_like));
+            }catch (NullPointerException ex){ex.printStackTrace();}
             super.onPostExecute(aVoid);
             if(!userInfo.isLogin()){
                 likePreference.edit().putBoolean(String.valueOf(toonId), false).commit();

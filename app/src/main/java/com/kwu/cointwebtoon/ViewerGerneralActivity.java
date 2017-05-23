@@ -380,13 +380,23 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                 showUIs(false);
             }
             else if(currentFirstVisibleItem < this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.VISIBLE){
-                showToolbars(false);
-                showUIs(false);
+                if(scrollManually) {
+                    showToolbars(false);
+                    showUIs(false);
+                }
+                else{
+                    showToolbars(true);
+                    showUIs(true);
+                }
             }
             else if (currentFirstVisibleItem > this.mLastFirstVisibleItem && GeneralToonTopToolbar.getVisibility() == View.VISIBLE) {
                 if (scrollManually) {
                     showToolbars(false);
                     showUIs(false);
+                }
+                else {
+                    showToolbars(true);
+                    showUIs(true);
                 }
             }
             initializeThread();
@@ -431,11 +441,11 @@ public class ViewerGerneralActivity extends TypeKitActivity implements Observer 
                 if(autoScroll){
                     try{autoScrollThread.interrupt();}catch(Exception e){}
                     ImageButton target = (ImageButton)v;
-                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_active));
+                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_inactive));
                     autoScroll = false;
                 }else{
                     ImageButton target = (ImageButton)v;
-                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_inactive));
+                    target.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_active));
                     autoScroll();
                     autoScroll = true;
                 }

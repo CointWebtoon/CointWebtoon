@@ -75,7 +75,9 @@
         <activity android:name=".ViewerMotionActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".ArtistActivity"/>
+        <activity android:name=".ArtistActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
 
         <activity android:name=".ViewerCommentWriteActivity"
             android:theme="@style/ViewerActivity"/>
