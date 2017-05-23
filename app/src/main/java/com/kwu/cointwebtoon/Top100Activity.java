@@ -50,6 +50,7 @@ public class Top100Activity extends TypeKitActivity {
                 Intent episodeIntent = new Intent(Top100Activity.this, EpisodeActivity.class);
                 episodeIntent.putExtra("id", target.getId());
                 episodeIntent.putExtra("toontype", target.getToonType());
+                episodeIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(episodeIntent);
             }
         });

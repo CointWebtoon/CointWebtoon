@@ -1,24 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-    <LinearLayout
-        android:id="@+id/activity_artist"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/background_bricks"
-        tools:context="com.kwu.cointwebtoon.ArtistActivity">
+        android:background="#FFFFFF"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
-        <com.kwu.cointwebtoon.Views.FastScrollRecyclerView
-            android:id="@+id/artist_recycler_view"
-            android:background="@android:color/transparent"
+        <LinearLayout
+            android:id="@+id/activity_artist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
-        </com.kwu.cointwebtoon.Views.FastScrollRecyclerView>
+            android:orientation="vertical"
+            android:background="@drawable/background_bricks"
+            android:fitsSystemWindows="true"
+            tools:context="com.kwu.cointwebtoon.ArtistActivity">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+                <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@color/D2Dark"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                    <EditText
+                        android:id="@+id/searchbar"
+                        android:layout_width="250dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/main_round"
+                        android:hint="웹툰명 또는 작가명 검색"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textColorHint="#BEBEBE" />
+
+                </android.support.v7.widget.Toolbar>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <com.kwu.cointwebtoon.Views.FastScrollRecyclerView
+                android:id="@+id/artist_recycler_view"
+                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+            </com.kwu.cointwebtoon.Views.FastScrollRecyclerView>
 
 
-    </LinearLayout>
+        </LinearLayout>
 
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#FFFFFF"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/main_nav_header"
+            app:menu="@menu/main_activity_drawer" />
+    </android.support.v4.widget.DrawerLayout>
 </layout>

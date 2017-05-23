@@ -76,6 +76,7 @@ public class Main_Top15Adapter extends PagerAdapter {
                         intent = new Intent(mContext, EpisodeActivity.class);
                         intent.putExtra("id", c.getInt(0));
                         intent.putExtra("toontype", c.getString(7).charAt(0));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         mContext.startActivity(intent);
                         break;
                     case R.id.middle:
@@ -87,6 +88,7 @@ public class Main_Top15Adapter extends PagerAdapter {
                         intent = new Intent(mContext, EpisodeActivity.class);
                         intent.putExtra("id", c.getInt(0));
                         intent.putExtra("toontype", c.getString(7).charAt(0));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         mContext.startActivity(intent);
                         break;
                     case R.id.bottom:
@@ -97,6 +99,7 @@ public class Main_Top15Adapter extends PagerAdapter {
                         intent = new Intent(mContext, EpisodeActivity.class);
                         intent.putExtra("id", c.getInt(0));
                         intent.putExtra("toontype", c.getString(7).charAt(0));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         mContext.startActivity(intent);
                         break;
                 }
@@ -168,9 +171,9 @@ public class Main_Top15Adapter extends PagerAdapter {
             artistTop.setText(c.getString(2));
             starTop.setText("★ "+String.valueOf(c.getFloat(3)));
             if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
-                topPlusBtn.setImageResource(R.drawable.main_minus_button_state);
+                topPlusBtn.setImageResource(R.drawable.my_star_active);
             }else{
-                topPlusBtn.setImageResource(R.drawable.main_add_button_state);
+                topPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
             if(c.getString(7).equals("C")){
@@ -215,9 +218,9 @@ public class Main_Top15Adapter extends PagerAdapter {
             starMid.setText("★ "+String.valueOf(c.getFloat(3)));
 
             if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
-                midPlusBtn.setImageResource(R.drawable.main_minus_button_state);
+                midPlusBtn.setImageResource(R.drawable.my_star_active);
             }else{
-                midPlusBtn.setImageResource(R.drawable.main_add_button_state);
+                midPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
             if(c.getString(7).equals("C")){
@@ -262,9 +265,9 @@ public class Main_Top15Adapter extends PagerAdapter {
             starBot.setText("★ "+String.valueOf(c.getFloat(3)));
 
             if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
-                botPlusBtn.setImageResource(R.drawable.main_minus_button_state);
+                botPlusBtn.setImageResource(R.drawable.my_star_active);
             }else{
-                botPlusBtn.setImageResource(R.drawable.main_add_button_state);
+                botPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
             if(c.getString(7).equals("C")){
