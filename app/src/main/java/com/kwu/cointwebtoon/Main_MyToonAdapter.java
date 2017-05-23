@@ -274,7 +274,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                         }else{
                             switch (arrayList.get(position).getToonType()) {
                                 case 'G': {//일반툰
-                                    Intent generalIntent = new Intent(mContext, ViewerGerneralActivity.class);
+                                    Intent generalIntent = new Intent(mContext, ViewerGeneralActivity.class);
                                     generalIntent.putExtra("id", episode.getId());
                                     generalIntent.putExtra("ep_id", episode.getEpisode_id());
                                     generalIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

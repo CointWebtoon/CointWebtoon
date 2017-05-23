@@ -263,7 +263,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         switch (currentToonType) {
             case 'G': {//일반툰
                 manager.updateEpisodeRead(target.getId(), target.getEpisode_id());
-                Intent generalIntent = new Intent(this, ViewerGerneralActivity.class);
+                Intent generalIntent = new Intent(this, ViewerGeneralActivity.class);
                 generalIntent.putExtra("id", target.getId());
                 generalIntent.putExtra("ep_id", target.getEpisode_id());
                 startActivity(generalIntent);
@@ -390,7 +390,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 switch (currentToonType) {
                     case 'G': {//일반툰
                         manager.updateEpisodeRead(currentToonId, 1);
-                        Intent generalIntent = new Intent(this, ViewerGerneralActivity.class);
+                        Intent generalIntent = new Intent(this, ViewerGeneralActivity.class);
                         generalIntent.putExtra("id", currentToonId);
                         generalIntent.putExtra("ep_id", 1);
                         startActivity(generalIntent);
