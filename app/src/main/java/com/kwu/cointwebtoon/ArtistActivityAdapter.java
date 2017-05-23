@@ -103,10 +103,10 @@ public class ArtistActivityAdapter extends RecyclerView.Adapter<ArtistActivityAd
         //My button 상태 설정
         if (dataSet.get(position).isMine()){
             //마이 웹툰 여부에 따라 별 아이콘 다르게 설정
-            binding.btnMy.setBackgroundResource(R.drawable.my_set);
+            binding.btnMy.setBackgroundResource(R.drawable.my_star_active);
         }
         else{
-            binding.btnMy.setBackgroundResource(R.drawable.my_release);
+            binding.btnMy.setBackgroundResource(R.drawable.my_star_unactive);
         }
 
         //Item onClick설정
@@ -134,11 +134,11 @@ public class ArtistActivityAdapter extends RecyclerView.Adapter<ArtistActivityAd
                 if(result.equals("마이 웹툰 설정")){
                     item.setIs_mine(true);
                     YoYo.with(Techniques.Flash).duration(500).delay(100).playOn(v);
-                    v.setBackgroundResource(R.drawable.my_set);
+                    v.setBackgroundResource(R.drawable.my_star_active);
                 }else if(result.equals("마이 웹툰 해제")){
                     item.setIs_mine(false);
                     YoYo.with(Techniques.Wobble).duration(500).delay(100).playOn(v);
-                    v.setBackgroundResource(R.drawable.my_release);
+                    v.setBackgroundResource(R.drawable.my_star_unactive);
                 }
 
                 Toast.makeText(mContext, item.getTitle() + " " + result , Toast.LENGTH_SHORT).show();

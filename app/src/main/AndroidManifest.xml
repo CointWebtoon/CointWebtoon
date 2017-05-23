@@ -38,7 +38,9 @@
             android:name=".BestChallengeActivity"
             android:label="Best Challenge"/>
 
-        <activity android:name=".WeekdayActivity"/>
+        <activity android:name=".WeekdayActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
 
         <activity android:name=".ViewerCutActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
