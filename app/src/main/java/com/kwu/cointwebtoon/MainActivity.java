@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -47,19 +48,20 @@ public class MainActivity extends TypeKitActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnKeyListener{
 
-    InputMethodManager imm;
-    ViewPager pager;
-    RecyclerView recyclerView;
-    Main_Top15Adapter top15Adapter;
-    RecyclerView.LayoutManager layoutManager;
-    Main_MyToonAdapter myToonAdapter, myToonAdapter2, myToonAdapter3, myToonAdapter4,
+    private InputMethodManager imm;
+    private ViewPager pager;
+    private RecyclerView recyclerView;
+    private Main_Top15Adapter top15Adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private Main_MyToonAdapter myToonAdapter, myToonAdapter2, myToonAdapter3, myToonAdapter4,
             myToonAdapter5,myToonAdapter6,myToonAdapter7,myToonAdapter8;
     private COINT_SQLiteManager coint_sqLiteManager;
     private EditText search;
     private int[] dateday={0,0,0,0,0,0,0};
     private Application_UserInfo userInfo;
-    Button navHeader;
-    TextView navStatus;
+    private Button navHeader;
+    private TextView navStatus;
+    private SharedPreferences sharedPreferences;
 
     Toolbar toolbar;
 
@@ -285,6 +287,7 @@ public class MainActivity extends TypeKitActivity
             }else{
                 intent = new Intent(MainActivity.this, SearchActivity.class);
                 intent.putExtra("Intent",search.getText().toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
             return true;
@@ -298,15 +301,22 @@ public class MainActivity extends TypeKitActivity
     public boolean onNavigationItemSelected(MenuItem item) {        // navigation drawer에 있는 메뉴 선택시 실행
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Intent intent;
         switch(id){
             case R.id.webtoonRanking:
-                startActivity(new Intent(MainActivity.this, Top100Activity.class));
+                intent = new Intent(MainActivity.this, Top100Activity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
             break;
             case R.id.moreMyWebtoon:
-                startActivity(new Intent(MainActivity.this, MyWebtoonActivity.class));
+                intent = new Intent(MainActivity.this, MyWebtoonActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 break;
             case R.id.personalFavorite:
-                startActivity(new Intent(MainActivity.this, FavoriteChartAcivity.class));
+                intent = new Intent(MainActivity.this, FavoriteChartAcivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 break;
         }
 
@@ -325,20 +335,27 @@ public class MainActivity extends TypeKitActivity
         ImageView addWebtoon;
         switch (id){
             case R.id.genreBtn:
-                startActivity(new Intent(this, GenreActivity.class));
+                intent = new Intent(MainActivity.this, GenreActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 break;
             case R.id.artistBtn:
                 /**
                  * 작가별 웹툰 Activity 연결부
                  */
-                startActivity((new Intent(this, ArtistActivity.class)));
+                intent = new Intent(MainActivity.this, ArtistActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 break;
             case R.id.weekdayBtn:
-                startActivity(new Intent(this, WeekdayActivity.class));
+                intent = new Intent(MainActivity.this, WeekdayActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 break;
             case R.id.bestBtn:
                 //webview로 띄울 예정
                 intent = new Intent(MainActivity.this, BestChallengeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("Best","bestchallenge");
                 startActivity(intent);
                 break;
@@ -359,7 +376,9 @@ public class MainActivity extends TypeKitActivity
                                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                        startActivity(intent);
                                     }
                                 }).setNegativeButton("아니요", null).show();
                         return;
@@ -386,7 +405,9 @@ public class MainActivity extends TypeKitActivity
                                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                        startActivity(intent);
                                     }
                                 }).setNegativeButton("아니요", null).show();
                         return;
@@ -414,7 +435,9 @@ public class MainActivity extends TypeKitActivity
                                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                        startActivity(intent);
                                     }
                                 }).setNegativeButton("아니요", null).show();
                         return;
@@ -432,14 +455,19 @@ public class MainActivity extends TypeKitActivity
                 }else{
                     intent = new Intent(MainActivity.this, SearchActivity.class);
                     intent.putExtra("Intent",search.getText().toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
                 }
                 break;
             case R.id.top15More:
-                startActivity(new Intent(this, Top100Activity.class));
+                intent = new Intent(MainActivity.this, Top100Activity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 break;
             case R.id.myMore:
-                startActivity(new Intent(this, MyWebtoonActivity.class));
+                intent = new Intent(MainActivity.this, MyWebtoonActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 break;
         }
         cursor = coint_sqLiteManager.getMyWebtoons();
@@ -499,6 +527,7 @@ public class MainActivity extends TypeKitActivity
             }else{
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 intent.putExtra("Intent",search.getText().toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
             return true;

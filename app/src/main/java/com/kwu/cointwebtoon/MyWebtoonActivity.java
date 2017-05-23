@@ -50,6 +50,7 @@ public class MyWebtoonActivity extends TypeKitActivity {
                 Intent episodeIntent = new Intent(MyWebtoonActivity.this, EpisodeActivity.class);
                 episodeIntent.putExtra("id", target.getId());
                 episodeIntent.putExtra("toontype", target.getToonType());
+                episodeIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(episodeIntent);
             }
         });

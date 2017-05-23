@@ -189,6 +189,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                         if(day!=0){
                             intent = new Intent(mContext,WeekdayActivity.class);
                             intent.putExtra("requestDay", day-1);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             mContext.startActivity(intent);
                         }
                         } else {
@@ -196,6 +197,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                             intent = new Intent(mContext, EpisodeActivity.class);
                             intent.putExtra("id", target.getId());
                             intent.putExtra("toontype", target.getToonType());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             mContext.startActivity(intent);
                         }
                         break;
@@ -275,6 +277,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                                     Intent generalIntent = new Intent(mContext, ViewerGerneralActivity.class);
                                     generalIntent.putExtra("id", episode.getId());
                                     generalIntent.putExtra("ep_id", episode.getEpisode_id());
+                                    generalIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     mContext.startActivity(generalIntent);
                                     break;
                                 }
@@ -282,6 +285,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                                     Intent cutIntent = new Intent(mContext, ViewerCutActivity.class);
                                     cutIntent.putExtra("id", episode.getId());
                                     cutIntent.putExtra("ep_id", episode.getEpisode_id());
+                                    cutIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     mContext.startActivity(cutIntent);
                                     break;
                                 }
@@ -289,6 +293,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                                     Intent smartIntent = new Intent(mContext, ViewerSmartActivity.class);
                                     smartIntent.putExtra("id", episode.getId());
                                     smartIntent.putExtra("ep_id", episode.getEpisode_id());
+                                    smartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     mContext.startActivity(smartIntent);
                                     break;
                                 }
@@ -296,6 +301,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                                     Intent motionIntent = new Intent(mContext, ViewerMotionActivity.class);
                                     motionIntent.putExtra("id", episode.getId());
                                     motionIntent.putExtra("ep_id", episode.getEpisode_id());
+                                    motionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     mContext.startActivity(motionIntent);
                                     break;
                                 }

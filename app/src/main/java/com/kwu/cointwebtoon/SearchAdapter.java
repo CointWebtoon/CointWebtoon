@@ -79,9 +79,9 @@ public class SearchAdapter extends BaseAdapter {
         viewHolder.starScore.setText("★ " + Float.toString(resultQuery.get(position).getStarScore()));
 
         if(resultQuery.get(position).isMine()){           //마이웹툰일 경우 -로 설정
-            viewHolder.addItemButton.setImageResource(R.drawable.main_minus_button_state);
+            viewHolder.addItemButton.setImageResource(R.drawable.my_star_active);
         }else{
-            viewHolder.addItemButton.setImageResource(R.drawable.main_add_button_state);
+            viewHolder.addItemButton.setImageResource(R.drawable.my_star_unactive);
         }
 
         if(resultQuery.get(position).getToonType() == 'C') {      // 컷툰 여부
@@ -134,9 +134,9 @@ public class SearchAdapter extends BaseAdapter {
                     ex.printStackTrace();
                 }
                 if(result.equals("마이 웹툰 설정")){
-                    addWebtoon.setImageResource(R.drawable.main_minus_button_state);
+                    addWebtoon.setImageResource(R.drawable.my_star_active);
                 }else{
-                    addWebtoon.setImageResource(R.drawable.main_add_button_state);
+                    addWebtoon.setImageResource(R.drawable.my_star_unactive);
                 }
             }
         });
