@@ -7,7 +7,22 @@
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_bricks"/>
+        android:layout_height="340dp"
+        android:layout_marginTop="20dp"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="    이런 웹툰은 어떠세요?"
+        android:layout_below="@+id/pieChart"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:textSize="20dp"
+        android:id="@+id/favoriteText"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/favoriteViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_below="@+id/favoriteText"/>
 </RelativeLayout>

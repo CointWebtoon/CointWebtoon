@@ -291,6 +291,14 @@ public class COINT_SQLiteManager {
         //position으로부터 내림차순 정리된 것 중 세개의 정보를 리턴함.
     }
 
+    public Cursor  favorite(int position, String genre){           // TODO - 웹툰의 모든 속성 가져오는 걸로 변경했음! --> 더 다양한 데이터 표시
+        position *= 3;
+        return db.rawQuery("SELECT * FROM WEBTOON WHERE Is_mine = 0 AND " +
+                "Id IN ( SELECT Id_G FROM GENRE WHERE Genre = '"+ genre + "') " +
+                "ORDER BY Hits DESC LIMIT 3 OFFSET "+Integer.toString(position), null);
+        //position으로부터 내림차순 정리된 것 중 세개의 정보를 리턴함.
+    }
+
     public String updateMyWebtoon(String id) {
         Cursor c;
         // db에 my webtoon 업데이트
