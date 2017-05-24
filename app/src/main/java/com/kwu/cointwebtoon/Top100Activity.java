@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
@@ -36,6 +37,8 @@ public class Top100Activity extends TypeKitActivity {
                     cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
                     cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
         }
+        TextView textView = (TextView)findViewById(R.id.emptyMy);
+        textView.setVisibility(View.GONE);
 
         listviewAdp = new MyWebtoonAdapter(this, resultQueries);
 

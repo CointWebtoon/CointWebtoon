@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,6 @@ public class MyWebtoonAdapter extends BaseAdapter {
 
         if (itemLayout == null) {
             itemLayout = layoutInflater.inflate(R.layout.top100_item, null);
-
             viewHolder = new ViewHolder();
 
             viewHolder.imageView = (ImageView) itemLayout.findViewById(R.id.webtoonImg);
@@ -187,5 +187,6 @@ public class MyWebtoonAdapter extends BaseAdapter {
         TextView update;
         TextView cuttoon;
         TextView adult;
+        TextView empty;
     }
 }

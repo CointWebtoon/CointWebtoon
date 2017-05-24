@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
@@ -28,7 +30,14 @@ public class MyWebtoonActivity extends TypeKitActivity {
 
         coint_sqLiteManager = COINT_SQLiteManager.getInstance(this);
         cursor = coint_sqLiteManager.getMyWebtoons();
-
+        TextView textView = (TextView)findViewById(R.id.emptyMy);
+        if(cursor.getCount()==0){
+            textView.setVisibility(View.VISIBLE);
+            textView.setText("추가한 웹툰이\n"+"존재하지 않습니다.");
+            textView.setTextSize(30.0f);
+        }else{
+            textView.setVisibility(View.GONE);
+        }
         resultQueries = new ArrayList<>();
 
         while(cursor.moveToNext()){
