@@ -498,7 +498,6 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                     currentWebtoon.setIs_mine(false);
                     myImageButton.setImageDrawable(getDrawable(R.drawable.my_star_unactive));
                 }
-                Toast.makeText(this, currentWebtoon.getTitle() + " " + result, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.episodeActivity_Title:
             case R.id.episode_finish:

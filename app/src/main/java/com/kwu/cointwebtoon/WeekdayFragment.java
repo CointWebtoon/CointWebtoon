@@ -65,7 +65,6 @@ public class WeekdayFragment extends Fragment {
             public void onItemClick(AdapterView parent, View v, int position, long id) {
                 //웹툰연결
                 Webtoon target = (Webtoon)parent.getItemAtPosition(position);
-                Toast.makeText(getContext(),"웹툰 ID : " + target.getTitle(), Toast.LENGTH_SHORT).show();
                 Intent episodeIntent = new Intent(getContext(), EpisodeActivity.class);
                 episodeIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 episodeIntent.putExtra("id", target.getId());

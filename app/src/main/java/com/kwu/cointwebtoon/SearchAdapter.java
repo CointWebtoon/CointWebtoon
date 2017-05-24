@@ -140,7 +140,6 @@ public class SearchAdapter extends BaseAdapter {
                 Log.i("addWebtoon", Integer.toString(getId));
                 try {
                     result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
-                    Toast.makeText(context, resultQuery.get(position).getTitle() + " " + result, Toast.LENGTH_SHORT).show();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

@@ -137,7 +137,6 @@ public class FavoriteChartAcivity extends TypeKitActivity {
             }
         }
         String result = coint_sqLiteManager.updateMyWebtoon(String.valueOf(target.getId()));
-        Toast.makeText(mContext, target.getTitle() + " " + result,Toast.LENGTH_LONG).show();
         if(result == "마이 웹툰 설정"){
             target.setIs_mine(true);
         }else{

@@ -161,7 +161,6 @@ public class MyWebtoonAdapter extends BaseAdapter {
                         }
                     }
                     String result = coint_sqLiteManager.updateMyWebtoon(Integer.toString(getId));
-                    Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
                     if(result.equals("마이 웹툰 설정")){
                         resultQuery.get(position).setIs_mine(true);
                         addWebtoon.setImageResource(R.drawable.my_star_active);

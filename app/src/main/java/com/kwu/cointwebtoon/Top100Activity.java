@@ -49,7 +49,6 @@ public class Top100Activity extends TypeKitActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Webtoon target = (Webtoon)listviewAdp.getItem(position);
-                Toast.makeText(Top100Activity.this, target.getTitle() , Toast.LENGTH_SHORT).show();
                 Intent episodeIntent = new Intent(Top100Activity.this, EpisodeActivity.class);
                 episodeIntent.putExtra("id", target.getId());
                 episodeIntent.putExtra("toontype", target.getToonType());

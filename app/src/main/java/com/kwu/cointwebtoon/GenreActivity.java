@@ -237,7 +237,6 @@ public class GenreActivity extends TypeKitActivity
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Webtoon target = gridAdapter.getItem(position);
-        Toast.makeText(GenreActivity.this, target.getTitle(), Toast.LENGTH_SHORT).show();
         Intent episodeIntent = new Intent(GenreActivity.this, EpisodeActivity.class);
         episodeIntent.putExtra("id", target.getId());
         episodeIntent.putExtra("toontype", target.getToonType());

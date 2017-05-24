@@ -323,26 +323,30 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             }
             case R.id.GeneralToont_before: {
                 //이전화
-                if(episodeId > 1 ){
-                    episodeId -= 1;
-                    dialog.show();
-                    adapter.clearImage();
-                    manager.updateEpisodeRead(toonId, episodeId);
-                    new GetInstances().execute();
-                    getServerData.getImagesFromServer(toonId, episodeId);
-                }
+                try {
+                    if (episodeId > 1) {
+                        episodeId -= 1;
+                        dialog.show();
+                        adapter.clearImage();
+                        manager.updateEpisodeRead(toonId, episodeId);
+                        new GetInstances().execute();
+                        getServerData.getImagesFromServer(toonId, episodeId);
+                    }
+                }catch (NullPointerException ex){}
                 break;
             }
             case R.id.GeneralToont_next: {
                 //다음화
-                if(episodeId > 0 && (episodeId < manager.maxEpisodeId(toonId))){
-                    episodeId += 1;
-                    dialog.show();
-                    adapter.clearImage();
-                    manager.updateEpisodeRead(toonId, episodeId);
-                    new GetInstances().execute();
-                    getServerData.getImagesFromServer(toonId, episodeId);
-                }
+                try {
+                    if (episodeId > 0 && (episodeId < manager.maxEpisodeId(toonId))) {
+                        episodeId += 1;
+                        dialog.show();
+                        adapter.clearImage();
+                        manager.updateEpisodeRead(toonId, episodeId);
+                        new GetInstances().execute();
+                        getServerData.getImagesFromServer(toonId, episodeId);
+                    }
+                }catch (NullPointerException ex){}
                 break;
             }
         }
@@ -466,15 +470,17 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            episodeTitleTextView.setText(episodeInstance.getEpisode_title());
-            episodeTitleTextView.setSelected(true);
-            episodeIdTextView.setText(String.valueOf(episodeInstance.getEpisode_id()));
-            goodCount.setText(String.valueOf(webtoonInstance.getLikes()));
-            if(likePreference.getBoolean(String.valueOf(toonId), false)){
-                good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
-            }else{
-                good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
-            }
+            try {
+                episodeTitleTextView.setText(episodeInstance.getEpisode_title());
+                episodeTitleTextView.setSelected(true);
+                episodeIdTextView.setText(String.valueOf(episodeInstance.getEpisode_id()));
+                goodCount.setText(String.valueOf(webtoonInstance.getLikes()));
+                if (likePreference.getBoolean(String.valueOf(toonId), false)) {
+                    good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
+                } else {
+                    good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
+                }
+            }catch (NullPointerException ex){}
         }
     }
 

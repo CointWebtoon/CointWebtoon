@@ -1,37 +1,25 @@
 package com.kwu.cointwebtoon;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.kwu.cointwebtoon.DataStructure.CustomBitmapPool;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
-import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
 import com.kwu.cointwebtoon.Views.FastScrollRecyclerViewInterface;
 import com.kwu.cointwebtoon.databinding.ArtistItemBinding;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by JWP on 2017-05-21.
@@ -167,7 +155,6 @@ public class ArtistActivityAdapter extends RecyclerView.Adapter<ArtistActivityAd
             public void onClick(View v) {
                 //웹툰연결
                 Webtoon target = dataSet.get(position);
-                Toast.makeText(mContext,"웹툰 ID : " + target.getTitle(), Toast.LENGTH_SHORT).show();
                 Intent episodeIntent = new Intent(mContext, EpisodeActivity.class);
                 episodeIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 episodeIntent.putExtra("id", target.getId());
@@ -193,8 +180,6 @@ public class ArtistActivityAdapter extends RecyclerView.Adapter<ArtistActivityAd
                     YoYo.with(Techniques.Wobble).duration(500).delay(100).playOn(v);
                     v.setBackgroundResource(R.drawable.my_star_unactive);
                 }
-
-                Toast.makeText(mContext, item.getTitle() + " " + result , Toast.LENGTH_SHORT).show();
             }
         });
 

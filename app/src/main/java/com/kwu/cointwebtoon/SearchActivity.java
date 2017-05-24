@@ -132,7 +132,6 @@ public class SearchActivity extends TypeKitActivity
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Webtoon target = searchAdapter.getItem(position);
-        Toast.makeText(SearchActivity.this, target.getTitle(), Toast.LENGTH_SHORT).show();
         Intent episodeIntent = new Intent(SearchActivity.this, EpisodeActivity.class);
         episodeIntent.putExtra("id", target.getId());
         episodeIntent.putExtra("toontype", target.getToonType());

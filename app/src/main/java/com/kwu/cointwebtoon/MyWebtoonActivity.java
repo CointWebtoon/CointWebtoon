@@ -60,7 +60,6 @@ public class MyWebtoonActivity extends TypeKitActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {// Intent로 id를 넘겨주면 회차정보 액티비티가 뜨면 됨.
                 Webtoon target = allMyWebtoonAdp.getItem(position);
-                Toast.makeText(MyWebtoonActivity.this, target.getTitle() ,Toast.LENGTH_SHORT).show();
                 Intent episodeIntent = new Intent(MyWebtoonActivity.this, EpisodeActivity.class);
                 episodeIntent.putExtra("id", target.getId());
                 episodeIntent.putExtra("toontype", target.getToonType());
