@@ -234,7 +234,9 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     public void flipperClick(View v) {
         if(imageURLs == null)
             return;
-        showToolbars(showtoolbar);
+        if(showtoolbar) {
+            showToolbars(!showtoolbar);
+        }
         int animationGenerator = rand.nextInt(4);
         switch (animationGenerator) {
             case 0:
