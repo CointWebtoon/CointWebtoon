@@ -514,6 +514,9 @@ public class MainActivity extends TypeKitActivity
         myToonAdapter7.addRemoveItem(mList);
         myToonAdapter8.addRemoveItem(mList);
         search.setText("");
+
+        top15Adapter = new Main_Top15Adapter(this);
+        pager.setAdapter(top15Adapter);
     }
 
     @Override
