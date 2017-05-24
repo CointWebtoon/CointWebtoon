@@ -210,6 +210,18 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
     //---onClick Listener--//
     public void givingStarBtnClick(View v) {
         try {
+            if(!userInfo.isLogin()){
+                new AlertDialog.Builder(this)
+                        .setTitle("로그인")
+                        .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(ViewerGeneralActivity.this, LoginActivity.class));
+                            }
+                        }).setNegativeButton("아니요", null).show();
+                return;
+            }
             Intent starIntent = new Intent(this, ViewerStarScoreActivity.class);
             starIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivityForResult(starIntent, REQUEST_CODE_RATING);
