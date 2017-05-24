@@ -1,5 +1,6 @@
 package com.kwu.cointwebtoon;
 
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,6 +95,7 @@ public class ViewerGeneralAdapter extends RecyclerView.Adapter{
                     if (webtoon != null) {
                         //웹툰 객체로 초기화
                         ratingHolder.artistTv.setText("작가의 말 (" + webtoon.getArtist() + ")");   //작가명 세팅
+                        ratingHolder.artistTv.setPaintFlags(ratingHolder.artistTv.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
                     }
 
                     //-----별점 셋팅----//

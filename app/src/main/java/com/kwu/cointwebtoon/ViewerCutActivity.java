@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -461,6 +462,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 }
                 mention.setText(episode_instance.getMention());
                 artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
+                artistTV.setPaintFlags(artistTV.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
             }catch (NullPointerException ex){}
         }
     }
