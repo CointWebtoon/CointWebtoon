@@ -42,9 +42,10 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
     private TextView tvToontypeIcon;
 
     private TextView tvTitle ;
-    private TextView tvStarPoint;
+    private TextView tvStarScore;
     private TextView tvArtist;
     private TextView tvAdult;
+    private TextView tvMy;
     private ImageButton btnMy;
     private SwipeLayout frameMy;
     private LinearLayout weekMy;
@@ -100,14 +101,14 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
                 if(result.equals("마이 웹툰 설정")){
                     item.setIs_mine(true);
                     YoYo.with(Techniques.Flash).duration(500).delay(100).playOn(v);
-                    //v.setBackgroundResource(R.drawable.my_star_active);
                     v.findViewById(R.id.btn_my).setBackgroundResource(R.drawable.my_star_active);
+                    swipeLayout.findViewById(R.id.tv_my).setVisibility(View.VISIBLE);
                     swipeLayout.setBackgroundResource(R.drawable.week_background_my);
                 }else if(result.equals("마이 웹툰 해제")){
                     item.setIs_mine(false);
                     YoYo.with(Techniques.Wobble).duration(500).delay(100).playOn(v);
-                    //v.setBackgroundResource(R.drawable.my_star_unactive);
                     v.findViewById(R.id.btn_my).setBackgroundResource(R.drawable.my_star_unactive);
+                    swipeLayout.findViewById(R.id.tv_my).setVisibility(View.GONE);
                     swipeLayout.setBackgroundResource(0);
                 }
 
@@ -126,11 +127,13 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
                     item.setIs_mine(true);
                     YoYo.with(Techniques.Flash).duration(500).delay(100).playOn(v);
                     v.setBackgroundResource(R.drawable.my_star_active);
+                    swipeLayout.findViewById(R.id.tv_my).setVisibility(View.VISIBLE);
                     swipeLayout.setBackgroundResource(R.drawable.week_background_my);
                 }else if(result.equals("마이 웹툰 해제")){
                     item.setIs_mine(false);
                     YoYo.with(Techniques.Wobble).duration(500).delay(100).playOn(v);
                     v.setBackgroundResource(R.drawable.my_star_unactive);
+                    swipeLayout.findViewById(R.id.tv_my).setVisibility(View.GONE);
                     swipeLayout.setBackgroundResource(0);
                 }
 
@@ -142,7 +145,7 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
     public void fillValues(final int position, View convertView) {
         ivThumbnail = (ImageView) convertView.findViewById(R.id.iv_thumbnail);
         tvTitle = (TextView)convertView.findViewById(R.id.tv_title);
-        tvStarPoint = (TextView)convertView.findViewById(R.id.tv_starPoint);
+        tvStarScore = (TextView)convertView.findViewById(R.id.tv_star_score);
         tvArtist = (TextView)convertView.findViewById(R.id.tv_artist);
         tvAdult = (TextView)convertView.findViewById(R.id.tv_adult_icon);
         tvUpdateIcon = (TextView)convertView.findViewById(R.id.tv_update_icon);
@@ -150,6 +153,7 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
         frameMy = (SwipeLayout)convertView.findViewById(R.id.swipe);
         weekMy = (LinearLayout)convertView.findViewById(R.id.week_my);
         btnMy = (ImageButton)convertView.findViewById(R.id.btn_my);
+        tvMy = (TextView)convertView.findViewById(R.id.tv_my);
 
 
         btnMy.setTag(position);
@@ -178,16 +182,18 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
                 .into(ivThumbnail);
         tvTitle.setText(currentItem.getTitle());
         tvTitle.setSelected(true);
-        tvStarPoint.setText("★" + String.valueOf(currentItem.getStarScore()));
+        tvStarScore.setText("★" + String.valueOf(currentItem.getStarScore()));
         tvArtist.setText(currentItem.getArtist());
 
         if (currentItem.isMine()){
             //마이 웹툰 여부에 따라 별 아이콘 다르게 설정
             btnMy.setBackgroundResource(R.drawable.my_star_active);
+            tvMy.setVisibility(View.VISIBLE);
             frameMy.setBackgroundResource(R.drawable.week_background_my);
         }
         else{
             btnMy.setBackgroundResource(R.drawable.my_star_unactive);
+            tvMy.setVisibility(View.GONE);
             frameMy.setBackgroundResource(0);
         }
 
