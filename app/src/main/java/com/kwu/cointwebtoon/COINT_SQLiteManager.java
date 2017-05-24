@@ -247,16 +247,6 @@ public class COINT_SQLiteManager {
         }
     }
 
-    //웹툰 고유 ID를 이용해 해당 웹툰의 제목을 SQLite 에서 가져오는 메소드
-    //에러 시 NULL RETURN
-    public String getWebtoonTitleById(int toonId){
-        Cursor queryResult = db.rawQuery("SELECT Title FROM WEBTOON WHERE Id=" + String.valueOf(toonId) + ";", null);
-        if(queryResult.moveToNext()){
-            return queryResult.getString(0);
-        }else
-            return null;
-    }
-
     //웹툰 고유 ID와 회차 ID를 이용해 해당 회차의 제목을 SQLite 에서 가져오는 메소드
     //에러 시 NULL RETURN
     public String getEpisodeTitle(int toonId, int episodeId){
@@ -271,8 +261,10 @@ public class COINT_SQLiteManager {
     public Episode getEpisodeInstance(int id, int ep_id){
         //Episode 생성자 :
         Cursor cursor = db.rawQuery("SELECT Episode_title, Ep_starscore, Ep_thumbURL, Reg_date, Mention, Likes_E FROM EPISODE WHERE Id_E=" + id + " AND Episode_id=" + ep_id, null);
-        cursor.moveToNext();
-        return new Episode(id, ep_id, cursor.getString(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), 1);
+        if(cursor.moveToNext())
+            return new Episode(id, ep_id, cursor.getString(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), 1);
+        else
+            return null;
     }
 
 
