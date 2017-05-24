@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:orientation="vertical">
@@ -20,7 +19,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="3dp"
             android:src="@drawable/splash" />
 
         <TextView
@@ -39,10 +38,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/webtoonName"
+            android:layout_marginRight="10dp"
             android:layout_marginStart="33dp"
             android:layout_marginTop="6dp"
-            android:layout_toEndOf="@+id/webtoonImg"
-            android:paddingRight="5dp"
+            android:layout_toRightOf="@+id/webtoonImg"
             android:text="artist"
             android:textColor="#5F5F5F"
             android:textSize="10dp" />
@@ -52,7 +51,8 @@
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/artistName"
-            android:layout_toEndOf="@+id/webtoonImg"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/webtoonImg"
             android:text="1"
             android:textAlignment="center"
             android:textColor="#5F5F5F"
@@ -60,11 +60,11 @@
 
         <ImageView
             android:id="@+id/addTopBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
+            android:layout_marginRight="10dp"
             android:onClick="onClick"
             android:src="@drawable/my_star_unactive" />
 
@@ -88,7 +88,8 @@
             android:layout_width="24dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankTop"
-            android:layout_toEndOf="@+id/cuttonTop"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/cuttonTop"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
@@ -99,9 +100,9 @@
             android:layout_width="24dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankTop"
-            android:layout_toEndOf="@+id/upTop"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/upTop"
             android:gravity="center"
-            android:paddingRight="5dp"
             android:textAlignment="center"
             android:textColor="@color/D2Light"
             android:textSize="9sp" />
@@ -111,7 +112,8 @@
             android:layout_width="21dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankTop"
-            android:layout_toEndOf="@+id/artistName"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/artistName"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@android:color/holo_red_light"
@@ -130,7 +132,8 @@
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/artistName1"
-            android:layout_toEndOf="@+id/webtoonImg1"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/webtoonImg1"
             android:text="1"
             android:textAlignment="center"
             android:textColor="#5F5F5F"
@@ -138,11 +141,11 @@
 
         <ImageView
             android:id="@+id/addMidBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
+            android:layout_marginRight="10dp"
             android:onClick="onClick"
             android:src="@drawable/my_star_unactive" />
 
@@ -154,7 +157,7 @@
             android:layout_alignTop="@+id/addMidBtn"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="3dp"
             android:src="@drawable/splash" />
 
         <TextView
@@ -173,10 +176,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/webtoonName1"
+            android:layout_marginRight="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="6dp"
-            android:layout_toEndOf="@+id/rankMiddle"
-            android:paddingRight="5dp"
+            android:layout_toRightOf="@+id/rankMiddle"
             android:text="artist"
             android:textColor="#5F5F5F"
             android:textSize="10dp" />
@@ -201,7 +204,8 @@
             android:layout_width="24dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankMiddle"
-            android:layout_toEndOf="@+id/cuttonMid"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/cuttonMid"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
@@ -212,9 +216,9 @@
             android:layout_width="24dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankMiddle"
-            android:layout_toEndOf="@+id/upMid"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/upMid"
             android:gravity="center"
-            android:paddingRight="5dp"
             android:textAlignment="center"
             android:textColor="@color/D2Light"
             android:textSize="9sp" />
@@ -225,7 +229,8 @@
             android:layout_width="21dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankMiddle"
-            android:layout_toEndOf="@+id/artistName1"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/artistName1"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@android:color/holo_red_light"
@@ -239,17 +244,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:onClick="onClick">
-
-        <ImageView
-            android:id="@+id/webtoonImg2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="4dp"
-            android:src="@drawable/splash" />
 
         <TextView
             android:id="@+id/starScore2"
@@ -267,21 +261,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/webtoonName2"
+            android:layout_marginRight="10dp"
             android:layout_marginStart="33dp"
             android:layout_marginTop="6dp"
-            android:layout_toEndOf="@+id/webtoonImg2"
-            android:paddingRight="5dp"
+            android:layout_toRightOf="@+id/webtoonImg2"
             android:text="artist"
             android:textColor="#5F5F5F"
             android:textSize="10dp" />
 
         <ImageView
             android:id="@+id/addBotBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
+            android:layout_marginRight="10dp"
             android:onClick="onClick"
             android:src="@drawable/my_star_unactive" />
 
@@ -290,7 +284,8 @@
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/artistName2"
-            android:layout_toEndOf="@+id/webtoonImg2"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/webtoonImg2"
             android:text="1"
             android:textAlignment="center"
             android:textColor="#5F5F5F"
@@ -316,7 +311,8 @@
             android:layout_width="24dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankBottom"
-            android:layout_toEndOf="@+id/cuttonBot"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/cuttonBot"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
@@ -327,9 +323,9 @@
             android:layout_width="24dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankBottom"
-            android:layout_toEndOf="@+id/upBot"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/upBot"
             android:gravity="center"
-            android:paddingRight="5dp"
             android:textAlignment="center"
             android:textColor="@color/D2Light"
             android:textSize="9sp" />
@@ -339,10 +335,22 @@
             android:layout_width="21dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankBottom"
-            android:layout_toEndOf="@+id/artistName2"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@+id/artistName2"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@android:color/holo_red_light"
             android:textSize="9sp" />
+
+        <ImageView
+            android:id="@+id/webtoonImg2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/splash" />
     </RelativeLayout>
 </LinearLayout>

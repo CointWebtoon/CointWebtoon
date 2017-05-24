@@ -13,23 +13,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kwu.cointwebtoon.DataStructure.Webtoon;
+
+import java.util.ArrayList;
 
 public class FavoriteAdpater extends PagerAdapter {
     LayoutInflater inflater;
     Context mContext;
-    COINT_SQLiteManager coint_sqLiteManager;
-    Cursor c;
     int returnPosition;
-    String genre;
+    ArrayList<Webtoon> pageOne = new ArrayList<>();
+    ArrayList<Webtoon> pageTwo = new ArrayList<>();
 
 //adapter의 데이터는 보통 액티비티라던가 다른 클래스에서 해서 생성자로 넘겨줌.
 
-    public FavoriteAdpater(Context mContext, String genre) {
+    public FavoriteAdpater(Context mContext, ArrayList<Webtoon> pageOne, ArrayList<Webtoon> pageTwo) {
         //전달 받은 LayoutInflater를 멤버변수로 전달
         this.inflater = LayoutInflater.from(mContext);
         this.mContext = mContext;
-        this.genre = genre;
-        coint_sqLiteManager = COINT_SQLiteManager.getInstance(mContext);
+        this.pageOne = pageOne;
+        this.pageTwo = pageTwo;
     }
 
     //PagerAdapter가 가지고 있는 View의 개수를 리턴
@@ -51,8 +53,6 @@ public class FavoriteAdpater extends PagerAdapter {
                 cuttoonTop, cuttoonMid, cuttoonBot, upTop, upMid, upBot, adultTop, adultMid, adultBot;
         returnPosition = position;
 
-        c = coint_sqLiteManager.favorite(position, genre);             //현재 페이지에 맞는 순위 세개를 가져옴
-
         //새로운 View 객체를 Layoutinflater를 이용해서 생성
         //만들어질 View의 설계는 top15레이아웃 파일 사용
         view = inflater.inflate(R.layout.main_top15_item, null);
@@ -62,48 +62,58 @@ public class FavoriteAdpater extends PagerAdapter {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                c = coint_sqLiteManager.favorite(position, genre);
+                ArrayList<Webtoon> currentList = position == 0? pageOne : pageTwo;
+                Webtoon emptyItem = new Webtoon(0, "", "", 0.0f, 0, "", 0, 'U', false, false, false, 0);
                 int id = v.getId();
                 Intent intent;
                 switch(id){
                     case R.id.top:
-                        c.moveToFirst();
-                        Toast.makeText(mContext,c.getString(1).toString(),Toast.LENGTH_SHORT).show();
                         /**
                          * Episode Activity 연결부
                          */
-                        intent = new Intent(mContext, EpisodeActivity.class);
-                        intent.putExtra("id", c.getInt(0));
-                        intent.putExtra("toontype", c.getString(7).charAt(0));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        mContext.startActivity(intent);
+                        if(currentList != null){
+                            if(emptyItem.equals(currentList.get(0)))
+                                return;
+                            intent = new Intent(mContext, EpisodeActivity.class);
+                            intent.putExtra("id", currentList.get(0).getId());
+                            intent.putExtra("toontype", currentList.get(0).getToonType());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            mContext.startActivity(intent);
+                        }
                         break;
                     case R.id.middle:
-                        c.moveToPosition(1);
-                        Toast.makeText(mContext,c.getString(1).toString(),Toast.LENGTH_SHORT).show();
                         /**
                          * Episode Activity 연결부
                          */
-                        intent = new Intent(mContext, EpisodeActivity.class);
-                        intent.putExtra("id", c.getInt(0));
-                        intent.putExtra("toontype", c.getString(7).charAt(0));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        mContext.startActivity(intent);
+                        if(currentList != null){
+                            if(emptyItem.equals(currentList.get(1)))
+                                return;
+                            intent = new Intent(mContext, EpisodeActivity.class);
+                            intent.putExtra("id", currentList.get(1).getId());
+                            intent.putExtra("toontype", currentList.get(1).getToonType());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            mContext.startActivity(intent);
+                        }
                         break;
                     case R.id.bottom:
-                        c.moveToLast();
                         /**
                          * Episode Activity 연결부
                          */
-                        intent = new Intent(mContext, EpisodeActivity.class);
-                        intent.putExtra("id", c.getInt(0));
-                        intent.putExtra("toontype", c.getString(7).charAt(0));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        mContext.startActivity(intent);
+                        if(currentList != null) {
+                            if(emptyItem.equals(currentList.get(2)))
+                                return;
+                            intent = new Intent(mContext, EpisodeActivity.class);
+                            intent.putExtra("id", currentList.get(2).getId());
+                            intent.putExtra("toontype", currentList.get(2).getToonType());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            mContext.startActivity(intent);
+                        }
                         break;
                 }
             }
         };
+
+        ArrayList<Webtoon> currentList = position == 0 ? pageOne : pageTwo;
 
         //추가버튼과 각각의 RelativeLayout에 setOnClickListener 설정
 
@@ -115,13 +125,13 @@ public class FavoriteAdpater extends PagerAdapter {
         //만들어진 View안에 있는 ImageView, TextView들을 가져옴
         //위에서 inflated 되어 만들어진 view로부터 findViewById()를 해야한다.
         ImageView topPlusBtn = (ImageView)view.findViewById(R.id.addTopBtn);
-        topPlusBtn.setTag(Integer.valueOf(position));
+        topPlusBtn.setTag(position == 0 ? pageOne.get(0) : pageTwo.get(0));
 
         ImageView midPlusBtn = (ImageView)view.findViewById(R.id.addMidBtn);
-        midPlusBtn.setTag(Integer.valueOf(position));
+        midPlusBtn.setTag(position == 0 ? pageOne.get(1) : pageTwo.get(1));
 
         ImageView botPlusBtn = (ImageView)view.findViewById(R.id.addBotBtn);
-        botPlusBtn.setTag(Integer.valueOf(position));
+        botPlusBtn.setTag(position == 0 ? pageOne.get(2) : pageTwo.get(2));
 
         cuttoonTop = (TextView)view.findViewById(R.id.cuttonTop);
         cuttoonMid = (TextView)view.findViewById(R.id.cuttonMid);
@@ -163,19 +173,22 @@ public class FavoriteAdpater extends PagerAdapter {
         rankBot = (TextView) view.findViewById(R.id.rankBottom);
         rankBot.setText(Integer.toString(position * 3 + 3));
 
-        while (c.moveToNext()) {
+        if(currentList != null){
             //Glide를 통해 img에 이미지를 로드, 타이틀과 작가, 별점을 set
-            Glide.with(mContext).load(c.getString(5).toString()).into(imgTop);
-            titleTop.setText(c.getString(1));
-            artistTop.setText(c.getString(2));
-            starTop.setText("★ "+String.valueOf(c.getFloat(3)));
-            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+            Webtoon itemTop = currentList.get(0), itemMid = currentList.get(1), itemBot = currentList.get(2);
+
+            //1번째 아이템
+            Glide.with(mContext).load(itemTop.getThumbURL()).into(imgTop);
+            titleTop.setText(itemTop.getTitle());
+            artistTop.setText(itemTop.getArtist());
+            starTop.setText("★ "+String.valueOf(itemTop.getStarScore()));
+            if(itemTop.isMine()){        //마이웹툰이면 -버튼으로
                 topPlusBtn.setImageResource(R.drawable.my_star_active);
             }else{
                 topPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
-            if(c.getString(7).equals("C")){
+            if(itemTop.getToonType() == 'C'){
                 cuttoonTop.setVisibility(view.VISIBLE);
                 cuttoonTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonTop.setText("컷툰");
@@ -185,7 +198,7 @@ public class FavoriteAdpater extends PagerAdapter {
                 cuttoonTop.setVisibility(view.GONE);
             }
 
-            if(c.getString(8).equals("1")){
+            if(itemTop.isAdult()){
                 adultTop.setVisibility(view.VISIBLE);
                 adultTop.setBackgroundResource(R.drawable.main_icon_adult);
                 adultTop.setText("성인");
@@ -195,11 +208,11 @@ public class FavoriteAdpater extends PagerAdapter {
                 adultTop.setVisibility(view.GONE);
             }
 
-            if(c.getString(11).equals("1")) {
+            if(itemTop.isUpdated() == 1) {
                 upTop.setVisibility(view.VISIBLE);
                 upTop.setBackgroundResource(R.drawable.week_icon_update);
                 upTop.setText("UP");
-            }else if(c.getString(11).equals("2")){
+            }else if(itemTop.isUpdated() ==  2){
                 upTop.setVisibility(view.VISIBLE);
                 upTop.setBackgroundResource(R.drawable.week_icon_dormant);
                 upTop.setText("휴재");
@@ -209,20 +222,20 @@ public class FavoriteAdpater extends PagerAdapter {
                 upTop.setText(null);
                 upTop.setVisibility(view.GONE);
             }
-            c.moveToNext();
 
-            Glide.with(mContext).load(c.getString(5)).into(imgMid);
-            titleMid.setText(c.getString(1));
-            artistMid.setText(c.getString(2));
-            starMid.setText("★ "+String.valueOf(c.getFloat(3)));
+            //2번째 아이템
+            Glide.with(mContext).load(itemMid.getThumbURL()).into(imgMid);
+            titleMid.setText(itemMid.getTitle());
+            artistMid.setText(itemMid.getArtist());
+            starMid.setText("★ "+String.valueOf(itemMid.getStarScore()));
 
-            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+            if(itemMid.isMine()){        //마이웹툰이면 -버튼으로
                 midPlusBtn.setImageResource(R.drawable.my_star_active);
             }else{
                 midPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
-            if(c.getString(7).equals("C")){
+            if(itemMid.getToonType() == 'C'){
                 cuttoonMid.setVisibility(view.VISIBLE);
                 cuttoonMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonMid.setText("컷툰");
@@ -232,7 +245,7 @@ public class FavoriteAdpater extends PagerAdapter {
                 cuttoonMid.setVisibility(view.GONE);
             }
 
-            if(c.getString(8).equals("1")){
+            if(itemMid.isAdult()){
                 adultMid.setVisibility(view.VISIBLE);
                 adultMid.setBackgroundResource(R.drawable.main_icon_adult);
                 adultMid.setText("성인");
@@ -242,11 +255,11 @@ public class FavoriteAdpater extends PagerAdapter {
                 adultMid.setVisibility(view.GONE);
             }
 
-            if(c.getString(11).equals("1")) {       //업데이트, 휴재, 연재일 아닌 날
+            if(itemMid.isUpdated() == 1) {       //업데이트, 휴재, 연재일 아닌 날
                 upMid.setVisibility(view.VISIBLE);
                 upMid.setBackgroundResource(R.drawable.week_icon_update);
                 upMid.setText("UP");
-            }else if(c.getString(11).equals("2")){
+            }else if(itemMid.isUpdated() == 2){
                 upMid.setVisibility(view.VISIBLE);
                 upMid.setBackgroundResource(R.drawable.week_icon_dormant);
                 upMid.setText("휴재");
@@ -256,20 +269,20 @@ public class FavoriteAdpater extends PagerAdapter {
                 upMid.setText(null);
                 upMid.setVisibility(view.GONE);
             }
-            c.moveToNext();
 
-            Glide.with(mContext).load(c.getString(5)).into(imgBot);
-            titleBot.setText(c.getString(1));
-            artistBot.setText(c.getString(2));
-            starBot.setText("★ "+String.valueOf(c.getFloat(3)));
+            //3번째 아이템
+            Glide.with(mContext).load(itemBot.getThumbURL()).into(imgBot);
+            titleBot.setText(itemBot.getTitle());
+            artistBot.setText(itemBot.getArtist());
+            starBot.setText("★ "+String.valueOf(itemBot.getStarScore()));
 
-            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+            if(itemBot.isMine()){        //마이웹툰이면 -버튼으로
                 botPlusBtn.setImageResource(R.drawable.my_star_active);
             }else{
                 botPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
-            if(c.getString(7).equals("C")){
+            if(itemBot.getToonType() == 'C'){
                 cuttoonBot.setVisibility(view.VISIBLE);
                 cuttoonBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonBot.setText("컷툰");
@@ -279,7 +292,7 @@ public class FavoriteAdpater extends PagerAdapter {
                 cuttoonBot.setVisibility(view.GONE);
             }
 
-            if(c.getString(8).equals("1")){
+            if(itemBot.isAdult()){
                 adultBot.setVisibility(view.VISIBLE);
                 adultBot.setBackgroundResource(R.drawable.main_icon_adult);
                 adultBot.setText("성인");
@@ -289,11 +302,11 @@ public class FavoriteAdpater extends PagerAdapter {
                 adultBot.setVisibility(view.GONE);
             }
 
-            if(c.getString(11).equals("1")) {
+            if(itemBot.isUpdated() == 1) {
                 upBot.setVisibility(view.VISIBLE);
                 upBot.setBackgroundResource(R.drawable.week_icon_update);
                 upBot.setText("UP");
-            }else if(c.getString(11).equals("2")){
+            }else if(itemBot.isUpdated() == 2){
                 upBot.setVisibility(view.VISIBLE);
                 upBot.setBackgroundResource(R.drawable.week_icon_dormant);
                 upBot.setText("휴재");
