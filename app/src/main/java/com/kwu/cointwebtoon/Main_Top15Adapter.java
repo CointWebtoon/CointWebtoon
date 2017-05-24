@@ -1,19 +1,15 @@
 package com.kwu.cointwebtoon;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -69,7 +65,6 @@ public class Main_Top15Adapter extends PagerAdapter {
                 switch(id){
                     case R.id.top:
                         c.moveToFirst();
-                        Toast.makeText(mContext,c.getString(1).toString(),Toast.LENGTH_SHORT).show();
                         /**
                          * Episode Activity 연결부
                          */
@@ -81,7 +76,6 @@ public class Main_Top15Adapter extends PagerAdapter {
                         break;
                     case R.id.middle:
                         c.moveToPosition(1);
-                        Toast.makeText(mContext,c.getString(1).toString(),Toast.LENGTH_SHORT).show();
                         /**
                          * Episode Activity 연결부
                          */

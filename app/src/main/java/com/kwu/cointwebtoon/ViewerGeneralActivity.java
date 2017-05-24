@@ -1,15 +1,19 @@
 package com.kwu.cointwebtoon;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -55,8 +59,6 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
      * Members
      */
     public static final int REQUEST_CODE_RATING = 1001;
-    private Thread autoScrollThread;
-    private boolean autoScrolling = false;
     private int toonId, episodeId;
     private int yDelta, ys = 0, maxTopMargin = 0;                          //스크롤바 좌표 계산
     private boolean scrollBySwipe = true;
@@ -77,14 +79,20 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
 
     @Override
     protected void onResume() {
-        getServerData.registerObserver(this);
         super.onResume();
+        getServerData.registerObserver(this);
     }
 
     @Override
     protected void onPause() {
-        getServerData.removeObserver(this);
         super.onPause();
+        getServerData.removeObserver(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        getServerData.removeObserver(this);
+        super.onDestroy();
     }
 
     /**
@@ -93,7 +101,7 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
     private void initView() {
         //Recycler
         recycler = (RecyclerView) findViewById(R.id.viewer_general_recycler);
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new CustomLinearLayoutManager(this);
         recycler.setLayoutManager(layoutManager);
         adapter = new ViewerGeneralAdapter(this);
         recycler.setAdapter(adapter);
@@ -158,35 +166,11 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             images.clear();
             images.addAll((ArrayList<String>) data);
             adapter.changeData(images);
-            if(autoScrolling)
-                autoScroll();
         }
     }
 
     private void autoScroll() {
-        try {
-            autoScrollThread.interrupt();
-        } catch (Exception e) {
-        }
-        autoScrollThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            recycler.scrollBy(0, 10);
-                        }
-                    });
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                }
-            }
-        });
-        autoScrollThread.start();
+        layoutManager.smoothScrollToPosition(recycler, new RecyclerView.State() , images.size());
     }
 
     public void showToolbars(boolean show){
@@ -277,19 +261,8 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             }
             case R.id.general_auto_scroll: {
                 //오토스크롤
-                if (autoScrolling) {
-                    try {
-                        autoScrollThread.interrupt();
-                    } catch (Exception e) {
-                    }
-                    autoScrolling = false;
-                    autoScrollButton.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_inactive));
-                } else {
-                    autoScrolling = true;
-                    autoScrollButton.setImageDrawable(getDrawable(R.drawable.viewer_auto_scroll_active));
-                    showToolbars(false);
-                    autoScroll();
-                }
+                showToolbars(false);
+                autoScroll();
                 break;
             }
             case R.id.GeneralToont_count_txt:
@@ -451,7 +424,6 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             if (runMode && runModeOnce) {
                 if (currentItemPosition == images.size()) {
                     runModeOnce = false;
-                    try{autoScrollThread.interrupt();}catch (Exception e){}
                     if(episodeId > 0 && (episodeId < manager.maxEpisodeId(toonId))){
                         episodeId += 1;
                         dialog.show();
@@ -486,6 +458,39 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             episodeTitleTextView.setSelected(true);
             episodeIdTextView.setText(String.valueOf(episodeInstance.getEpisode_id()));
             goodCount.setText(String.valueOf(webtoonInstance.getLikes()));
+            if(likePreference.getBoolean(String.valueOf(toonId), false)){
+                good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
+            }else{
+                good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
+            }
+        }
+    }
+
+    private  class CustomLinearLayoutManager extends LinearLayoutManager{
+        public CustomLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+            final LinearSmoothScroller linearSmoothScroller =
+                    new LinearSmoothScroller(recyclerView.getContext()) {
+                        private static final float MILLISECONDS_PER_INCH = 1000f;
+
+                        @Override
+                        public PointF computeScrollVectorForPosition(int targetPosition) {
+                            return CustomLinearLayoutManager.this
+                                    .computeScrollVectorForPosition(targetPosition);
+                        }
+
+                        @Override
+                        protected float calculateSpeedPerPixel
+                                (DisplayMetrics displayMetrics) {
+                            return MILLISECONDS_PER_INCH / displayMetrics.densityDpi;
+                        }
+                    };
+            linearSmoothScroller.setTargetPosition(position);
+            startSmoothScroll(linearSmoothScroller);
         }
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context="com.kwu.cointwebtoon.ViewerGerneralActivity">
+    tools:context="com.kwu.cointwebtoon.ViewerGeneralActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/viewer_general_recycler"
@@ -77,7 +77,7 @@
                     android:background="#333333"
                     android:onClick="general_onClick"
                     android:padding="5dp"
-                    android:src="@drawable/viewer_auto_scroll_inactive" />
+                    android:src="@drawable/viewer_auto_scroll_active" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>

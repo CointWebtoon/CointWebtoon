@@ -67,50 +67,52 @@ public class ViewerGeneralAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof ViewHolder_TYPE_IMAGE){
-            ViewHolder_TYPE_IMAGE imageHolder = (ViewHolder_TYPE_IMAGE)holder;
-            if(position < images.size()){
-                imageHolder.imageItem.setClickable(false);
-                Glide.with(mContext)
-                        .load(images.get(position))
-                        .asBitmap()
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                        .override(width, Target.SIZE_ORIGINAL)
-                        .placeholder(R.drawable.view_placeholder)
-                        .into(imageHolder.imageItem);   //이미지 세팅
-            }
-        }else if(holder instanceof ViewHolder_TYPE_RATING){
-            ViewHolder_TYPE_RATING ratingHolder = (ViewHolder_TYPE_RATING)holder;
-            if(position == images.size()){
-                float rating = mContext.getMyStar();
-                Webtoon webtoon = mContext.getWebtoonInstance();
-                Episode episode = mContext.getEpisodeInstance();
+        try{
+            if(holder instanceof ViewHolder_TYPE_IMAGE){
+                ViewHolder_TYPE_IMAGE imageHolder = (ViewHolder_TYPE_IMAGE)holder;
+                if(position < images.size()){
+                    imageHolder.imageItem.setClickable(false);
+                    Glide.with(mContext)
+                            .load(images.get(position))
+                            .asBitmap()
+                            .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                            .override(width, Target.SIZE_ORIGINAL)
+                            .placeholder(R.drawable.view_placeholder)
+                            .into(imageHolder.imageItem);   //이미지 세팅
+                }
+            }else if(holder instanceof ViewHolder_TYPE_RATING) {
+                ViewHolder_TYPE_RATING ratingHolder = (ViewHolder_TYPE_RATING) holder;
+                if (position == images.size()) {
+                    float rating = mContext.getMyStar();
+                    Webtoon webtoon = mContext.getWebtoonInstance();
+                    Episode episode = mContext.getEpisodeInstance();
 
-                if(episode != null){
-                    //에피소드를 통해 초기화
-                    ratingHolder.mention.setText(episode.getMention()); //작가의 말 세팅
-                }
-                if(webtoon != null){
-                    //웹툰 객체로 초기화
-                    ratingHolder.artistTv.setText("작가의 말 (" + webtoon.getArtist() + ")");   //작가명 세팅
-                }
+                    if (episode != null) {
+                        //에피소드를 통해 초기화
+                        ratingHolder.mention.setText(episode.getMention()); //작가의 말 세팅
+                    }
+                    if (webtoon != null) {
+                        //웹툰 객체로 초기화
+                        ratingHolder.artistTv.setText("작가의 말 (" + webtoon.getArtist() + ")");   //작가명 세팅
+                    }
 
-                //-----별점 셋팅----//
-                if(rating != -1){
-                    //사용자가 준 별점 값이 있을 때
-                    ratingHolder.ratingBar.setMax(10);
-                    ratingHolder.ratingBar.setRating(rating / 2);
-                    ratingHolder.starTv.setText(String.valueOf(rating));
-                    ratingHolder.givingStar.setEnabled(false);
-                }else{
-                    //myStar가 -1일 때
-                    ratingHolder.ratingBar.setRating(0);
-                    ratingHolder.starTv.setText("0.0");
-                    ratingHolder.givingStar.setEnabled(true);
+                    //-----별점 셋팅----//
+                    if (rating != -1) {
+                        //사용자가 준 별점 값이 있을 때
+                        ratingHolder.ratingBar.setMax(10);
+                        ratingHolder.ratingBar.setRating(rating / 2);
+                        ratingHolder.starTv.setText(String.valueOf(rating));
+                        ratingHolder.givingStar.setEnabled(false);
+                    } else {
+                        //myStar가 -1일 때
+                        ratingHolder.ratingBar.setRating(0);
+                        ratingHolder.starTv.setText("0.0");
+                        ratingHolder.givingStar.setEnabled(true);
+                    }
+                    //-----별점 셋팅----//
                 }
-                //-----별점 셋팅----//
             }
-        }
+        }catch (Exception e){return;}
     }
 
     @Override

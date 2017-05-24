@@ -22,24 +22,26 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
-import com.kwu.cointwebtoon.DataStructure.Weekday;
 import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.ViewHolder> {
+public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.ViewHolder> implements Observer {
     private ArrayList<Webtoon> arrayList = new ArrayList<>();
     private ArrayList<Webtoon> weekdayList = new ArrayList<>();
     private Weekday_ListItem weekday_listItem;
-    COINT_SQLiteManager coint_sqLiteManager;
+    private COINT_SQLiteManager coint_sqLiteManager;
     private View v;
     private Context mContext;
     private int lastPosition = -1;
     private Main_MyToonAdapter adapter;
     private int day;                // day는 0:완결, 1- 7 까지 차례로 요일.
     private Application_UserInfo userInfo;
+    private Webtoon updateInstance; //Observer update 함수 에서 사용할 변수
+    private CointProgressDialog dialog;
+    private GetServerData serverData;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
@@ -80,7 +82,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         }
 
         addRemoveItem(mList);
-
+        dialog = new CointProgressDialog(mContext);
         weekday_listItem = new Weekday_ListItem(mContext, num);
         weekdayList = weekday_listItem.getList();
         Log.i("weekday list size : ", Integer.toString(weekdayList.size()));
@@ -224,54 +226,20 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                             }
 
                         }
-
                         if(episode==null){
-                            Toast.makeText(mContext,"한개도 안봄!",Toast.LENGTH_SHORT).show();
-
-                            /*하나도 안읽은 경우엔 안드로이드 디비에 에피소드가 없어서 바로 첫화를 가져올 수 없음.*/
-
-/*                            Toast.makeText(mContext,Integer.toString(arrayList.get(position).getId()),Toast.LENGTH_SHORT).show();
-
-                            GetServerData getServerData;
-                            getServerData = new GetServerData(mContext);
-                            getServerData.registerObserver();
-                            getServerData.getEpisodesFromServer(arrayList.get(position).getId());
-
-                            switch (arrayList.get(position).getToonType()) {
-                                case 'G': {//일반툰
-                                    coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
-                                    Intent generalIntent = new Intent(mContext, ViewerGerneralActivity.class);
-                                    generalIntent.putExtra("id", arrayList.get(position).getId());
-                                    generalIntent.putExtra("ep_id", 1);;;;;;;;;;
-                                    mContext.startActivity(generalIntent);
-                                    break;
+                            updateInstance = arrayList.get(position);
+                            serverData = new GetServerData(mContext);
+                            serverData.registerObserver(Main_MyToonAdapter.this);
+                            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    serverData.removeObserver(Main_MyToonAdapter.this);
                                 }
-                                case 'C': {//컷툰
-                                    coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
-                                    Intent cutIntent = new Intent(mContext, ViewerCutActivity.class);
-                                    cutIntent.putExtra("id", arrayList.get(position).getId());
-                                    cutIntent.putExtra("ep_id", 1);
-                                    mContext.startActivity(cutIntent);
-                                    break;
-                                }
-                                case 'S': {//스마트툰
-                                    coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
-                                    Intent smartIntent = new Intent(mContext, ViewerSmartActivity.class);
-                                    smartIntent.putExtra("id", arrayList.get(position).getId());
-                                    smartIntent.putExtra("ep_id", 1);
-                                    mContext.startActivity(smartIntent);
-                                    break;
-                                }
-                                case 'M': {//모션툰
-                                    coint_sqLiteManager.updateEpisodeRead(arrayList.get(position).getId(), 1);
-                                    Intent motionIntent = new Intent(mContext, ViewerMotionActivity.class);
-                                    motionIntent.putExtra("id", arrayList.get(position).getId());
-                                    motionIntent.putExtra("ep_id", 1);
-                                    mContext.startActivity(motionIntent);
-                                    break;
-                                }
-                            }*/
-                        }else{
+                            });
+                            dialog.show();
+                            serverData.getEpisodesFromServer(arrayList.get(position).getId());
+                        }
+                        else {
                             switch (arrayList.get(position).getToonType()) {
                                 case 'G': {//일반툰
                                     Intent generalIntent = new Intent(mContext, ViewerGeneralActivity.class);
@@ -315,6 +283,52 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         v.findViewById(R.id.latest).setOnClickListener(onClickListener);
 
         setAnimation(holder.imageView, position);
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        dialog.dismiss();
+        serverData.removeObserver(this);
+        if(updateInstance != null){
+            switch (updateInstance.getToonType()) {
+                case 'G': {//일반툰
+                    coint_sqLiteManager.updateEpisodeRead(updateInstance.getId(), 1);
+                    Intent generalIntent = new Intent(mContext, ViewerGeneralActivity.class);
+                    generalIntent.putExtra("id", updateInstance.getId());
+                    generalIntent.putExtra("ep_id", 1);
+                    generalIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    mContext.startActivity(generalIntent);
+                    break;
+                }
+                case 'C': {//컷툰
+                    coint_sqLiteManager.updateEpisodeRead(updateInstance.getId(), 1);
+                    Intent cutIntent = new Intent(mContext, ViewerCutActivity.class);
+                    cutIntent.putExtra("id", updateInstance.getId());
+                    cutIntent.putExtra("ep_id", 1);
+                    cutIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    mContext.startActivity(cutIntent);
+                    break;
+                }
+                case 'S': {//스마트툰
+                    coint_sqLiteManager.updateEpisodeRead(updateInstance.getId(), 1);
+                    Intent smartIntent = new Intent(mContext, ViewerSmartActivity.class);
+                    smartIntent.putExtra("id", updateInstance.getId());
+                    smartIntent.putExtra("ep_id", 1);
+                    smartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    mContext.startActivity(smartIntent);
+                    break;
+                }
+                case 'M': {//모션툰
+                    coint_sqLiteManager.updateEpisodeRead(updateInstance.getId(), 1);
+                    Intent motionIntent = new Intent(mContext, ViewerMotionActivity.class);
+                    motionIntent.putExtra("id", updateInstance.getId());
+                    motionIntent.putExtra("ep_id", 1);
+                    motionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    mContext.startActivity(motionIntent);
+                    break;
+                }
+            }
+        }
     }
 
     public int getItemCount() {

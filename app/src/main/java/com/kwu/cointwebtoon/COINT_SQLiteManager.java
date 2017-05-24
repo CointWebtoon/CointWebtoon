@@ -370,10 +370,14 @@ public class COINT_SQLiteManager {
 
     public Webtoon getWebtoonInstance(int id){
         Cursor cursor = db.rawQuery("SELECT * FROM WEBTOON WHERE ID=" + id, null);
-        cursor.moveToNext();
-        return new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11));
+        if(cursor.getCount() > 0){
+            cursor.moveToNext();
+            return new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
+                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
+                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11));
+        }else{
+            return null;
+        }
     }
 
     public ArrayList<Webtoon> getWebtoonsByGenre(String genre){
@@ -431,8 +435,12 @@ public class COINT_SQLiteManager {
 
     public float getMyStar(int id, int ep_id){
         Cursor c = db.rawQuery("SELECT My_star FROM EPISODE WHERE Id_E=" + id + " AND Episode_id=" + ep_id, null);
-        c.moveToNext();
-        return c.getFloat(0);
+        if(c.getCount() > 0){
+            c.moveToNext();
+            return c.getFloat(0);
+        }else{
+            return -1;
+        }
     }
 }
 

@@ -250,24 +250,26 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
 
     public void onRecyclerViewItemClick(View v) {
         Episode target = (Episode) v.findViewById(R.id.reg_date).getTag();
-        if(currentWebtoon.isAdult()){
-            Log.i("coint", "로그인 상태 : " + String.valueOf(userInfo.isLogin()));
-            if(userInfo.isLogin()){
-                if(!userInfo.isUserAdult()){
-                    Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+        if(currentWebtoon != null){
+            if(currentWebtoon.isAdult()){
+                Log.i("coint", "로그인 상태 : " + String.valueOf(userInfo.isLogin()));
+                if(userInfo.isLogin()){
+                    if(!userInfo.isUserAdult()){
+                        Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }else{
+                    new AlertDialog.Builder(this)
+                            .setTitle("로그인")
+                            .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(EpisodeActivity.this, LoginActivity.class));
+                                }
+                            }).setNegativeButton("아니요", null).show();
                     return;
                 }
-            }else{
-                new AlertDialog.Builder(this)
-                        .setTitle("로그인")
-                        .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
-                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(EpisodeActivity.this, LoginActivity.class));
-                            }
-                        }).setNegativeButton("아니요", null).show();
-                return;
             }
         }
         switch (currentToonType) {
@@ -578,6 +580,8 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             }
             if (likePreference.getBoolean(String.valueOf(currentToonId), false)) {
                 likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
+            }else{
+                likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
             }
         }
     }
