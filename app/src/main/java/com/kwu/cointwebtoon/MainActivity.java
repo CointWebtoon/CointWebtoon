@@ -1,13 +1,11 @@
 package com.kwu.cointwebtoon;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,7 +20,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,6 +62,7 @@ public class MainActivity extends TypeKitActivity
         super.onCreate(savedInstanceState);
                  /*안드로이드 데이터베이스에 데이터를 넣음*/
         setContentView(R.layout.main_activity);
+
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         userInfo = (Application_UserInfo)getApplication();
         setSupportActionBar(toolbar);
@@ -195,14 +193,14 @@ public class MainActivity extends TypeKitActivity
 
         sharedPreferences = getSharedPreferences("isFirstLaunch", MODE_PRIVATE);
 
-        if(sharedPreferences.getBoolean("first", true)){
+        //if(sharedPreferences.getBoolean("first", true)){
             onCoachMark();
-        }
+        //}
     }
 
 
     public void onCoachMark(){
-        final Dialog dialog = new Dialog(this);
+       /* final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.main_coachmark);
@@ -217,7 +215,10 @@ public class MainActivity extends TypeKitActivity
                 sharedPreferences.edit().putBoolean("first", false).commit();
             }
         });
-        dialog.show();
+        dialog.show();*/
+        Intent intent = new Intent(MainActivity.this, CoachActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
     }
 
     public static int[] getDateDay() throws Exception {
