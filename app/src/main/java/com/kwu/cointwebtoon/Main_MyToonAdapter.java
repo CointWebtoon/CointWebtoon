@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +54,11 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         TextView up;
         TextView cuttoon;
         TextView adult;
+        TextView textMy;
         Button latest;
+        Button moreBtn;
         CardView cardView;
+        LinearLayout backbook;
 
         public ViewHolder(View view) {
             super(view);
@@ -61,11 +66,14 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
             title = (TextView) view.findViewById(R.id.mainTitle);
             artist = (TextView) view.findViewById(R.id.mainArtist);
             starscore = (TextView) view.findViewById(R.id.mainStarScore);
-            up = (TextView)view.findViewById(R.id.recycle_update);
-            cuttoon = (TextView)view.findViewById(R.id.recycle_cuttoon);
-            adult = (TextView)view.findViewById(R.id.recycle_adult);
-            latest = (Button)view.findViewById(R.id.latest);
-            cardView = (CardView)view.findViewById(R.id.cardview);
+            up = (TextView) view.findViewById(R.id.recycle_update);
+            cuttoon = (TextView) view.findViewById(R.id.recycle_cuttoon);
+            adult = (TextView) view.findViewById(R.id.recycle_adult);
+            latest = (Button) view.findViewById(R.id.latest);
+            cardView = (CardView) view.findViewById(R.id.cardview);
+            backbook = (LinearLayout) view.findViewById(R.id.backbook);
+            moreBtn = (Button) view.findViewById(R.id.moreBtn);
+            textMy = (TextView)view.findViewById(R.id.textMy);
         }
     }
 
@@ -78,8 +86,8 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         Cursor cursor = coint_sqLiteManager.getMyWebtoons();
         while (cursor.moveToNext()) {
             mList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                    cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
         }
 
         addRemoveItem(mList);
@@ -98,100 +106,98 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (position == 0) {
-            holder.cardView.setCardBackgroundColor(0);
-            holder.title.setTextColor(Color.parseColor("#5f5f5f"));
-            holder.title.setText("더 보기");
-            holder.artist.setText(null);
-            holder.starscore.setVisibility(v.GONE);
-            holder.latest.setVisibility(v.GONE);
+            holder.backbook.setVisibility(v.GONE);
+            holder.moreBtn.setVisibility(v.VISIBLE);
+            holder.textMy.setVisibility(v.VISIBLE);
 
-            switch (day){
+            switch (day) {
                 case 1:
-                    holder.imageView.setImageResource(R.drawable.main_mon_d2);
+                    holder.moreBtn.setBackgroundResource(R.drawable.main_mon_d2);
                     break;
                 case 2:
-                    holder.imageView.setImageResource(R.drawable.main_tue_d2);
+                    holder.moreBtn.setBackgroundResource(R.drawable.main_tue_d2);
                     break;
                 case 3:
-                    holder.imageView.setImageResource(R.drawable.main_wed_d2);
+                    holder.moreBtn.setBackgroundResource(R.drawable.main_wed_d2);
                     break;
                 case 4:
-                    holder.imageView.setImageResource(R.drawable.main_thu_d2);
+                    holder.moreBtn.setBackgroundResource(R.drawable.main_thu_d2);
                     break;
                 case 5:
-                    holder.imageView.setImageResource(R.drawable.main_fri_d2);
+                    holder.moreBtn.setBackgroundResource(R.drawable.main_fri_d2);
                     break;
                 case 6:
-                    holder.imageView.setImageResource(R.drawable.main_sat_d2);
+                    holder.moreBtn.setBackgroundResource(R.drawable.main_sat_d2);
                     break;
                 case 7:
-                    holder.imageView.setImageResource(R.drawable.main_sun_d2);
+                    holder.moreBtn.setBackgroundResource(R.drawable.main_sun_d2);
                     break;
                 case 0:
-                    holder.imageView.setImageResource(R.drawable.main_finish_d2);
-                    holder.title.setText(null);
+                    holder.moreBtn.setBackgroundResource(R.drawable.main_finish_d2);
                     break;
             }
         } else {
 
             episode = coint_sqLiteManager.getLatestEpisode(arrayList.get(position).getId());
 
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#5f5f5f"));
             holder.starscore.setVisibility(v.VISIBLE);
             holder.latest.setVisibility(v.VISIBLE);
+            holder.backbook.setVisibility(v.VISIBLE);
+            holder.moreBtn.setVisibility(v.GONE);
+            holder.textMy.setVisibility(v.GONE);
 
             holder.title.setText(arrayList.get(position).getTitle());
             holder.artist.setText(arrayList.get(position).getArtist());
-            holder.starscore.setText("★ "+String.valueOf(arrayList.get(position).getStarScore()));
-            if(episode==null){
+            holder.starscore.setText("★ " + String.valueOf(arrayList.get(position).getStarScore()));
+            if (episode == null) {
                 holder.latest.setText("첫화보기");
-            }else{
-                holder.latest.setText(String.valueOf(episode.getEpisode_id())+"화\n이어보기");
+            } else {
+                holder.latest.setText(String.valueOf(episode.getEpisode_id()) + "화\n이어보기");
             }
             Glide.with(mContext).load(arrayList.get(position).getThumbURL()).into(holder.imageView);
 
-            if(arrayList.get(position).getToonType() == 'C') {      // 컷툰 여부
+            if (arrayList.get(position).getToonType() == 'C') {      // 컷툰 여부
                 holder.cuttoon.setVisibility(View.VISIBLE);
                 holder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 holder.cuttoon.setTextColor(Color.parseColor("#28dcbe"));
                 holder.cuttoon.setText("컷툰");
-            }else if(arrayList.get(position).getToonType() == 'M'){     //모션툰
+            } else if (arrayList.get(position).getToonType() == 'M') {     //모션툰
                 holder.cuttoon.setVisibility(View.VISIBLE);
                 holder.cuttoon.setBackgroundResource(R.drawable.week_icon_motiontoon);
                 holder.cuttoon.setTextColor(Color.parseColor("#6d1daf"));
                 holder.cuttoon.setText("모션");
-            }else if(arrayList.get(position).getToonType()=='S'){
+            } else if (arrayList.get(position).getToonType() == 'S') {
                 holder.cuttoon.setVisibility(View.VISIBLE);
                 holder.cuttoon.setBackgroundResource(R.drawable.week_icon_smarttoon);
                 holder.cuttoon.setTextColor(Color.parseColor("#0050b4"));
                 holder.cuttoon.setText("스마트");
-            }else{
+            } else {
                 holder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 holder.cuttoon.setText(null);
                 holder.cuttoon.setVisibility(v.GONE);
             }
 
-            if(arrayList.get(position).isAdult()==true) {      // 성인툰 여부
+            if (arrayList.get(position).isAdult() == true) {      // 성인툰 여부
                 holder.adult.setVisibility(View.VISIBLE);
                 holder.adult.setBackgroundResource(R.drawable.main_icon_adult);
                 holder.adult.setTextColor(Color.parseColor("#FFFFFF"));
                 holder.adult.setText("성인");
-            }else{
+            } else {
                 holder.adult.setBackgroundResource(R.drawable.main_icon_adult);
                 holder.adult.setText(null);
                 holder.adult.setVisibility(v.GONE);
             }
 
-            if(arrayList.get(position).isUpdated()==1){             //순서대로 연재일, 휴재, 연재일 아님
+            if (arrayList.get(position).isUpdated() == 1) {             //순서대로 연재일, 휴재, 연재일 아님
                 holder.up.setVisibility(View.VISIBLE);
                 holder.up.setBackgroundResource(R.drawable.week_icon_update);
                 holder.up.setText("UP");
-            }else if(arrayList.get(position).isUpdated()==2){
+            } else if (arrayList.get(position).isUpdated() == 2) {
                 holder.up.setVisibility(View.VISIBLE);
                 holder.up.setBackgroundResource(R.drawable.main_icon_dormant);
                 holder.up.setText("휴재");
                 holder.up.setTextColor(Color.parseColor("#5F5F5F"));
-            }else{
+            } else {
                 holder.up.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 holder.up.setText(null);
                 holder.up.setVisibility(v.GONE);
@@ -203,17 +209,25 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                 int id = v.getId();
                 Intent intent;
                 switch (id) {
-                    case R.id.cardview:
-                        if (position==0) {
-                            /**
-                             * Activity 연결부
-                             */
-                        if(day!=0){
-                            intent = new Intent(mContext,WeekdayActivity.class);
-                            intent.putExtra("requestDay", day-1);
+                    case R.id.moreBtn:
+                        if (day != 0) {
+                            intent = new Intent(mContext, WeekdayActivity.class);
+                            intent.putExtra("requestDay", day - 1);
                             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             mContext.startActivity(intent);
                         }
+                        break;
+                    case R.id.cardview:
+                        if (position == 0) {
+                            /**
+                             * Activity 연결부
+                             */
+                            if (day != 0) {
+                                intent = new Intent(mContext, WeekdayActivity.class);
+                                intent.putExtra("requestDay", day - 1);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                mContext.startActivity(intent);
+                            }
                         } else {
                             Webtoon target = arrayList.get(position);
                             intent = new Intent(mContext, EpisodeActivity.class);
@@ -225,14 +239,14 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                         break;
                     case R.id.latest:
                         episode = coint_sqLiteManager.getLatestEpisode(arrayList.get(position).getId());
-                        userInfo = (Application_UserInfo)mContext.getApplicationContext();
-                        if(arrayList.get(position).isAdult()){
-                            if(userInfo.isLogin()){
-                                if(!userInfo.isUserAdult()){
+                        userInfo = (Application_UserInfo) mContext.getApplicationContext();
+                        if (arrayList.get(position).isAdult()) {
+                            if (userInfo.isLogin()) {
+                                if (!userInfo.isUserAdult()) {
                                     Toast.makeText(mContext, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
                                     break;
                                 }
-                            }else{
+                            } else {
                                 new AlertDialog.Builder(mContext)
                                         .setTitle("로그인")
                                         .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -246,7 +260,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                             }
 
                         }
-                        if(episode==null){
+                        if (episode == null) {
                             updateInstance = arrayList.get(position);
                             serverData = new GetServerData(mContext);
                             serverData.registerObserver(Main_MyToonAdapter.this);
@@ -258,8 +272,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                             });
                             dialog.show();
                             serverData.getEpisodesFromServer(arrayList.get(position).getId());
-                        }
-                        else {
+                        } else {
                             switch (arrayList.get(position).getToonType()) {
                                 case 'G': {//일반툰
                                     Intent generalIntent = new Intent(mContext, ViewerGeneralActivity.class);
@@ -301,6 +314,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
         };
         v.findViewById(R.id.cardview).setOnClickListener(onClickListener);
         v.findViewById(R.id.latest).setOnClickListener(onClickListener);
+        v.findViewById(R.id.moreBtn).setOnClickListener(onClickListener);
 
         setAnimation(holder.imageView, position);
     }
@@ -309,7 +323,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
     public void update(Observable observable, Object data) {
         dialog.dismiss();
         serverData.removeObserver(this);
-        if(updateInstance != null){
+        if (updateInstance != null) {
             switch (updateInstance.getToonType()) {
                 case 'G': {//일반툰
                     coint_sqLiteManager.updateEpisodeRead(updateInstance.getId(), 1);
@@ -371,7 +385,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
 
         for (int i = 0; i < list.size(); i++) {
             for (int j = 0; j < weekdayList.size(); j++) {
-                if(list.get(i).getId()==weekdayList.get(j).getId()){
+                if (list.get(i).getId() == weekdayList.get(j).getId()) {
                     arrayList.add(list.get(i));
                     break;
                 }
