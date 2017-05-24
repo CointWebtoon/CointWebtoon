@@ -117,6 +117,7 @@ public class ArtistActivityAdapter extends RecyclerView.Adapter<ArtistActivityAd
                 Webtoon target = dataSet.get(position);
                 Toast.makeText(mContext,"웹툰 ID : " + target.getTitle(), Toast.LENGTH_SHORT).show();
                 Intent episodeIntent = new Intent(mContext, EpisodeActivity.class);
+                episodeIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 episodeIntent.putExtra("id", target.getId());
                 episodeIntent.putExtra("toontype", target.getToonType());
                 mContext.startActivity(episodeIntent);
