@@ -22,7 +22,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
@@ -150,7 +149,6 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                         .load(imageURLs.get(i))
                         .asBitmap()
                         .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .placeholder(R.drawable.view_placeholder_testing)
                         .into(newImageView);
             }
@@ -237,9 +235,8 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
     public void flipperClick(View v) {
         if(imageURLs == null)
             return;
-        if(showtoolbar) {
-            showToolbars(!showtoolbar);
-        }
+        if(showtoolbar)
+        showToolbars(showtoolbar);
         int animationGenerator = rand.nextInt(4);
         switch (animationGenerator) {
             case 0:

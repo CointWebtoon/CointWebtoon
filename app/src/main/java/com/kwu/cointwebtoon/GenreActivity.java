@@ -241,6 +241,7 @@ public class GenreActivity extends TypeKitActivity
         Intent episodeIntent = new Intent(GenreActivity.this, EpisodeActivity.class);
         episodeIntent.putExtra("id", target.getId());
         episodeIntent.putExtra("toontype", target.getToonType());
+        episodeIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(episodeIntent);
     }
 
@@ -317,6 +318,7 @@ public class GenreActivity extends TypeKitActivity
             } else {
                 intent = new Intent(GenreActivity.this, SearchActivity.class);
                 intent.putExtra("Intent", search.getText().toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 finish();
                 startActivity(intent);
             }
@@ -336,14 +338,17 @@ public class GenreActivity extends TypeKitActivity
         switch (id) {
             case R.id.webtoonRanking:
                 intent = new Intent(GenreActivity.this, Top100Activity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
             case R.id.moreMyWebtoon:
                 intent = new Intent(GenreActivity.this, MyWebtoonActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
             case R.id.personalFavorite:
                 intent = new Intent(GenreActivity.this, FavoriteChartAcivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
         }
@@ -365,6 +370,7 @@ public class GenreActivity extends TypeKitActivity
                 } else {
                     intent = new Intent(GenreActivity.this, SearchActivity.class);
                     intent.putExtra("Intent", search.getText().toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     finish();
                     startActivity(intent);
                 }
@@ -388,6 +394,7 @@ public class GenreActivity extends TypeKitActivity
             } else {
                 Intent intent = new Intent(GenreActivity.this, SearchActivity.class);
                 intent.putExtra("Intent", search.getText().toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 finish();
                 startActivity(intent);
             }

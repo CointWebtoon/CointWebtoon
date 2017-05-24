@@ -87,13 +87,15 @@
                     android:id="@+id/mainTitle"
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
-                    android:ellipsize="end"
+                    android:ellipsize="marquee"
                     android:maxLines="1"
+                    android:marqueeRepeatLimit="5"
                     android:minHeight="?android:attr/listPreferredItemHeightSmall"
                     android:text="TextView"
                     android:textAlignment="center"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall"
                     android:textColor="#5f5f5f"
+                    android:singleLine="true"
                     android:textSize="12dp" />
                 <!--마지막 두줄은 애니메이션 효과를 위한것-->
 

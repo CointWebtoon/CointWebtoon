@@ -64,6 +64,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
             super(view);
             imageView = (ImageView) view.findViewById(R.id.addView);
             title = (TextView) view.findViewById(R.id.mainTitle);
+            title.setSelected(true);
             artist = (TextView) view.findViewById(R.id.mainArtist);
             starscore = (TextView) view.findViewById(R.id.mainStarScore);
             up = (TextView) view.findViewById(R.id.recycle_update);
