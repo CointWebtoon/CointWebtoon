@@ -28,7 +28,7 @@
 
         <activity
             android:name=".FavoriteChartAcivity"
-            android:label="Favorite Chart"/>
+            android:label="내 취향 분석"/>
 
         <activity
             android:name=".MyWebtoonActivity"

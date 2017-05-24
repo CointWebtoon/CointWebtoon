@@ -46,6 +46,7 @@ public class FavoriteChartAcivity extends TypeKitActivity {
     private COINT_SQLiteManager coint_sqLiteManager;
     private CointProgressDialog cointProgressDialog;
     private Application_UserInfo userInfo;
+    private ArrayList<Webtoon> one = new ArrayList<>(), two = new ArrayList<>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,114 +104,53 @@ public class FavoriteChartAcivity extends TypeKitActivity {
         legend.setEnabled(false);
     }
 
-    public void onClick(View view) {
-        int id = view.getId();
-        String result;
-        Intent intent;
-        int position;
-        ArrayList<Webtoon> mList = new ArrayList<>();
-        Cursor cursor;
-        ImageView addWebtoon;
-        switch (id){
-            case R.id.addTopBtn:
-                position = (Integer)view.getTag();
-                cursor = coint_sqLiteManager.favorite(position, genre);
-                cursor.moveToFirst();
-                if(cursor.getString(8).equals("1")){
-                    if(userInfo.isLogin()){
-                        if(!userInfo.isUserAdult()){
-                            Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }else{
-                        new AlertDialog.Builder(this)
-                                .setTitle("로그인")
-                                .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
-                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(mContext, LoginActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                        startActivity(intent);
-                                    }
-                                }).setNegativeButton("아니요", null).show();
-                        return;
-                    }
-                }
-                Toast.makeText(mContext,"My Webtoon에 추가되었습니다.",Toast.LENGTH_LONG).show();
-                result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
-                favoriteAdpater.notifyDataSetChanged();
-                break;
-
-            case R.id.addMidBtn:
-                position = (Integer)view.getTag();
-                cursor = coint_sqLiteManager.favorite(position, genre);
-                cursor.moveToPosition(1);
-                if(cursor.getString(8).equals("1")){
-                    if(userInfo.isLogin()){
-                        if(!userInfo.isUserAdult()){
-                            Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }else{
-                        new AlertDialog.Builder(this)
-                                .setTitle("로그인")
-                                .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
-                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(mContext, LoginActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                        startActivity(intent);
-                                    }
-                                }).setNegativeButton("아니요", null).show();
-                        return;
-                    }
-                }
-                Toast.makeText(mContext,"My Webtoon에 추가되었습니다.",Toast.LENGTH_LONG).show();
-                result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
-                favoriteAdpater.notifyDataSetChanged();
-                break;
-            case R.id.addBotBtn:
-                position = (Integer)view.getTag();
-
-                cursor = coint_sqLiteManager.favorite(position, genre);
-                cursor.moveToLast();
-
-                if(cursor.getString(8).equals("1")){
-                    if(userInfo.isLogin()){
-                        if(!userInfo.isUserAdult()){
-                            Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }else{
-                        new AlertDialog.Builder(this)
-                                .setTitle("로그인")
-                                .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
-                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(mContext, LoginActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                        startActivity(intent);
-                                    }
-                                }).setNegativeButton("아니요", null).show();
-                        return;
-                    }
-                }
-                Toast.makeText(mContext,"My Webtoon에 추가되었습니다.",Toast.LENGTH_LONG).show();
-                result = coint_sqLiteManager.updateMyWebtoon(cursor.getString(0).toString());
-                favoriteAdpater.notifyDataSetChanged();
-                break;
-        }
+    public void moveToGenre(View view){
+        Intent intent = new Intent(this, GenreActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
     }
-    private class SettingChart extends AsyncTask<Integer, Integer, Integer>{
 
+    public void onClick(View view) {
+        Webtoon target = (Webtoon)view.getTag();
+        Webtoon emptyItem = new Webtoon(0, "", "", 0.0f, 0, "", 0, 'U', false, false, false, 0);
+        if(emptyItem.equals(target) | target == null)
+            return;
+        if(target.isAdult()){
+            if(userInfo.isLogin()){
+                if(!userInfo.isUserAdult()){
+                    Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }else{
+                new AlertDialog.Builder(this)
+                        .setTitle("로그인")
+                        .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(mContext, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton("아니요", null).show();
+                return;
+            }
+        }
+        String result = coint_sqLiteManager.updateMyWebtoon(String.valueOf(target.getId()));
+        Toast.makeText(mContext, target.getTitle() + " " + result,Toast.LENGTH_LONG).show();
+        if(result == "마이 웹툰 설정"){
+            target.setIs_mine(true);
+        }else{
+            target.setIs_mine(false);
+        }
+        favoriteAdpater.notifyDataSetChanged();
+    }
+
+
+    private class SettingChart extends AsyncTask<Integer, Integer, Integer>{
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-
-            cointProgressDialog.dismiss();
             ArrayList<Entry> yVals1 = new ArrayList<>();
 
             int totalread = 0;
@@ -316,10 +256,9 @@ public class FavoriteChartAcivity extends TypeKitActivity {
                         break;
                 }
 
-                pager = (ViewPager)findViewById(R.id.favoriteViewPager);                        //뷰페이저에 어댑터를 연결하는 부분
-                favoriteAdpater = new FavoriteAdpater(mContext, genre);
-                pager.setAdapter(favoriteAdpater);
+                genre = "SPORTS";
 
+                new UpdateViewPager().execute();
             }
         }
 
@@ -361,8 +300,57 @@ public class FavoriteChartAcivity extends TypeKitActivity {
                 }
                 cursor.close();
             }
-
             return 1;
+        }
+    }
+
+    private class UpdateViewPager extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... params) {
+            one.clear();
+            two.clear();
+
+            Webtoon emptyItem = new Webtoon(0, "", "", 0.0f, 0, "", 0, 'U', false, false, false, 0);
+
+            Cursor page1 = coint_sqLiteManager.favorite(0, genre);
+            Cursor page2 = coint_sqLiteManager.favorite(1, genre);
+
+            while(page1.moveToNext()){
+                one.add(new Webtoon(page1.getInt(0), page1.getString(1), page1.getString(2), page1.getFloat(3),
+                        page1.getInt(4), page1.getString(5), page1.getInt(6), page1.getString(7).charAt(0), page1.getInt(8)==1?true:false,
+                        page1.getInt(9)==1?true:false, page1.getInt(10)==1?true:false, page1.getInt(11)));
+            }
+
+            while(page2.moveToNext()){
+                two.add(new Webtoon(page2.getInt(0), page2.getString(1), page2.getString(2), page2.getFloat(3),
+                        page2.getInt(4), page2.getString(5), page2.getInt(6), page2.getString(7).charAt(0), page2.getInt(8)==1?true:false,
+                        page2.getInt(9)==1?true:false, page2.getInt(10)==1?true:false, page2.getInt(11)));
+            }
+
+            int page1Count = one.size(), page2Count = two.size();
+
+            Log.i("coint", String.valueOf(page1Count) + " " + String.valueOf(two.size()));
+
+            if(page1Count < 3){
+                for(int i = 0 ; i < 3 - page1Count; i++){
+                    one.add(emptyItem);
+                }
+            }
+            if(page2Count < 3){
+                for(int i = 0 ; i < 3 - page2Count; i++){
+                    two.add(emptyItem);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pager = (ViewPager)findViewById(R.id.favoriteViewPager);                        //뷰페이저에 어댑터를 연결하는 부분
+            favoriteAdpater = new FavoriteAdpater(mContext, one, two);
+            pager.setAdapter(favoriteAdpater);
+            cointProgressDialog.dismiss();
         }
     }
 }
