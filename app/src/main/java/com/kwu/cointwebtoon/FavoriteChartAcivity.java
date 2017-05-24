@@ -256,8 +256,6 @@ public class FavoriteChartAcivity extends TypeKitActivity {
                         break;
                 }
 
-                genre = "SPORTS";
-
                 new UpdateViewPager().execute();
             }
         }

@@ -23,6 +23,7 @@ public class FavoriteAdpater extends PagerAdapter {
     int returnPosition;
     ArrayList<Webtoon> pageOne = new ArrayList<>();
     ArrayList<Webtoon> pageTwo = new ArrayList<>();
+    Webtoon emptyItem;
 
 //adapter의 데이터는 보통 액티비티라던가 다른 클래스에서 해서 생성자로 넘겨줌.
 
@@ -32,6 +33,7 @@ public class FavoriteAdpater extends PagerAdapter {
         this.mContext = mContext;
         this.pageOne = pageOne;
         this.pageTwo = pageTwo;
+        emptyItem = new Webtoon(0, "", "", 0.0f, 0, "", 0, 'U', false, false, false, 0);
     }
 
     //PagerAdapter가 가지고 있는 View의 개수를 리턴
@@ -63,7 +65,6 @@ public class FavoriteAdpater extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 ArrayList<Webtoon> currentList = position == 0? pageOne : pageTwo;
-                Webtoon emptyItem = new Webtoon(0, "", "", 0.0f, 0, "", 0, 'U', false, false, false, 0);
                 int id = v.getId();
                 Intent intent;
                 switch(id){
@@ -165,13 +166,13 @@ public class FavoriteAdpater extends PagerAdapter {
         starBot = (TextView) view.findViewById(R.id.starScore2);
 
         rankTop = (TextView) view.findViewById(R.id.rankTop);
-        rankTop.setText(Integer.toString(position * 3 + 1));
+        rankTop.setText(null);
 
         rankMid = (TextView) view.findViewById(R.id.rankMiddle);
-        rankMid.setText(Integer.toString(position * 3 + 2));
+        rankMid.setText(null);
 
         rankBot = (TextView) view.findViewById(R.id.rankBottom);
-        rankBot.setText(Integer.toString(position * 3 + 3));
+        rankBot.setText(null);
 
         if(currentList != null){
             //Glide를 통해 img에 이미지를 로드, 타이틀과 작가, 별점을 set
@@ -222,6 +223,10 @@ public class FavoriteAdpater extends PagerAdapter {
                 upTop.setText(null);
                 upTop.setVisibility(view.GONE);
             }
+            if(emptyItem.equals(itemTop)){
+                starTop.setText("");
+                topPlusBtn.setImageDrawable(null);
+            }
 
             //2번째 아이템
             Glide.with(mContext).load(itemMid.getThumbURL()).into(imgMid);
@@ -269,6 +274,10 @@ public class FavoriteAdpater extends PagerAdapter {
                 upMid.setText(null);
                 upMid.setVisibility(view.GONE);
             }
+            if(emptyItem.equals(itemMid)){
+                starMid.setText("");
+                midPlusBtn.setImageDrawable(null);
+            }
 
             //3번째 아이템
             Glide.with(mContext).load(itemBot.getThumbURL()).into(imgBot);
@@ -315,6 +324,10 @@ public class FavoriteAdpater extends PagerAdapter {
                 upBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 upBot.setText(null);
                 upBot.setVisibility(view.GONE);
+            }
+            if(emptyItem.equals(itemBot)){
+                starBot.setText("");
+                botPlusBtn.setImageDrawable(null);
             }
         }
 
