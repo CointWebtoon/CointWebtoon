@@ -1,10 +1,15 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -64,8 +69,46 @@ public class MyWebtoonActivity extends TypeKitActivity {
             }
         });
     }
+
     @Override
     protected void attachBaseContext(Context newBase){
         super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //종료 버튼 추가
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mywebtoon_activity_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {       // 검색 누르면 실행
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.all_my_webtoon_remove:
+                new AlertDialog.Builder(this)
+                        .setTitle("My Webtoon 전체삭제")
+                        .setMessage("추가한 모든 웹툰을 삭제하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                coint_sqLiteManager.removeAllMyWebtoon();
+                                Intent intent = new Intent(MyWebtoonActivity.this,MyWebtoonActivity.class);
+                                finish();
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton("아니요", null).show();
+
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

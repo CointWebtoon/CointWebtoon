@@ -136,6 +136,7 @@ public class SearchActivity extends TypeKitActivity
         Intent episodeIntent = new Intent(SearchActivity.this, EpisodeActivity.class);
         episodeIntent.putExtra("id", target.getId());
         episodeIntent.putExtra("toontype", target.getToonType());
+        episodeIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(episodeIntent);
     }
 
@@ -188,14 +189,17 @@ public class SearchActivity extends TypeKitActivity
         switch (id) {
             case R.id.webtoonRanking:
                 intent = new Intent(SearchActivity.this, Top100Activity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
             case R.id.moreMyWebtoon:
                 intent = new Intent(SearchActivity.this, MyWebtoonActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
             case R.id.personalFavorite:
                 intent = new Intent(SearchActivity.this, FavoriteChartAcivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
         }
@@ -218,6 +222,7 @@ public class SearchActivity extends TypeKitActivity
                 } else {
                     intent = new Intent(SearchActivity.this, SearchActivity.class);
                     intent.putExtra("Intent", search.getText().toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     finish();
                     startActivity(intent);
                 }

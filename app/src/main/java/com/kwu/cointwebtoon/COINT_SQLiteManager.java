@@ -349,6 +349,10 @@ public class COINT_SQLiteManager {
         return episode;
 
     }
+
+    public void removeAllMyWebtoon(){
+        db.execSQL("UPDATE WEBTOON SET Is_mine=0");
+    }
     /**
      * 1차 통합 은주 부분 추가 메소드 end
      */
