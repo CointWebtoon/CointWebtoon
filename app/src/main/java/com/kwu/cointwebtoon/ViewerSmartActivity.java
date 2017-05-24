@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.Views.Smart_Cut_ImageView;
@@ -148,6 +150,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                         .load(imageURLs.get(i))
                         .asBitmap()
                         .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .placeholder(R.drawable.view_placeholder_testing)
                         .into(newImageView);
             }
@@ -418,6 +421,7 @@ public class ViewerSmartActivity extends AppCompatActivity implements Observer {
                     starTV.setText("0.0");
                 }
                 artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
+                artistTV.setPaintFlags(artistTV.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
                 mention.setText(episode_instance.getMention());
             }catch (NullPointerException ex){}
         }
