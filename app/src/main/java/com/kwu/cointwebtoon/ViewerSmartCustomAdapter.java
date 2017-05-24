@@ -86,7 +86,7 @@ public class ViewerSmartCustomAdapter {
                     .load(imageURLs.get(position + 1))
                     .asBitmap()
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    //.placeholder(R.drawable.view_placeholder_testing)
+                    .placeholder(R.drawable.view_placeholder_testing)
                     .into(holder3.imageView);
         }else{
             holder3.imageView.setImageDrawable(null);
