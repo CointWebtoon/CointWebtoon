@@ -42,6 +42,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
     private Webtoon updateInstance; //Observer update 함수 에서 사용할 변수
     private CointProgressDialog dialog;
     private GetServerData serverData;
+    private Episode episode;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
@@ -132,6 +133,9 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                     break;
             }
         } else {
+
+            episode = coint_sqLiteManager.getLatestEpisode(arrayList.get(position).getId());
+
             holder.cardView.setCardBackgroundColor(Color.parseColor("#5f5f5f"));
             holder.starscore.setVisibility(v.VISIBLE);
             holder.latest.setVisibility(v.VISIBLE);
@@ -139,12 +143,28 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
             holder.title.setText(arrayList.get(position).getTitle());
             holder.artist.setText(arrayList.get(position).getArtist());
             holder.starscore.setText("★ "+String.valueOf(arrayList.get(position).getStarScore()));
+            if(episode==null){
+                holder.latest.setText("첫화보기");
+            }else{
+                holder.latest.setText(String.valueOf(episode.getEpisode_id())+"화\n이어보기");
+            }
             Glide.with(mContext).load(arrayList.get(position).getThumbURL()).into(holder.imageView);
 
             if(arrayList.get(position).getToonType() == 'C') {      // 컷툰 여부
                 holder.cuttoon.setVisibility(View.VISIBLE);
                 holder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                holder.cuttoon.setTextColor(Color.parseColor("#28dcbe"));
                 holder.cuttoon.setText("컷툰");
+            }else if(arrayList.get(position).getToonType() == 'M'){     //모션툰
+                holder.cuttoon.setVisibility(View.VISIBLE);
+                holder.cuttoon.setBackgroundResource(R.drawable.week_icon_motiontoon);
+                holder.cuttoon.setTextColor(Color.parseColor("#6d1daf"));
+                holder.cuttoon.setText("모션");
+            }else if(arrayList.get(position).getToonType()=='S'){
+                holder.cuttoon.setVisibility(View.VISIBLE);
+                holder.cuttoon.setBackgroundResource(R.drawable.week_icon_smarttoon);
+                holder.cuttoon.setTextColor(Color.parseColor("#0050b4"));
+                holder.cuttoon.setText("스마트");
             }else{
                 holder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 holder.cuttoon.setText(null);
@@ -204,7 +224,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
                         }
                         break;
                     case R.id.latest:
-                        Episode episode = coint_sqLiteManager.getLatestEpisode(arrayList.get(position).getId());
+                        episode = coint_sqLiteManager.getLatestEpisode(arrayList.get(position).getId());
                         userInfo = (Application_UserInfo)mContext.getApplicationContext();
                         if(arrayList.get(position).isAdult()){
                             if(userInfo.isLogin()){

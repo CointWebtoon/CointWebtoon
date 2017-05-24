@@ -79,7 +79,6 @@
                 android:id="@+id/search_adult"
                 android:textColor="#ffffff"
                 android:textSize="9sp"
-                android:layout_marginLeft="3dp"
                 android:textAlignment="center"
                 android:gravity="center"
                 android:layout_below="@+id/search_cuttoon"

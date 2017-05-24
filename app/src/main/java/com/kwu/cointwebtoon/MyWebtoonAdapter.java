@@ -89,7 +89,18 @@ public class MyWebtoonAdapter extends BaseAdapter {
         if(currentItem.getToonType() == 'C') {      // 컷툰 여부
             viewHolder.cuttoon.setVisibility(itemLayout.VISIBLE);
             viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.cuttoon.setTextColor(Color.parseColor("#28dcbe"));
             viewHolder.cuttoon.setText("컷툰");
+        }else if(currentItem.getToonType() == 'M'){     //모션툰
+            viewHolder.cuttoon.setVisibility(View.VISIBLE);
+            viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_motiontoon);
+            viewHolder.cuttoon.setTextColor(Color.parseColor("#6d1daf"));
+            viewHolder.cuttoon.setText("모션");
+        }else if(currentItem.getToonType()=='S'){
+            viewHolder.cuttoon.setVisibility(View.VISIBLE);
+            viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_smarttoon);
+            viewHolder.cuttoon.setTextColor(Color.parseColor("#0050b4"));
+            viewHolder.cuttoon.setText("스마트");
         }else{
             viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
             viewHolder.cuttoon.setText(null);

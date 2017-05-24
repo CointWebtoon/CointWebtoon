@@ -14,6 +14,7 @@
         app:cardusecompatpadding="false"
         card:cardBackgroundColor="#5F5F5F"
         card:cardCornerRadius="10dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -23,14 +24,15 @@
             <RelativeLayout
                 android:layout_width="72dp"
                 android:layout_height="wrap_content">
+
                 <ImageView
                     android:id="@+id/addView"
                     android:layout_width="62dp"
                     android:layout_height="62dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="2dp"
-                    android:paddingBottom="2dp"
                     android:layout_marginLeft="5dp"
+                    android:paddingBottom="2dp"
                     android:paddingTop="6dp"
                     android:src="@drawable/week_placeholder" />
 
@@ -40,34 +42,35 @@
                     android:layout_width="24dp"
                     android:layout_height="15dp"
                     android:layout_alignBaseline="@+id/cuttonBot"
-                    android:layout_marginLeft="6dp"
-                    android:textAlignment="center"
+                    android:layout_marginLeft="2dp"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:textColor="@android:color/holo_red_light"
-                    android:textSize="9sp"/>
+                    android:textSize="9sp" />
 
                 <TextView
                     android:id="@+id/recycle_cuttoon"
                     android:layout_width="24dp"
                     android:layout_height="15dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/recycle_update"
+                    android:layout_marginLeft="2dp"
                     android:gravity="center"
-                    android:layout_marginLeft="6dp"
                     android:textAlignment="center"
                     android:textColor="@color/D2Light"
-                    android:textSize="9sp"
-                    android:layout_below="@+id/recycle_update"
-                    android:layout_alignParentStart="true" />
+                    android:textSize="9sp" />
+
                 <TextView
                     android:id="@+id/recycle_adult"
                     android:layout_width="24dp"
                     android:layout_height="15dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/recycle_cuttoon"
+                    android:layout_marginLeft="2dp"
                     android:gravity="center"
-                    android:layout_marginLeft="6dp"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="9sp"
-                    android:layout_below="@+id/recycle_cuttoon"
-                    android:layout_alignParentStart="true" />
+                    android:textSize="9sp" />
             </RelativeLayout>
 
 
@@ -96,17 +99,17 @@
                 android:textColor="#FFFFFF"
                 android:textSize="8dp" />
 
-                <TextView
-                    android:id="@+id/mainStarScore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="9dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="9.99"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/holo_red_light"
-                    android:textSize="8dp"/>
+            <TextView
+                android:id="@+id/mainStarScore"
+                android:layout_width="wrap_content"
+                android:layout_height="9dp"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="9.99"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="8dp" />
 
 
         </LinearLayout>
@@ -114,10 +117,10 @@
 
     <Button
         android:id="@+id/latest"
-        android:layout_marginTop="9dp"
         android:layout_width="60dp"
-        android:layout_height="30dp"
-        android:text="이어보기"
-        android:background="@color/episode_sub_floating_color"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:background="@color/episode_sub_floating_color"
+        android:text="이어보기" />
 
 </LinearLayout>

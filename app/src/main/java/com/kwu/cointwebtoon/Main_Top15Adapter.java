@@ -173,7 +173,18 @@ public class Main_Top15Adapter extends PagerAdapter {
             if(c.getString(7).equals("C")){
                 cuttoonTop.setVisibility(view.VISIBLE);
                 cuttoonTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonTop.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonTop.setText("컷툰");
+            }else if(c.getString(7).equals("M")){
+                cuttoonTop.setVisibility(view.VISIBLE);
+                cuttoonTop.setBackgroundResource(R.drawable.week_icon_motiontoon);
+                cuttoonTop.setTextColor(Color.parseColor("28dcbe"));
+                cuttoonTop.setText("모션");
+            }else if(c.getString(7).equals("S")){
+                cuttoonTop.setVisibility(View.VISIBLE);
+                cuttoonTop.setBackgroundResource(R.drawable.week_icon_smarttoon);
+                cuttoonTop.setTextColor(Color.parseColor("#0050b4"));
+                cuttoonTop.setText("스마트");
             }else{
                 cuttoonTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonTop.setText(null);
@@ -220,7 +231,18 @@ public class Main_Top15Adapter extends PagerAdapter {
             if(c.getString(7).equals("C")){
                 cuttoonMid.setVisibility(view.VISIBLE);
                 cuttoonMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonTop.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonMid.setText("컷툰");
+            }else if(c.getString(7).equals("M")){
+                cuttoonMid.setVisibility(view.VISIBLE);
+                cuttoonMid.setBackgroundResource(R.drawable.week_icon_motiontoon);
+                cuttoonMid.setTextColor(Color.parseColor("28dcbe"));
+                cuttoonMid.setText("모션");
+            }else if(c.getString(7).equals("S")){
+                cuttoonMid.setVisibility(View.VISIBLE);
+                cuttoonMid.setBackgroundResource(R.drawable.week_icon_smarttoon);
+                cuttoonMid.setTextColor(Color.parseColor("#0050b4"));
+                cuttoonMid.setText("스마트");
             }else{
                 cuttoonMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonMid.setText(null);
@@ -267,7 +289,18 @@ public class Main_Top15Adapter extends PagerAdapter {
             if(c.getString(7).equals("C")){
                 cuttoonBot.setVisibility(view.VISIBLE);
                 cuttoonBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
+                cuttoonBot.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonBot.setText("컷툰");
+            }else if(c.getString(7).equals("M")){
+                cuttoonBot.setVisibility(view.VISIBLE);
+                cuttoonBot.setBackgroundResource(R.drawable.week_icon_motiontoon);
+                cuttoonBot.setTextColor(Color.parseColor("28dcbe"));
+                cuttoonBot.setText("모션");
+            }else if(c.getString(7).equals("S")){
+                cuttoonBot.setVisibility(View.VISIBLE);
+                cuttoonBot.setBackgroundResource(R.drawable.week_icon_smarttoon);
+                cuttoonBot.setTextColor(Color.parseColor("#0050b4"));
+                cuttoonBot.setText("스마트");
             }else{
                 cuttoonBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonBot.setText(null);

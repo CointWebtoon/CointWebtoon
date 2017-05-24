@@ -87,14 +87,25 @@ public class SearchAdapter extends BaseAdapter {
         if(resultQuery.get(position).getToonType() == 'C') {      // 컷툰 여부
             viewHolder.cuttoon.setVisibility(View.VISIBLE);
             viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
+            viewHolder.cuttoon.setTextColor(Color.parseColor("#28dcbe"));
             viewHolder.cuttoon.setText("컷툰");
+        }else if(resultQuery.get(position).getToonType() == 'M'){     //모션툰
+            viewHolder.cuttoon.setVisibility(View.VISIBLE);
+            viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_motiontoon);
+            viewHolder.cuttoon.setTextColor(Color.parseColor("#6d1daf"));
+            viewHolder.cuttoon.setText("모션");
+        }else if(resultQuery.get(position).getToonType()=='S'){
+            viewHolder.cuttoon.setVisibility(View.VISIBLE);
+            viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_smarttoon);
+            viewHolder.cuttoon.setTextColor(Color.parseColor("#0050b4"));
+            viewHolder.cuttoon.setText("스마트");
         }else{
             viewHolder.cuttoon.setBackgroundResource(R.drawable.week_icon_cuttoon);
             viewHolder.cuttoon.setText(null);
             viewHolder.cuttoon.setVisibility(itemLayout.GONE);
         }
 
-        if(resultQuery.get(position).isAdult() == true) {      // 컷툰 여부
+        if(resultQuery.get(position).isAdult() == true) {      // 성인툰 여부
             viewHolder.adult.setVisibility(View.VISIBLE);
             viewHolder.adult.setBackgroundResource(R.drawable.main_icon_adult);
             viewHolder.adult.setText("성인");
@@ -110,7 +121,7 @@ public class SearchAdapter extends BaseAdapter {
             viewHolder.up.setText("UP");
         }else if(resultQuery.get(position).isUpdated()==2){
             viewHolder.up.setVisibility(View.VISIBLE);
-            viewHolder.up.setBackgroundResource(R.drawable.main_icon_dormant);
+            viewHolder.up.setBackgroundResource(R.drawable.week_icon_dormant);
             viewHolder.up.setText("휴재");
             viewHolder.up.setTextColor(Color.parseColor("#5F5F5F"));
         }else{
