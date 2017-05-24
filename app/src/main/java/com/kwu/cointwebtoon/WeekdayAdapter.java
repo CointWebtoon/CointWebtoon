@@ -2,10 +2,14 @@ package com.kwu.cointwebtoon;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +27,7 @@ import com.kwu.cointwebtoon.DataStructure.CustomBitmapPool;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
 import com.kwu.cointwebtoon.Views.CircularView;
+import com.kwu.cointwebtoon.databinding.WeekdayItemBinding;
 
 import java.util.ArrayList;
 
@@ -31,21 +36,10 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 public class WeekdayAdapter extends BaseSwipeAdapter {
     private Context mContext;
     private ArrayList<Webtoon> webtoons;
+    private WeekdayItemBinding binding;
 
 
     private ListView mListView;
-    private ImageView ivThumbnail;
-    private TextView tvUpdateIcon;
-    private TextView tvToontypeIcon;
-
-    private TextView tvTitle;
-    private TextView tvStarScore;
-    private TextView tvArtist;
-    private TextView tvAdult;
-    private TextView tvMy;
-    private ImageButton btnMy;
-    private SwipeLayout frameMy;
-    private LinearLayout weekMy;
     private COINT_SQLiteManager manager;
 
 
@@ -70,40 +64,37 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
     public long getItemId(int position) {
         return 0;
     }
-
     @Override
     public int getSwipeLayoutResourceId(int position) {
         return R.id.swipe;
     }
-
     @Override
     public View generateView(final int position, final ViewGroup parent) {
         CircularView v = (CircularView) LayoutInflater.from(mContext).inflate(R.layout.weekday_item, null);
         v.setParentHeight(mListView.getHeight());
-        final SwipeLayout swipeLayout = (SwipeLayout) v.findViewById(getSwipeLayoutResourceId(position));
+        final SwipeLayout swipeLayout = (SwipeLayout)v.findViewById(getSwipeLayoutResourceId(position));
         swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
                 YoYo.with(Techniques.Tada).duration(400).delay(100).playOn(layout.findViewById(R.id.btn_my));
             }
         });
-
-        v.findViewById(R.id.week_my).setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.week_my).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 //해당 웹툰 MY웹툰으로 설정/해제
-                int position = (int) v.getTag();
-                Webtoon item = (Webtoon) getItem(position);
+                int position  = (int)v.getTag();
+                Webtoon item = (Webtoon)getItem(position);
 
                 String result = manager.updateMyWebtoon(String.valueOf(item.getId()));
 
-                if (result.equals("마이 웹툰 설정")) {
+                if(result.equals("마이 웹툰 설정")){
                     item.setIs_mine(true);
                     YoYo.with(Techniques.Flash).duration(500).delay(100).playOn(v);
                     v.findViewById(R.id.btn_my).setBackgroundResource(R.drawable.my_star_active);
                     swipeLayout.findViewById(R.id.tv_my).setVisibility(View.VISIBLE);
                     swipeLayout.setBackgroundResource(R.drawable.week_background_my);
-                } else if (result.equals("마이 웹툰 해제")) {
+                }else if(result.equals("마이 웹툰 해제")){
                     item.setIs_mine(false);
                     YoYo.with(Techniques.Wobble).duration(500).delay(100).playOn(v);
                     v.findViewById(R.id.btn_my).setBackgroundResource(R.drawable.my_star_unactive);
@@ -113,22 +104,22 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
 
             }
         });
-        v.findViewById(R.id.btn_my).setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.btn_my).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 //해당 웹툰 MY웹툰으로 설정/해제
-                int position = (int) v.getTag();
-                Webtoon item = (Webtoon) getItem(position);
+                int position  = (int)v.getTag();
+                Webtoon item = (Webtoon)getItem(position);
 
                 String result = manager.updateMyWebtoon(String.valueOf(item.getId()));
 
-                if (result.equals("마이 웹툰 설정")) {
+                if(result.equals("마이 웹툰 설정")){
                     item.setIs_mine(true);
                     YoYo.with(Techniques.Flash).duration(500).delay(100).playOn(v);
                     v.setBackgroundResource(R.drawable.my_star_active);
                     swipeLayout.findViewById(R.id.tv_my).setVisibility(View.VISIBLE);
                     swipeLayout.setBackgroundResource(R.drawable.week_background_my);
-                } else if (result.equals("마이 웹툰 해제")) {
+                }else if(result.equals("마이 웹툰 해제")){
                     item.setIs_mine(false);
                     YoYo.with(Techniques.Wobble).duration(500).delay(100).playOn(v);
                     v.setBackgroundResource(R.drawable.my_star_unactive);
@@ -140,25 +131,14 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
         });
         return v;
     }
-
     @Override
     public void fillValues(final int position, View convertView) {
-        ivThumbnail = (ImageView) convertView.findViewById(R.id.iv_thumbnail);
-        tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
-        tvStarScore = (TextView) convertView.findViewById(R.id.tv_star_score);
-        tvArtist = (TextView) convertView.findViewById(R.id.tv_artist);
-        tvAdult = (TextView) convertView.findViewById(R.id.tv_adult_icon);
-        tvUpdateIcon = (TextView) convertView.findViewById(R.id.tv_update_icon);
-        tvToontypeIcon = (TextView) convertView.findViewById(R.id.tv_toontype_icon);
-        frameMy = (SwipeLayout) convertView.findViewById(R.id.swipe);
-        weekMy = (LinearLayout) convertView.findViewById(R.id.week_my);
-        btnMy = (ImageButton) convertView.findViewById(R.id.btn_my);
-        tvMy = (TextView) convertView.findViewById(R.id.tv_my);
 
+        binding = DataBindingUtil.bind(convertView);
 
-        btnMy.setTag(position);
-        weekMy.setTag(position);
-        convertView.findViewById(R.id.week_item).setOnClickListener(new View.OnClickListener() {
+        binding.btnMy.setTag(position);
+        binding.weekMy.setTag(position);
+        convertView.findViewById(R.id.week_item).setOnClickListener(new View.OnClickListener(){
             //웹툰연결
             @Override
             public void onClick(View v) {
@@ -179,62 +159,70 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
                 .bitmapTransform(new CropCircleTransformation(new CustomBitmapPool()))
                 .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                 .placeholder(R.drawable.week_placeholder)
-                .into(ivThumbnail);
-        tvTitle.setText(currentItem.getTitle());
-        tvTitle.setSelected(true);
-        tvStarScore.setText("★" + String.valueOf(currentItem.getStarScore()));
-        tvArtist.setText(currentItem.getArtist());
+                .into(binding.ivThumbnail);
+        binding.tvTitle.setText(currentItem.getTitle());
+        binding.tvTitle.setSelected(true);
+        binding.tvStarScore.setText("★" + String.valueOf(currentItem.getStarScore()));
+        binding.tvArtist.setText(currentItem.getArtist());
 
-        if (currentItem.isMine()) {
+        if (currentItem.isMine()){
             //마이 웹툰 여부에 따라 별 아이콘 다르게 설정
-            btnMy.setBackgroundResource(R.drawable.my_star_active);
-            tvMy.setVisibility(View.VISIBLE);
-            frameMy.setBackgroundResource(R.drawable.week_background_my);
-        } else {
-            btnMy.setBackgroundResource(R.drawable.my_star_unactive);
-            tvMy.setVisibility(View.GONE);
-            frameMy.setBackgroundResource(0);
+            binding.btnMy.setBackgroundResource(R.drawable.my_star_active);
+            binding.tvMy.setVisibility(View.VISIBLE);
+            binding.swipe.setBackgroundResource(R.drawable.week_background_my);
+        }
+        else{
+            binding.btnMy.setBackgroundResource(R.drawable.my_star_unactive);
+            binding.tvMy.setVisibility(View.GONE);
+            binding.swipe.setBackgroundResource(0);
         }
 
         //Update상태 아이콘 표시
-        if (currentItem.isUpdated() == 0) {
-            tvUpdateIcon.setVisibility(View.GONE);
-        } else if (currentItem.isUpdated() == 1) {
+        if(currentItem.isUpdated() == 0){
+            binding.tvUpdateIcon.setVisibility(View.GONE);
+        }
+        else if(currentItem.isUpdated() == 1){
             //Updated
-            setToonIcon(tvUpdateIcon, R.drawable.week_icon_update, "UP", "#fc6c00");
-        } else if (currentItem.isUpdated() == 2) {
+            setToonIcon(binding.tvUpdateIcon, R.drawable.week_icon_update, "UP", "#fc6c00");
+        }
+        else if(currentItem.isUpdated() == 2){
             //Dormant
-            setToonIcon(tvUpdateIcon, R.drawable.week_icon_dormant, "휴재", "#ffffff");
+            setToonIcon(binding.tvUpdateIcon, R.drawable.week_icon_dormant, "휴재", "#ffffff");
         }
 
         //성인 여부 표시
-        if (currentItem.isAdult()) {
-            setToonIcon(tvAdult, R.drawable.main_icon_adult, "성인", "#ffffff");
-        } else {
-            tvAdult.setVisibility(View.GONE);
+        if(currentItem.isAdult()){
+            setToonIcon(binding.tvAdultIcon, R.drawable.main_icon_adult, "성인", "#ffffff");
+        }
+        else{
+            binding.tvAdultIcon.setVisibility(View.GONE);
         }
 
         //Webtoon type 아이콘 표시
-        switch (currentItem.getToonType()) {
-            case 'C': {
+        switch (currentItem.getToonType()){
+            case 'C':
+            {
                 //컷툰
-                setToonIcon(tvToontypeIcon, R.drawable.week_icon_cuttoon, "컷툰", "#28dcbe");
+                setToonIcon(binding.tvToontypeIcon, R.drawable.week_icon_cuttoon, "컷툰", "#28dcbe");
                 break;
             }
-            case 'M': {
+            case 'M':
+            {
                 //모션툰
-                setToonIcon(tvToontypeIcon, R.drawable.week_icon_motiontoon, "모션", "#6d1daf");
+                setToonIcon(binding.tvToontypeIcon, R.drawable.week_icon_motiontoon, "모션", "#6d1daf");
                 break;
             }
-            case 'S': {
+            case 'S':
+            {
                 //스마트툰
-                setToonIcon(tvToontypeIcon, R.drawable.week_icon_smarttoon, "스마트", "#0050b4");
+                setToonIcon(binding.tvToontypeIcon, R.drawable.week_icon_smarttoon, "스마트", "#0050b4");
                 break;
             }
-            case 'G':
-            default: {
+            case  'G':
+            default:
+            {
                 //일반
-                tvToontypeIcon.setVisibility(View.GONE);
+                binding.tvToontypeIcon.setVisibility(View.GONE);
                 break;
             }
 
@@ -242,14 +230,14 @@ public class WeekdayAdapter extends BaseSwipeAdapter {
 
     }
 
-    public void setToonIcon(TextView icon, int resId, String text, String textColorString) {
+    public void setToonIcon(TextView icon, int resId, String text, String textColorString){
         icon.setVisibility(View.VISIBLE);
         icon.setBackgroundResource(resId);
         icon.setText(text);
         icon.setTextColor(Color.parseColor(textColorString));
     }
 
-    public void setItemList(Weekday_ListItem listItem) {
+    public void setItemList(Weekday_ListItem listItem){
         this.webtoons = listItem.getList();
     }
 

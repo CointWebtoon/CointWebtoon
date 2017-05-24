@@ -12,7 +12,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
 import com.daimajia.swipe.util.Attributes;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
@@ -46,8 +45,8 @@ public class WeekdayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         position = getArguments().getInt("position");
         listItem = WeekdayActivity.listItems[(position)];
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.weekday_fragment, container, false);
-        listView = (ListView) layout.findViewById(R.id.listView);
+        LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.weekday_fragment, container, false);
+        listView = (ListView)layout.findViewById(R.id.listView);
         //리스트 조회순 정렬
         listItem.orderByHits();
         weekdayAdapter = new WeekdayAdapter(listView, listItem, getContext());
@@ -60,21 +59,19 @@ public class WeekdayFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
                 //웹툰연결
-                Webtoon target = (Webtoon) parent.getItemAtPosition(position);
+                Webtoon target = (Webtoon)parent.getItemAtPosition(position);
                 Intent episodeIntent = new Intent(getContext(), EpisodeActivity.class);
                 episodeIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 episodeIntent.putExtra("id", target.getId());
                 episodeIntent.putExtra("toontype", target.getToonType());
                 startActivity(episodeIntent);
             }
-        });
-
+        }) ;
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
-
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 for (int i = 0; i < listView.getChildCount(); i++) {
