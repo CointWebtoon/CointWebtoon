@@ -110,6 +110,7 @@ public class MyWebtoonAdapter extends BaseAdapter {
             viewHolder.update.setVisibility(itemLayout.VISIBLE);
             viewHolder.update.setBackgroundResource(R.drawable.week_icon_update);
             viewHolder.update.setText("UP");
+            viewHolder.update.setTextColor(Color.parseColor("#fc6c00"));
         }else if(currentItem.isUpdated()==2){
             viewHolder.update.setVisibility(itemLayout.VISIBLE);
             viewHolder.update.setBackgroundResource(R.drawable.week_icon_dormant);
