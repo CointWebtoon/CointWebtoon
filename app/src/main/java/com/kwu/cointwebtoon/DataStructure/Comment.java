@@ -1,6 +1,6 @@
 package com.kwu.cointwebtoon.DataStructure;
 
-public class Comment implements Comparable<Comment>{
+public class Comment implements Comparable<Comment> {
     private int comment_id;
     private int id;
     private int ep_id;
@@ -16,10 +16,10 @@ public class Comment implements Comparable<Comment>{
      * Constructor
      */
     public Comment(int comment_id, int id, int ep_id, String writer, String nickname, String content,
-                   int likes, String time, int cutNumber,boolean isBest){
+                   int likes, String time, int cutNumber, boolean isBest) {
         this.comment_id = comment_id;
         this.id = id;
-        this. ep_id = ep_id;
+        this.ep_id = ep_id;
         this.writer = writer;
         this.nickname = nickname;
         this.content = content;
@@ -32,22 +32,56 @@ public class Comment implements Comparable<Comment>{
     /**
      * Getter Methods
      */
-    public int getComment_id(){return comment_id;}
-    public int getId(){return id;}
-    public int getEp_id(){return ep_id;}
-    public String getWriter(){return writer;}
-    public String getNickname(){return nickname;}
-    public String getContent(){return content;}
-    public int getLikes(){return likes;}
-    public String getTime(){return time;}
-    public int getCutNumber(){return cutNumber;}
-    public boolean isBest(){return isBest;}
+    public int getComment_id() {
+        return comment_id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getEp_id() {
+        return ep_id;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public int getCutNumber() {
+        return cutNumber;
+    }
+
+    public boolean isBest() {
+        return isBest;
+    }
 
     /**
-     *Setter Methods
+     * Setter Methods
      */
-    public void setBest(boolean best){this.isBest = best;}
-    public void setLikes(int likes){this.likes = likes;}
+    public void setBest(boolean best) {
+        this.isBest = best;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 
 
     ///------------- ArrayList.Contains 기능 사용하기 위해 만든 메소드------//////
@@ -72,11 +106,11 @@ public class Comment implements Comparable<Comment>{
 
     @Override
     public int compareTo(Comment another) {
-        if(this.likes > another.getLikes()){
+        if (this.likes > another.getLikes()) {
             return 1;
-        }else if(this.likes < another.getLikes()){
+        } else if (this.likes < another.getLikes()) {
             return -1;
-        }else{
+        } else {
             return 0;
         }
     }

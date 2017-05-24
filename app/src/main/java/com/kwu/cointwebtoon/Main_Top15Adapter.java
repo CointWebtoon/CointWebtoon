@@ -62,7 +62,7 @@ public class Main_Top15Adapter extends PagerAdapter {
                 c = coint_sqLiteManager.topHits(position);
                 int id = v.getId();
                 Intent intent;
-                switch(id){
+                switch (id) {
                     case R.id.top:
                         c.moveToFirst();
                         /**
@@ -109,26 +109,26 @@ public class Main_Top15Adapter extends PagerAdapter {
 
         //만들어진 View안에 있는 ImageView, TextView들을 가져옴
         //위에서 inflated 되어 만들어진 view로부터 findViewById()를 해야한다.
-        ImageView topPlusBtn = (ImageView)view.findViewById(R.id.addTopBtn);
+        ImageView topPlusBtn = (ImageView) view.findViewById(R.id.addTopBtn);
         topPlusBtn.setTag(Integer.valueOf(position));
 
-        ImageView midPlusBtn = (ImageView)view.findViewById(R.id.addMidBtn);
+        ImageView midPlusBtn = (ImageView) view.findViewById(R.id.addMidBtn);
         midPlusBtn.setTag(Integer.valueOf(position));
 
-        ImageView botPlusBtn = (ImageView)view.findViewById(R.id.addBotBtn);
+        ImageView botPlusBtn = (ImageView) view.findViewById(R.id.addBotBtn);
         botPlusBtn.setTag(Integer.valueOf(position));
 
-        cuttoonTop = (TextView)view.findViewById(R.id.cuttonTop);
-        cuttoonMid = (TextView)view.findViewById(R.id.cuttonMid);
-        cuttoonBot = (TextView)view.findViewById(R.id.cuttonBot);
+        cuttoonTop = (TextView) view.findViewById(R.id.cuttonTop);
+        cuttoonMid = (TextView) view.findViewById(R.id.cuttonMid);
+        cuttoonBot = (TextView) view.findViewById(R.id.cuttonBot);
 
-        upTop = (TextView)view.findViewById(R.id.upTop);
-        upMid = (TextView)view.findViewById(R.id.upMid);
-        upBot = (TextView)view.findViewById(R.id.upBot);
+        upTop = (TextView) view.findViewById(R.id.upTop);
+        upMid = (TextView) view.findViewById(R.id.upMid);
+        upBot = (TextView) view.findViewById(R.id.upBot);
 
-        adultTop = (TextView)view.findViewById(R.id.adultTop);
-        adultMid = (TextView)view.findViewById(R.id.adultMid);
-        adultBot = (TextView)view.findViewById(R.id.adultBot);
+        adultTop = (TextView) view.findViewById(R.id.adultTop);
+        adultMid = (TextView) view.findViewById(R.id.adultMid);
+        adultBot = (TextView) view.findViewById(R.id.adultBot);
 
         imgTop = (ImageView) view.findViewById(R.id.webtoonImg);
         imgMid = (ImageView) view.findViewById(R.id.webtoonImg1);
@@ -163,54 +163,54 @@ public class Main_Top15Adapter extends PagerAdapter {
             Glide.with(mContext).load(c.getString(5).toString()).into(imgTop);
             titleTop.setText(c.getString(1));
             artistTop.setText(c.getString(2));
-            starTop.setText("★ "+String.valueOf(c.getFloat(3)));
-            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+            starTop.setText("★ " + String.valueOf(c.getFloat(3)));
+            if (c.getInt(10) == 1) {        //마이웹툰이면 -버튼으로
                 topPlusBtn.setImageResource(R.drawable.my_star_active);
-            }else{
+            } else {
                 topPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
-            if(c.getString(7).equals("C")){
+            if (c.getString(7).equals("C")) {
                 cuttoonTop.setVisibility(view.VISIBLE);
                 cuttoonTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonTop.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonTop.setText("컷툰");
-            }else if(c.getString(7).equals("M")){
+            } else if (c.getString(7).equals("M")) {
                 cuttoonTop.setVisibility(view.VISIBLE);
                 cuttoonTop.setBackgroundResource(R.drawable.week_icon_motiontoon);
                 cuttoonTop.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonTop.setText("모션");
-            }else if(c.getString(7).equals("S")){
+            } else if (c.getString(7).equals("S")) {
                 cuttoonTop.setVisibility(View.VISIBLE);
                 cuttoonTop.setBackgroundResource(R.drawable.week_icon_smarttoon);
                 cuttoonTop.setTextColor(Color.parseColor("#0050b4"));
                 cuttoonTop.setText("스마트");
-            }else{
+            } else {
                 cuttoonTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonTop.setText(null);
                 cuttoonTop.setVisibility(view.GONE);
             }
 
-            if(c.getString(8).equals("1")){
+            if (c.getString(8).equals("1")) {
                 adultTop.setVisibility(view.VISIBLE);
                 adultTop.setBackgroundResource(R.drawable.main_icon_adult);
                 adultTop.setText("성인");
-            }else{
+            } else {
                 adultTop.setBackgroundResource(R.drawable.main_icon_adult);
                 adultTop.setText(null);
                 adultTop.setVisibility(view.GONE);
             }
 
-            if(c.getString(11).equals("1")) {
+            if (c.getString(11).equals("1")) {
                 upTop.setVisibility(view.VISIBLE);
                 upTop.setBackgroundResource(R.drawable.week_icon_update);
                 upTop.setText("UP");
-            }else if(c.getString(11).equals("2")){
+            } else if (c.getString(11).equals("2")) {
                 upTop.setVisibility(view.VISIBLE);
                 upTop.setBackgroundResource(R.drawable.week_icon_dormant);
                 upTop.setText("휴재");
                 upTop.setTextColor(Color.parseColor("#ffffff"));
-            }else{
+            } else {
                 upTop.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 upTop.setText(null);
                 upTop.setVisibility(view.GONE);
@@ -220,55 +220,55 @@ public class Main_Top15Adapter extends PagerAdapter {
             Glide.with(mContext).load(c.getString(5)).into(imgMid);
             titleMid.setText(c.getString(1));
             artistMid.setText(c.getString(2));
-            starMid.setText("★ "+String.valueOf(c.getFloat(3)));
+            starMid.setText("★ " + String.valueOf(c.getFloat(3)));
 
-            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+            if (c.getInt(10) == 1) {        //마이웹툰이면 -버튼으로
                 midPlusBtn.setImageResource(R.drawable.my_star_active);
-            }else{
+            } else {
                 midPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
-            if(c.getString(7).equals("C")){
+            if (c.getString(7).equals("C")) {
                 cuttoonMid.setVisibility(view.VISIBLE);
                 cuttoonMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonTop.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonMid.setText("컷툰");
-            }else if(c.getString(7).equals("M")){
+            } else if (c.getString(7).equals("M")) {
                 cuttoonMid.setVisibility(view.VISIBLE);
                 cuttoonMid.setBackgroundResource(R.drawable.week_icon_motiontoon);
                 cuttoonMid.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonMid.setText("모션");
-            }else if(c.getString(7).equals("S")){
+            } else if (c.getString(7).equals("S")) {
                 cuttoonMid.setVisibility(View.VISIBLE);
                 cuttoonMid.setBackgroundResource(R.drawable.week_icon_smarttoon);
                 cuttoonMid.setTextColor(Color.parseColor("#0050b4"));
                 cuttoonMid.setText("스마트");
-            }else{
+            } else {
                 cuttoonMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonMid.setText(null);
                 cuttoonMid.setVisibility(view.GONE);
             }
 
-            if(c.getString(8).equals("1")){
+            if (c.getString(8).equals("1")) {
                 adultMid.setVisibility(view.VISIBLE);
                 adultMid.setBackgroundResource(R.drawable.main_icon_adult);
                 adultMid.setText("성인");
-            }else{
+            } else {
                 adultMid.setBackgroundResource(R.drawable.main_icon_adult);
                 adultMid.setText(null);
                 adultMid.setVisibility(view.GONE);
             }
 
-            if(c.getString(11).equals("1")) {       //업데이트, 휴재, 연재일 아닌 날
+            if (c.getString(11).equals("1")) {       //업데이트, 휴재, 연재일 아닌 날
                 upMid.setVisibility(view.VISIBLE);
                 upMid.setBackgroundResource(R.drawable.week_icon_update);
                 upMid.setText("UP");
-            }else if(c.getString(11).equals("2")){
+            } else if (c.getString(11).equals("2")) {
                 upMid.setVisibility(view.VISIBLE);
                 upMid.setBackgroundResource(R.drawable.week_icon_dormant);
                 upMid.setText("휴재");
                 upMid.setTextColor(Color.parseColor("#ffffff"));
-            }else{
+            } else {
                 upMid.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 upMid.setText(null);
                 upMid.setVisibility(view.GONE);
@@ -278,55 +278,55 @@ public class Main_Top15Adapter extends PagerAdapter {
             Glide.with(mContext).load(c.getString(5)).into(imgBot);
             titleBot.setText(c.getString(1));
             artistBot.setText(c.getString(2));
-            starBot.setText("★ "+String.valueOf(c.getFloat(3)));
+            starBot.setText("★ " + String.valueOf(c.getFloat(3)));
 
-            if(c.getInt(10)==1){        //마이웹툰이면 -버튼으로
+            if (c.getInt(10) == 1) {        //마이웹툰이면 -버튼으로
                 botPlusBtn.setImageResource(R.drawable.my_star_active);
-            }else{
+            } else {
                 botPlusBtn.setImageResource(R.drawable.my_star_unactive);
             }
 
-            if(c.getString(7).equals("C")){
+            if (c.getString(7).equals("C")) {
                 cuttoonBot.setVisibility(view.VISIBLE);
                 cuttoonBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonBot.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonBot.setText("컷툰");
-            }else if(c.getString(7).equals("M")){
+            } else if (c.getString(7).equals("M")) {
                 cuttoonBot.setVisibility(view.VISIBLE);
                 cuttoonBot.setBackgroundResource(R.drawable.week_icon_motiontoon);
                 cuttoonBot.setTextColor(Color.parseColor("28dcbe"));
                 cuttoonBot.setText("모션");
-            }else if(c.getString(7).equals("S")){
+            } else if (c.getString(7).equals("S")) {
                 cuttoonBot.setVisibility(View.VISIBLE);
                 cuttoonBot.setBackgroundResource(R.drawable.week_icon_smarttoon);
                 cuttoonBot.setTextColor(Color.parseColor("#0050b4"));
                 cuttoonBot.setText("스마트");
-            }else{
+            } else {
                 cuttoonBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 cuttoonBot.setText(null);
                 cuttoonBot.setVisibility(view.GONE);
             }
 
-            if(c.getString(8).equals("1")){
+            if (c.getString(8).equals("1")) {
                 adultBot.setVisibility(view.VISIBLE);
                 adultBot.setBackgroundResource(R.drawable.main_icon_adult);
                 adultBot.setText("성인");
-            }else{
+            } else {
                 adultBot.setBackgroundResource(R.drawable.main_icon_adult);
                 adultBot.setText(null);
                 adultBot.setVisibility(view.GONE);
             }
 
-            if(c.getString(11).equals("1")) {
+            if (c.getString(11).equals("1")) {
                 upBot.setVisibility(view.VISIBLE);
                 upBot.setBackgroundResource(R.drawable.week_icon_update);
                 upBot.setText("UP");
-            }else if(c.getString(11).equals("2")){
+            } else if (c.getString(11).equals("2")) {
                 upBot.setVisibility(view.VISIBLE);
                 upBot.setBackgroundResource(R.drawable.week_icon_dormant);
                 upBot.setText("휴재");
                 upBot.setTextColor(Color.parseColor("#ffffff"));
-            }else{
+            } else {
                 upBot.setBackgroundResource(R.drawable.week_icon_cuttoon);
                 upBot.setText(null);
                 upBot.setVisibility(view.GONE);
@@ -357,17 +357,18 @@ public class Main_Top15Adapter extends PagerAdapter {
         return v == obj;
     }
 
-    public int getReturnPosition(){
+    public int getReturnPosition() {
         return returnPosition;
     }
 
-    public int getItemPosition(Object object){
+    public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
+
     /*
     *  지니처럼 옆 화면이 보이는 뷰 페이저 구현을 위해 추가
     * */
-    public float getPageWidth(int position){
+    public float getPageWidth(int position) {
         return (0.9f);
     }
 }

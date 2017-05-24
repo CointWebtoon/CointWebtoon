@@ -39,7 +39,7 @@
             android:layout_width="88dp"
             android:layout_height="46dp"
             android:layout_weight="1"
-            android:background="@drawable/login"/>
+            android:background="@drawable/login" />
 
     </LinearLayout>
 

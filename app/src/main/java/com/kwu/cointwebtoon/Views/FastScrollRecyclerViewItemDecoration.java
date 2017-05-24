@@ -1,7 +1,6 @@
 package com.kwu.cointwebtoon.Views;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,8 +8,9 @@ import android.support.v7.widget.RecyclerView;
 
 import com.kwu.cointwebtoon.R;
 
-public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecoration{
+public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecoration {
     private Context mContext;
+
     public FastScrollRecyclerViewItemDecoration(Context context) {
         mContext = context;
     }
@@ -19,13 +19,13 @@ public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecor
     public void onDrawOver(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
         super.onDrawOver(canvas, parent, state);
 
-        float scaledWidth = ((FastScrollRecyclerView)parent).scaledWidth;
-        float sx = ((FastScrollRecyclerView)parent).sx;
-        float scaledHeight= ((FastScrollRecyclerView)parent).scaledHeight;
-        float sy = ((FastScrollRecyclerView)parent).sy;
-        String[] sections = ((FastScrollRecyclerView)parent).sections;
-        String section = ((FastScrollRecyclerView)parent).section;
-        boolean showLetter = ((FastScrollRecyclerView)parent).showLetter;
+        float scaledWidth = ((FastScrollRecyclerView) parent).scaledWidth;
+        float sx = ((FastScrollRecyclerView) parent).sx;
+        float scaledHeight = ((FastScrollRecyclerView) parent).scaledHeight;
+        float sy = ((FastScrollRecyclerView) parent).sy;
+        String[] sections = ((FastScrollRecyclerView) parent).sections;
+        String section = ((FastScrollRecyclerView) parent).section;
+        boolean showLetter = ((FastScrollRecyclerView) parent).showLetter;
 
         // We draw the letter in the middle
         if (showLetter & section != null && !section.equals("")) {
@@ -41,7 +41,7 @@ public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecor
             middleLetter.setAntiAlias(true);
             middleLetter.setFakeBoldText(true);
             middleLetter.setStyle(Paint.Style.FILL);
-            int xPos = (canvas.getWidth() -  (int)middleTextSize)/ 2;
+            int xPos = (canvas.getWidth() - (int) middleTextSize) / 2;
             int yPos = (int) ((canvas.getHeight() / 2) - ((middleLetter.descent() + middleLetter.ascent()) / 2));
 
 
@@ -54,19 +54,19 @@ public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecor
         textPaint.setStyle(Paint.Style.FILL);
 
         for (int i = 0; i < sections.length; i++) {
-            if(showLetter & section != null && !section.equals("") && section!=null
+            if (showLetter & section != null && !section.equals("") && section != null
                     && sections[i].toUpperCase().equals(section.toUpperCase())) {
                 textPaint.setColor(Color.WHITE);
                 textPaint.setAlpha(255);
                 textPaint.setFakeBoldText(true);
-                textPaint.setTextSize((float)(scaledWidth / 2));
+                textPaint.setTextSize((float) (scaledWidth / 2));
                 canvas.drawText(sections[i].toUpperCase(),
                         sx + textPaint.getTextSize() / 2, sy + parent.getPaddingTop()
                                 + scaledHeight * (i + 1), textPaint);
-                textPaint.setTextSize((float)(scaledWidth));
+                textPaint.setTextSize((float) (scaledWidth));
                 canvas.drawText("•",
-                        sx - textPaint.getTextSize()/3, sy+parent.getPaddingTop()
-                                + scaledHeight * (i + 1) + scaledHeight/3, textPaint);
+                        sx - textPaint.getTextSize() / 3, sy + parent.getPaddingTop()
+                                + scaledHeight * (i + 1) + scaledHeight / 3, textPaint);
 
             } else {
                 textPaint.setColor(Color.parseColor("#666666"));
@@ -79,8 +79,6 @@ public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecor
             }
 
         }
-
-
 
 
     }

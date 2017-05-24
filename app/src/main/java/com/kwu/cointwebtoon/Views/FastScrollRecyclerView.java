@@ -17,7 +17,7 @@ public class FastScrollRecyclerView extends RecyclerView {
 
     private boolean setupThings = false;
     public static int indWidth = 25;
-    public static int indHeight= 18;
+    public static int indHeight = 18;
     public float scaledWidth;
     public float scaledHeight;
     public String[] sections;
@@ -44,26 +44,26 @@ public class FastScrollRecyclerView extends RecyclerView {
 
     @Override
     public void onDraw(Canvas c) {
-        if(!setupThings)
+        if (!setupThings)
             setupThings();
         super.onDraw(c);
     }
 
     private void setupThings() {
         //create az text data
-        Set<String> sectionSet = ((FastScrollRecyclerViewInterface)getAdapter()).getMapIndex().keySet();
+        Set<String> sectionSet = ((FastScrollRecyclerViewInterface) getAdapter()).getMapIndex().keySet();
         ArrayList<String> listSection = new ArrayList<>(sectionSet);
         Collections.sort(listSection);
         sections = new String[listSection.size()];
-        int i=0;
-        for(String s:listSection) {
+        int i = 0;
+        for (String s : listSection) {
             sections[i++] = s;
         }
 
         scaledWidth = indWidth * ctx.getResources().getDisplayMetrics().density;
-        scaledHeight= indHeight* ctx.getResources().getDisplayMetrics().density;
-        sx = this.getWidth() - this.getPaddingRight() - (float)(1.2*scaledWidth);
-        sy = (float)((this.getHeight() - (scaledHeight * sections.length) )/2.0);
+        scaledHeight = indHeight * ctx.getResources().getDisplayMetrics().density;
+        sx = this.getWidth() - this.getPaddingRight() - (float) (1.2 * scaledWidth);
+        sy = (float) ((this.getHeight() - (scaledHeight * sections.length)) / 2.0);
         setupThings = true;
     }
 
@@ -74,19 +74,19 @@ public class FastScrollRecyclerView extends RecyclerView {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
-                if (x < sx - scaledWidth || y < sy || y > (sy + scaledHeight*sections.length))
+                if (x < sx - scaledWidth || y < sy || y > (sy + scaledHeight * sections.length))
                     return super.onTouchEvent(event);
                 else {
                     // We touched the index bar
                     float yy = y - this.getPaddingTop() - getPaddingBottom() - sy;
                     int currentPosition = (int) Math.floor(yy / scaledHeight);
-                    if(currentPosition<0)currentPosition=0;
-                    if(currentPosition>=sections.length)currentPosition=sections.length-1;
+                    if (currentPosition < 0) currentPosition = 0;
+                    if (currentPosition >= sections.length) currentPosition = sections.length - 1;
                     section = sections[currentPosition];
                     showLetter = true;
                     int positionInData = 0;
-                    if( ((FastScrollRecyclerViewInterface)getAdapter()).getMapIndex().containsKey(section.toUpperCase()) )
-                        positionInData = ((FastScrollRecyclerViewInterface)getAdapter()).getMapIndex().get(section.toUpperCase());
+                    if (((FastScrollRecyclerViewInterface) getAdapter()).getMapIndex().containsKey(section.toUpperCase()))
+                        positionInData = ((FastScrollRecyclerViewInterface) getAdapter()).getMapIndex().get(section.toUpperCase());
                     this.scrollToPosition(positionInData);
                     FastScrollRecyclerView.this.invalidate();
                 }
@@ -94,18 +94,18 @@ public class FastScrollRecyclerView extends RecyclerView {
             }
             case MotionEvent.ACTION_MOVE: {
 
-                if (!showLetter && (x < sx  - scaledWidth || y < sy || y > (sy + scaledHeight*sections.length)))
+                if (!showLetter && (x < sx - scaledWidth || y < sy || y > (sy + scaledHeight * sections.length)))
                     return super.onTouchEvent(event);
                 else {
                     float yy = y - sy;
                     int currentPosition = (int) Math.floor(yy / scaledHeight);
-                    if(currentPosition<0)currentPosition=0;
-                    if(currentPosition>=sections.length)currentPosition=sections.length-1;
+                    if (currentPosition < 0) currentPosition = 0;
+                    if (currentPosition >= sections.length) currentPosition = sections.length - 1;
                     section = sections[currentPosition];
                     showLetter = true;
                     int positionInData = 0;
-                    if(((FastScrollRecyclerViewInterface)getAdapter()).getMapIndex().containsKey(section.toUpperCase()) )
-                        positionInData = ((FastScrollRecyclerViewInterface)getAdapter()).getMapIndex().get(section.toUpperCase());
+                    if (((FastScrollRecyclerViewInterface) getAdapter()).getMapIndex().containsKey(section.toUpperCase()))
+                        positionInData = ((FastScrollRecyclerViewInterface) getAdapter()).getMapIndex().get(section.toUpperCase());
                     this.scrollToPosition(positionInData);
                     FastScrollRecyclerView.this.invalidate();
 
@@ -116,7 +116,7 @@ public class FastScrollRecyclerView extends RecyclerView {
             case MotionEvent.ACTION_UP: {
                 listHandler = new ListHandler();
                 listHandler.sendEmptyMessageDelayed(0, 100);
-                if (x < sx - scaledWidth || y < sy || y > (sy + scaledHeight*sections.length))
+                if (x < sx - scaledWidth || y < sy || y > (sy + scaledHeight * sections.length))
                     return super.onTouchEvent(event);
                 else
                     return true;

@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.kwu.cointwebtoon.DataStructure.Episode;
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 
-public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouchListener{
+public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouchListener {
     private WebView viewer;
     public static final int REQUEST_CODE_RATING = 1001;
     private int id, ep_id;
@@ -36,12 +36,13 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
     private int toolbarheight = 0;
     private TextView episodeTitleTextView, episodeIdTextView, goodCount;
     private ImageButton good;
-    private  boolean showtoolbar;
+    private boolean showtoolbar;
     private int count = 0;
     private int motion_like = 0;
     private COINT_SQLiteManager manager;
     private SharedPreferences likePreference;
     private Application_UserInfo userInfo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,17 +50,17 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
         Intent getIntent = getIntent();
         id = getIntent.getIntExtra("id", -1);
         ep_id = getIntent.getIntExtra("ep_id", -1);
-        if(id == -1 | ep_id == -1){
+        if (id == -1 | ep_id == -1) {
             Toast.makeText(this, "존재하지 않는 에피소드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
         likePreference = getSharedPreferences("episode_like", MODE_PRIVATE);
         serverData = new GetServerData(this);
         url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
-        episodeTitleTextView = (TextView)findViewById(R.id.MotionToontEpisodeTitle);
+        episodeTitleTextView = (TextView) findViewById(R.id.MotionToontEpisodeTitle);
         episodeTitleTextView.setSelected(true);
-        episodeIdTextView = (TextView)findViewById(R.id.MotionToont_current_pos);
-        good = (ImageButton)findViewById(R.id.MotionToontgood);
+        episodeIdTextView = (TextView) findViewById(R.id.MotionToont_current_pos);
+        good = (ImageButton) findViewById(R.id.MotionToontgood);
         viewer = (WebView) findViewById(R.id.motion_viewer_webView);
         manager = COINT_SQLiteManager.getInstance(this);
         showtoolbar = true;
@@ -72,14 +73,15 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
         toolbarheight = dpToPixel(42);
         myUpdate(url);
         initializeThread();
-        episode_instance = manager.getEpisodeInstance(id,ep_id);
+        episode_instance = manager.getEpisodeInstance(id, ep_id);
         new ViewerMotionActivity.GetCurrentToonInfo().execute();
-        userInfo = (Application_UserInfo)getApplication();
+        userInfo = (Application_UserInfo) getApplication();
         episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
         episodeIdTextView.setText(String.valueOf(ep_id));
         goodCount.setText(String.valueOf(manager.getEpisodeInstance(id, ep_id).getLikes_E()));
     }
-    private void myUpdate(String url){
+
+    private void myUpdate(String url) {
         try {
             viewer.setWebViewClient(new WebViewClient() {
                 @Override
@@ -102,12 +104,15 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
             });
             viewer.loadUrl(url);
             viewer.getContentHeight();
-        }catch (Exception ex){}
+        } catch (Exception ex) {
+        }
     }
+
     private void initializeThread() {
         try {
             toolbarHideThread.interrupt();
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
         toolbarHideThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -116,7 +121,7 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(showtoolbar){
+                            if (showtoolbar) {
                                 showToolbars(!showtoolbar);
                             }
                         }
@@ -127,6 +132,7 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
         });
         toolbarHideThread.start();
     }
+
     public int dpToPixel(int dp) {
         float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
@@ -142,15 +148,16 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
             MotionToonBottomToolbar.animate().translationY(toolbarheight).withLayer();
         }
     }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 x = event.getX();
                 y = event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                if(Math.abs(event.getX() - x) < clickCriteria && Math.abs(event.getY() - y) < clickCriteria){
+                if (Math.abs(event.getX() - x) < clickCriteria && Math.abs(event.getY() - y) < clickCriteria) {
                     showToolbars(!showtoolbar);
                     return true;
                 }
@@ -158,31 +165,34 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
         }
         return false;
     }
+
     @Override
     protected void onDestroy() {
-        try{
+        try {
             toolbarHideThread.interrupt();
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         super.onDestroy();
     }
 
-    public void runButtonClick(View v){
-        if(runMode) {
+    public void runButtonClick(View v) {
+        if (runMode) {
             runMode = false;
-            ImageButton target = (ImageButton)v;
+            ImageButton target = (ImageButton) v;
             target.setImageDrawable(getDrawable(R.drawable.run_inactive));
-        }
-        else {
+        } else {
             runMode = true;
-            ImageButton target = (ImageButton)v;
+            ImageButton target = (ImageButton) v;
             target.setImageDrawable(getDrawable(R.drawable.run_active));
         }
     }
+
     public void BackBtn(View v) {
         this.finish();
     }
-    public void HeartBtn(View v){
-        if(!userInfo.isLogin()){
+
+    public void HeartBtn(View v) {
+        if (!userInfo.isLogin()) {
             new AlertDialog.Builder(this)
                     .setTitle("로그인")
                     .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -212,17 +222,21 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                 }
             }
             editor.commit();
-        }catch (NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
-    public void Dat(View v){
+
+    public void Dat(View v) {
         try {
             Intent comment_intent = new Intent(this, ViewerCommentActivity.class);
             comment_intent.putExtra("id", id);
             comment_intent.putExtra("ep_id", ep_id);
             comment_intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(comment_intent);
-        }catch (NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
+
     public void Previous(View v) {
         try {
             if (ep_id > 1) {
@@ -233,8 +247,10 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                 episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
                 episodeIdTextView.setText(String.valueOf(ep_id));
             }
-        }catch (NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
+
     public void Next(View v) {
         try {
             url = "http://m.comic.naver.com/webtoon/detail.nhn?titleId=" + id + "&no=" + ep_id;
@@ -246,28 +262,35 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                 episodeTitleTextView.setText(manager.getEpisodeTitle(id, ep_id));
                 episodeIdTextView.setText(String.valueOf(ep_id));
             }
-        }catch (NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
+
     public void givingStarBtnClick(View v) {
         try {
             Intent intent = new Intent(this, ViewerStarScoreActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivityForResult(intent, REQUEST_CODE_RATING);
-        }catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_RATING) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_RATING) {
+            if (resultCode == RESULT_OK) {
                 try {
                     float SCORE = data.getExtras().getFloat("SCORE");
                     Toast.makeText(this, "전달 된 별점은 " + SCORE, Toast.LENGTH_SHORT).show();
 
-                }catch (NullPointerException ex) {ex.printStackTrace();}
+                } catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
+
     private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -288,7 +311,9 @@ public class ViewerMotionActivity extends TypeKitActivity implements View.OnTouc
                 if (likePreference.getBoolean(String.valueOf(id), false)) {
                     good.setBackgroundResource(R.drawable.episode_heart_active);
                 }
-            }catch (NullPointerException ex) {ex.printStackTrace();}
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }

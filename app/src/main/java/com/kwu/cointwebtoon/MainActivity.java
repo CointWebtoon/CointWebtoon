@@ -38,7 +38,7 @@ import java.util.Locale;
 
 public class MainActivity extends TypeKitActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        View.OnKeyListener{
+        View.OnKeyListener {
 
     private InputMethodManager imm;
     private ViewPager pager;
@@ -46,10 +46,10 @@ public class MainActivity extends TypeKitActivity
     private Main_Top15Adapter top15Adapter;
     private RecyclerView.LayoutManager layoutManager;
     private Main_MyToonAdapter myToonAdapter, myToonAdapter2, myToonAdapter3, myToonAdapter4,
-            myToonAdapter5,myToonAdapter6,myToonAdapter7,myToonAdapter8;
+            myToonAdapter5, myToonAdapter6, myToonAdapter7, myToonAdapter8;
     private COINT_SQLiteManager coint_sqLiteManager;
     private EditText search;
-    private int[] dateday={0,0,0,0,0,0,0};
+    private int[] dateday = {0, 0, 0, 0, 0, 0, 0};
     private Application_UserInfo userInfo;
     private Button navHeader;
     private TextView navStatus;
@@ -63,64 +63,65 @@ public class MainActivity extends TypeKitActivity
                  /*안드로이드 데이터베이스에 데이터를 넣음*/
         setContentView(R.layout.main_activity);
 
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
-        userInfo = (Application_UserInfo)getApplication();
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        userInfo = (Application_UserInfo) getApplication();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);            // 액션바에서 앱 이름 보이지 않게 함
         getSupportActionBar().setDisplayShowHomeEnabled(false);
-        final DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerview = navigationView.getHeaderView(0);
 
-        navStatus = (TextView)headerview.findViewById(R.id.nav_status);
-        navHeader = (Button)headerview.findViewById(R.id.nav_login);
-        navHeader.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(userInfo.isLogin()){
+        navStatus = (TextView) headerview.findViewById(R.id.nav_status);
+        navHeader = (Button) headerview.findViewById(R.id.nav_login);
+        navHeader.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (userInfo.isLogin()) {
                     userInfo.onLogOut(MainActivity.this);
                     Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                     navHeader.setBackgroundResource(R.drawable.login);
                     navStatus.setText("로그인 해주세요");
-                }else{
+                } else {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     drawer.closeDrawer(GravityCompat.START);
                 }
             }
         });
-        search = (EditText)findViewById(R.id.searchbar);
+        search = (EditText) findViewById(R.id.searchbar);
         search.setOnKeyListener(this);
 
-        pager = (ViewPager)findViewById(R.id.viewpager);                        //뷰페이저에 어댑터를 연결하는 부분
+        pager = (ViewPager) findViewById(R.id.viewpager);                        //뷰페이저에 어댑터를 연결하는 부분
         top15Adapter = new Main_Top15Adapter(this);
         pager.setAdapter(top15Adapter);
 
         //즐겨찾는 웹툰 추가하는 부분 Id(R.id.my_recycler_view);
 
-        try{
+        try {
             dateday = getDateDay();
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
         //1번
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter = new Main_MyToonAdapter(this, dateday[0]);
         recyclerView.setAdapter(myToonAdapter);
 
         //2번
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view2);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view2);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter2 = new Main_MyToonAdapter(this, dateday[1]);
@@ -128,10 +129,10 @@ public class MainActivity extends TypeKitActivity
 
 
         //3번
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view3);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view3);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter3 = new Main_MyToonAdapter(this, dateday[2]);
@@ -139,10 +140,10 @@ public class MainActivity extends TypeKitActivity
 
 
         //4번
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view4);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view4);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter4 = new Main_MyToonAdapter(this, dateday[3]);
@@ -150,10 +151,10 @@ public class MainActivity extends TypeKitActivity
 
 
         //5번
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view5);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view5);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter5 = new Main_MyToonAdapter(this, dateday[4]);
@@ -161,10 +162,10 @@ public class MainActivity extends TypeKitActivity
 
 
         //6번
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view6);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view6);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter6 = new Main_MyToonAdapter(this, dateday[5]);
@@ -172,20 +173,20 @@ public class MainActivity extends TypeKitActivity
 
 
         //7번
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view7);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view7);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter7 = new Main_MyToonAdapter(this, dateday[6]);
         recyclerView.setAdapter(myToonAdapter7);
 
         //8번
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view8);
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view8);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this,1, GridLayoutManager.HORIZONTAL,false);
+        layoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         myToonAdapter8 = new Main_MyToonAdapter(this, 0);
@@ -194,12 +195,12 @@ public class MainActivity extends TypeKitActivity
         sharedPreferences = getSharedPreferences("isFirstLaunch", MODE_PRIVATE);
 
         //if(sharedPreferences.getBoolean("first", true)){
-            onCoachMark();
+        onCoachMark();
         //}
     }
 
 
-    public void onCoachMark(){
+    public void onCoachMark() {
        /* final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -226,7 +227,7 @@ public class MainActivity extends TypeKitActivity
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN);
         String str_date = dateFormat.format(new Date());
         Date nDate = dateFormat.parse(str_date);
-        int[] arr = {0,0,0,0,0,0,0};
+        int[] arr = {0, 0, 0, 0, 0, 0, 0};
         Calendar cal = Calendar.getInstance();
         cal.setTime(nDate);
 
@@ -234,25 +235,26 @@ public class MainActivity extends TypeKitActivity
 
         System.out.println(dayNum);
         //일요일 : 1 , 월- 토 : 2-7 이라서 바꿔서 넘겨줌
-        if(dayNum == 1) {//일요일인 경우
+        if (dayNum == 1) {//일요일인 경우
             dayNum = 7;
-        }else{
-            dayNum-=1;
+        } else {
+            dayNum -= 1;
         }
 
-        for(int i=0;i<7;i++){
-            if(dayNum%8!=0){
-                arr[i]=dayNum%8;/*
+        for (int i = 0; i < 7; i++) {
+            if (dayNum % 8 != 0) {
+                arr[i] = dayNum % 8;/*
                 System.out.println(arr[i]);*/
-            }else{
+            } else {
                 i--;
             }
             dayNum++;
         }
         return arr;
     }
+
     @Override
-    protected void attachBaseContext(Context newBase){
+    protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(TypekitContextWrapper.wrap(newBase));       //폰트 바꿈
     }
 
@@ -265,6 +267,7 @@ public class MainActivity extends TypeKitActivity
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {     // 검색 메뉴 만들어주는 부분
         getMenuInflater().inflate(R.menu.main_search_menu, menu);
@@ -282,11 +285,11 @@ public class MainActivity extends TypeKitActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            if(searchString.equals("")){
-                Toast.makeText(this,"검색어를 입력하세요",Toast.LENGTH_SHORT).show();
-            }else{
+            if (searchString.equals("")) {
+                Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
+            } else {
                 intent = new Intent(MainActivity.this, SearchActivity.class);
-                intent.putExtra("Intent",search.getText().toString());
+                intent.putExtra("Intent", search.getText().toString());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
@@ -302,12 +305,12 @@ public class MainActivity extends TypeKitActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Intent intent;
-        switch(id){
+        switch (id) {
             case R.id.webtoonRanking:
                 intent = new Intent(MainActivity.this, Top100Activity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
-            break;
+                break;
             case R.id.moreMyWebtoon:
                 intent = new Intent(MainActivity.this, MyWebtoonActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -318,6 +321,29 @@ public class MainActivity extends TypeKitActivity
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
+            case R.id.customService:
+                new AlertDialog.Builder(this)
+                        .setTitle("코인트 고객센터")
+                        .setMessage("광운대학교\n" +
+                                "서울특별시 노원구 광운로 20\n" +
+                                "융합SW교육혁신추진단\n(새빛관 404호)\n" +
+                                "Tel : 02-940-5654\nE-Mail : syjin@kw.ac.kr\n")
+                        .setPositiveButton("닫기", null)
+                        .show();
+                break;
+            case R.id.error:
+                new AlertDialog.Builder(this)
+                        .setTitle("오류 신고")
+                        .setMessage("광운대학교\n" +
+                                "컴퓨터 소프트웨어학과\nTEAM COINT 팀장 최은주\n" +
+                                "E-Mail : epcej0020@gmail.com\n")
+                        .setPositiveButton("닫기", null)
+                        .show();
+                break;
+            case R.id.appInfo:
+                AppInfoDialog dialog = new AppInfoDialog(this);
+                dialog.show();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -326,14 +352,14 @@ public class MainActivity extends TypeKitActivity
     }
 
     public void onClick(View view) {        // 베스트도전은 웹뷰로 띄우고, 나머지는 액티비티
-         int id = view.getId();
+        int id = view.getId();
         String result;
         Intent intent;
         int position;
         ArrayList<Webtoon> mList = new ArrayList<>();
         Cursor cursor;
         ImageView addWebtoon;
-        switch (id){
+        switch (id) {
             case R.id.genreBtn:
                 intent = new Intent(MainActivity.this, GenreActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -356,20 +382,20 @@ public class MainActivity extends TypeKitActivity
                 //webview로 띄울 예정
                 intent = new Intent(MainActivity.this, BestChallengeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra("Best","bestchallenge");
+                intent.putExtra("Best", "bestchallenge");
                 startActivity(intent);
                 break;
             case R.id.addTopBtn:
-                position = (Integer)view.getTag();
+                position = (Integer) view.getTag();
                 cursor = coint_sqLiteManager.topHits(position);
                 cursor.moveToFirst();
-                if(cursor.getString(8).equals("1")){
-                    if(userInfo.isLogin()){
-                        if(!userInfo.isUserAdult()){
+                if (cursor.getString(8).equals("1")) {
+                    if (userInfo.isLogin()) {
+                        if (!userInfo.isUserAdult()) {
                             Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(this)
                                 .setTitle("로그인")
                                 .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -389,16 +415,16 @@ public class MainActivity extends TypeKitActivity
                 break;
 
             case R.id.addMidBtn:
-                position = (Integer)view.getTag();
+                position = (Integer) view.getTag();
                 cursor = coint_sqLiteManager.topHits(position);
                 cursor.moveToPosition(1);
-                if(cursor.getString(8).equals("1")){
-                    if(userInfo.isLogin()){
-                        if(!userInfo.isUserAdult()){
+                if (cursor.getString(8).equals("1")) {
+                    if (userInfo.isLogin()) {
+                        if (!userInfo.isUserAdult()) {
                             Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(this)
                                 .setTitle("로그인")
                                 .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -417,18 +443,18 @@ public class MainActivity extends TypeKitActivity
                 top15Adapter.notifyDataSetChanged();
                 break;
             case R.id.addBotBtn:
-                position = (Integer)view.getTag();
+                position = (Integer) view.getTag();
 
                 cursor = coint_sqLiteManager.topHits(position);
                 cursor.moveToLast();
 
-                if(cursor.getString(8).equals("1")){
-                    if(userInfo.isLogin()){
-                        if(!userInfo.isUserAdult()){
+                if (cursor.getString(8).equals("1")) {
+                    if (userInfo.isLogin()) {
+                        if (!userInfo.isUserAdult()) {
                             Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(this)
                                 .setTitle("로그인")
                                 .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -450,11 +476,11 @@ public class MainActivity extends TypeKitActivity
 
             case R.id.action_search:
                 String searchString = search.getText().toString();
-                if(searchString.equals("")){
-                    Toast.makeText(this,"검색어를 입력하세요",Toast.LENGTH_SHORT).show();
-                }else{
+                if (searchString.equals("")) {
+                    Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
+                } else {
                     intent = new Intent(MainActivity.this, SearchActivity.class);
-                    intent.putExtra("Intent",search.getText().toString());
+                    intent.putExtra("Intent", search.getText().toString());
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
                 }
@@ -473,8 +499,8 @@ public class MainActivity extends TypeKitActivity
         cursor = coint_sqLiteManager.getMyWebtoons();
         while (cursor.moveToNext()) {
             mList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                    cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
         }
         myToonAdapter.addRemoveItem(mList);
         myToonAdapter2.addRemoveItem(mList);
@@ -490,10 +516,10 @@ public class MainActivity extends TypeKitActivity
         super.onResume();
         search.clearFocus();
 
-        if(userInfo.isLogin()){
+        if (userInfo.isLogin()) {
             navHeader.setBackgroundResource(R.drawable.logout);
-            navStatus.setText(userInfo.getUserName()+"님");
-        }else{
+            navStatus.setText(userInfo.getUserName() + "님");
+        } else {
             navHeader.setBackgroundResource(R.drawable.login);
             navStatus.setText("로그인 해주세요");
         }
@@ -503,8 +529,8 @@ public class MainActivity extends TypeKitActivity
         Cursor cursor = coint_sqLiteManager.getMyWebtoons();
         while (cursor.moveToNext()) {
             mList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                    cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
         }
         myToonAdapter.addRemoveItem(mList);
         myToonAdapter2.addRemoveItem(mList);
@@ -522,14 +548,14 @@ public class MainActivity extends TypeKitActivity
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP){
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
             Log.i("epcej", "ENTER");
             String searchString = search.getText().toString();
-            if(searchString.equals("")){
-                Toast.makeText(this,"검색어를 입력하세요",Toast.LENGTH_SHORT).show();
-            }else{
+            if (searchString.equals("")) {
+                Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
+            } else {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                intent.putExtra("Intent",search.getText().toString());
+                intent.putExtra("Intent", search.getText().toString());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }

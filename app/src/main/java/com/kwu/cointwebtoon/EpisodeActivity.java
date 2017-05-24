@@ -108,7 +108,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
     }
 
     private void initData() {
-        userInfo = (Application_UserInfo)getApplication();
+        userInfo = (Application_UserInfo) getApplication();
         likePreference = getSharedPreferences("episode_like", MODE_PRIVATE);
         Intent getIntent = getIntent();
         currentToonId = getIntent.getIntExtra("id", ERR_CODE);
@@ -204,8 +204,8 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
      */
     @Override
     public void update(Observable observable, Object data) {
-        new Thread(){
-            public void run(){
+        new Thread() {
+            public void run() {
                 Cursor episodeCursor = manager.getEpisodes(currentToonId);
                 updateCursorFromSQLite(episodeCursor);
                 if (isFirst) {
@@ -240,9 +240,9 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             progressDialog.dismiss();
         } catch (Exception e) {
         }
-        try{
+        try {
             timeOutThread.interrupt();
-        }catch (Exception e){
+        } catch (Exception e) {
         }
         getServerData.removeObserver(this);
         super.onDestroy();
@@ -250,15 +250,15 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
 
     public void onRecyclerViewItemClick(View v) {
         Episode target = (Episode) v.findViewById(R.id.reg_date).getTag();
-        if(currentWebtoon != null){
-            if(currentWebtoon.isAdult()){
+        if (currentWebtoon != null) {
+            if (currentWebtoon.isAdult()) {
                 Log.i("coint", "로그인 상태 : " + String.valueOf(userInfo.isLogin()));
-                if(userInfo.isLogin()){
-                    if(!userInfo.isUserAdult()){
+                if (userInfo.isLogin()) {
+                    if (!userInfo.isUserAdult()) {
                         Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                }else{
+                } else {
                     new AlertDialog.Builder(this)
                             .setTitle("로그인")
                             .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -382,14 +382,14 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 }
                 break;
             case R.id.episode_floating_first:
-                if(currentWebtoon.isAdult()){
+                if (currentWebtoon.isAdult()) {
                     Log.i("coint", "로그인 상태 : " + String.valueOf(userInfo.isLogin()));
-                    if(userInfo.isLogin()){
-                        if(!userInfo.isUserAdult()){
+                    if (userInfo.isLogin()) {
+                        if (!userInfo.isUserAdult()) {
                             Toast.makeText(this, "만 19세 이상 시청 가능한 컨텐츠입니다.", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                    }else{
+                    } else {
                         new AlertDialog.Builder(this)
                                 .setTitle("로그인")
                                 .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -463,7 +463,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         switch (v.getId()) {
             case R.id.episode_like:
             case R.id.episode_like_text:
-                if(!userInfo.isLogin()){
+                if (!userInfo.isLogin()) {
                     new AlertDialog.Builder(this)
                             .setTitle("로그인")
                             .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -533,10 +533,12 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
      */
     private class ActionbarShowHideListener extends RecyclerView.OnScrollListener {
         private int mLastFirstVisibleItem = 0;
+
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
         }
+
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
@@ -574,12 +576,12 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             if (currentWebtoon.isMine()) {
                 myImageButton.setImageDrawable(getDrawable(R.drawable.my_star_active));
             }
-            if(!userInfo.isLogin()){
+            if (!userInfo.isLogin()) {
                 likePreference.edit().putBoolean(String.valueOf(currentToonId), false).commit();
             }
             if (likePreference.getBoolean(String.valueOf(currentToonId), false)) {
                 likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
-            }else{
+            } else {
                 likeImageButton.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
             }
         }

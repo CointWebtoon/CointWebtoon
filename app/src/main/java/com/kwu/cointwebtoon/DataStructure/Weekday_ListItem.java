@@ -15,40 +15,41 @@ public class Weekday_ListItem {
     Cursor cursor = null;
     private int day;
 
-    public ArrayList<Webtoon> getList(){return list;}
+    public ArrayList<Webtoon> getList() {
+        return list;
+    }
 
-    public Weekday_ListItem(Context context, int day){
+    public Weekday_ListItem(Context context, int day) {
         list = new ArrayList<>();
         manager = COINT_SQLiteManager.getInstance(context);
         this.day = day;
         this.updateList();
     }
 
-    public void updateList(){
+    public void updateList() {
         list.clear();
         cursor = null;
         cursor = manager.getListItem(day);
-        if(cursor != null){
-            while(cursor.moveToNext()){
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
                 list.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                        cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                        cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
             }
             cursor.close();
         }
     }
-    public void orderByHits(){
+
+    public void orderByHits() {
         //조회순 정렬
         Collections.sort(this.list, new Comparator<Webtoon>() {
             @Override
             public int compare(Webtoon lhs, Webtoon rhs) {
-                if(lhs.getHits() < rhs.getHits()){
+                if (lhs.getHits() < rhs.getHits()) {
                     return 1;
-                }
-                else if(lhs.getHits() > rhs.getHits()){
+                } else if (lhs.getHits() > rhs.getHits()) {
                     return -1;
-                }
-                else{
+                } else {
                     return 0;
                 }
             }

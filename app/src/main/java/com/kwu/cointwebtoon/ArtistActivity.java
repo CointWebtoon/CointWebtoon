@@ -1,12 +1,13 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.kwu.cointwebtoon.DataStructure.Weekday_ListItem;
 import com.kwu.cointwebtoon.Views.FastScrollRecyclerViewItemDecoration;
 import com.kwu.cointwebtoon.databinding.ArtistActivityBinding;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -63,7 +65,6 @@ public class ArtistActivity extends TypeKitActivity
     private RecyclerView.LayoutManager artistLayoutManager;
 
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.artist_activity);
@@ -84,16 +85,16 @@ public class ArtistActivity extends TypeKitActivity
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         View headerview = navigationView.getHeaderView(0);
-        navStatus = (TextView)headerview.findViewById(R.id.nav_status);
-        navHeader = (Button)headerview.findViewById(R.id.nav_login);
-        navHeader.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(userInfo.isLogin()){
+        navStatus = (TextView) headerview.findViewById(R.id.nav_status);
+        navHeader = (Button) headerview.findViewById(R.id.nav_login);
+        navHeader.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (userInfo.isLogin()) {
                     userInfo.onLogOut(ArtistActivity.this);
                     Toast.makeText(ArtistActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                     navHeader.setBackgroundResource(R.drawable.login);
                     navStatus.setText("로그인 해주세요");
-                }else{
+                } else {
                     Intent intent = new Intent(ArtistActivity.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
@@ -121,7 +122,7 @@ public class ArtistActivity extends TypeKitActivity
 
         //Adapter 설정
         HashMap<String, Integer> mapIndex = calculateIndexesForName(dataSet);
-        for(int i = 0; i < dataSet.size(); i++){
+        for (int i = 0; i < dataSet.size(); i++) {
             Log.d("onCreate", dataSet.get(i).getArtist());
         }
         artistAdapter = new ArtistActivityAdapter(dataSet, mapIndex);
@@ -135,10 +136,10 @@ public class ArtistActivity extends TypeKitActivity
 
     }
 
-    private void updateDataset(){
+    private void updateDataset() {
         dataSet.clear();
         //listItem 생성
-        for(int i = 0; i<8; i++){
+        for (int i = 0; i < 8; i++) {
             dataSet.addAll(new Weekday_ListItem(this, i).getList());
         }
         //중복 제거
@@ -149,7 +150,7 @@ public class ArtistActivity extends TypeKitActivity
         Collections.sort(dataSet, new Comparator<Webtoon>() {
             @Override
             public int compare(Webtoon lhs, Webtoon rhs) {
-                return  lhs.getArtist().compareTo(rhs.getArtist());
+                return lhs.getArtist().compareTo(rhs.getArtist());
             }
         });
 
@@ -164,34 +165,37 @@ public class ArtistActivity extends TypeKitActivity
     }
 
 
-
-    private HashMap<String, Integer> calculateIndexesForName(ArrayList<Webtoon> items){
+    private HashMap<String, Integer> calculateIndexesForName(ArrayList<Webtoon> items) {
         HashMap<String, Integer> mapIndex = new LinkedHashMap<String, Integer>();
-        for (int i = 0; i<items.size(); i++){
+        for (int i = 0; i < items.size(); i++) {
             String name = items.get(i).getArtist();
-            String index = name.substring(0,1);
-            if(Character.getType(index.charAt(0))==Character.OTHER_LETTER){
+            String index = name.substring(0, 1);
+            if (Character.getType(index.charAt(0)) == Character.OTHER_LETTER) {
                 String token = tokenJASO(index).substring(0, 1);
-                switch (token){
-                    case "ㄲ":{
-                        token = "ㄱ"; break;
+                switch (token) {
+                    case "ㄲ": {
+                        token = "ㄱ";
+                        break;
                     }
-                    case "ㄸ":{
-                        token = "ㄷ"; break;
+                    case "ㄸ": {
+                        token = "ㄷ";
+                        break;
                     }
-                    case "ㅃ":{
-                        token = "ㅂ"; break;
+                    case "ㅃ": {
+                        token = "ㅂ";
+                        break;
                     }
-                    case "ㅆ":{
-                        token = "ㅅ"; break;
+                    case "ㅆ": {
+                        token = "ㅅ";
+                        break;
                     }
-                    case "ㅉ":{
-                        token = "ㅈ"; break;
+                    case "ㅉ": {
+                        token = "ㅈ";
+                        break;
                     }
                 }
                 index = token;
-            }
-            else if(isNumeric(index))
+            } else if (isNumeric(index))
                 index = "#";
             else
                 index = index.toUpperCase();
@@ -202,16 +206,18 @@ public class ArtistActivity extends TypeKitActivity
         }
         return mapIndex;
     }
-    private static String tokenJASO(String text)
-    {
-        if (text == null) { return null; }
+
+    private static String tokenJASO(String text) {
+        if (text == null) {
+            return null;
+        }
         // StringBuilder의 capacity가 0으로 등록되는 것 방지.
-        if (text.length() == 0) { return ""; }
+        if (text.length() == 0) {
+            return "";
+        }
         StringBuilder rv = new StringBuilder(text.length() * 3);
-        for (char ch : text.toCharArray())
-        {
-            if (ch >= '가' && ch <= '힣')
-            {
+        for (char ch : text.toCharArray()) {
+            if (ch >= '가' && ch <= '힣') {
                 // 한글의 시작부분을 구함
                 int ce = ch - '가';
                 // 초성을 구함
@@ -219,18 +225,16 @@ public class ArtistActivity extends TypeKitActivity
                 // 중성을 구함
                 rv.append(KO_INIT_M[(ce = ce % (588)) / 28]); // 21 * 28
                 // 종성을 구함
-                if ((ce = ce % 28) != 0)
-                {
+                if ((ce = ce % 28) != 0) {
                     rv.append(KO_INIT_E[ce]);
                 }
-            }
-            else
-            {
+            } else {
                 rv.append(ch);
             }
         }
         return rv.toString();
     }
+
     private boolean isNumeric(String s) {
         return s.matches("[-+]?\\d*\\.?\\d+");
     }
@@ -304,6 +308,29 @@ public class ArtistActivity extends TypeKitActivity
                 intent = new Intent(ArtistActivity.this, FavoriteChartAcivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
+                break;
+            case R.id.customService:
+                new AlertDialog.Builder(this)
+                        .setTitle("코인트 고객센터")
+                        .setMessage("광운대학교\n" +
+                                "서울특별시 노원구 광운로 20\n" +
+                                "융합SW교육혁신추진단\n(새빛관 404호)\n" +
+                                "Tel : 02-940-5654\nE-Mail : syjin@kw.ac.kr\n")
+                        .setPositiveButton("닫기", null)
+                        .show();
+                break;
+            case R.id.error:
+                new AlertDialog.Builder(this)
+                        .setTitle("오류 신고")
+                        .setMessage("광운대학교\n" +
+                                "컴퓨터 소프트웨어학과\nTEAM COINT 팀장 최은주\n" +
+                                "E-Mail : epcej0020@gmail.com\n")
+                        .setPositiveButton("닫기", null)
+                        .show();
+                break;
+            case R.id.appInfo:
+                AppInfoDialog dialog = new AppInfoDialog(this);
+                dialog.show();
                 break;
         }
 

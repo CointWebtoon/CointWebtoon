@@ -4,5 +4,5 @@ import java.util.HashMap;
 
 
 public interface FastScrollRecyclerViewInterface {
-    public HashMap<String,Integer> getMapIndex();
+    public HashMap<String, Integer> getMapIndex();
 }

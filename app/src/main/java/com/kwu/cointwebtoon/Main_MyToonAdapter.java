@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -74,7 +73,7 @@ public class Main_MyToonAdapter extends RecyclerView.Adapter<Main_MyToonAdapter.
             cardView = (CardView) view.findViewById(R.id.cardview);
             backbook = (LinearLayout) view.findViewById(R.id.backbook);
             moreBtn = (Button) view.findViewById(R.id.moreBtn);
-            textMy = (TextView)view.findViewById(R.id.textMy);
+            textMy = (TextView) view.findViewById(R.id.textMy);
         }
     }
 

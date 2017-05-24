@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="40dp"
-        android:paddingLeft="20dp"
-        >
+        android:paddingLeft="20dp">
 
         <TextView
             android:id="@+id/tv_artist"
@@ -26,8 +25,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <RelativeLayout
                 android:id="@+id/item_webtoon"
                 android:layout_width="0dp"
@@ -39,15 +38,16 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
 
-                android:background="#d9d9d9"
-                >
+                android:background="#d9d9d9">
+
                 <ImageView
                     android:id="@+id/iv_thumbnail"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:background="#ffffff"/>
+                    android:background="#ffffff" />
+
                 <TextView
                     android:id="@+id/tv_star_score"
                     android:layout_width="wrap_content"
@@ -88,8 +88,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingBottom="3dp"
-                    android:paddingTop="3dp"
-                    />
+                    android:paddingTop="3dp" />
 
                 <TextView
                     android:id="@+id/tv_toontype_icon"
@@ -104,8 +103,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingBottom="3dp"
-                    android:paddingTop="3dp"
-                    />
+                    android:paddingTop="3dp" />
 
                 <TextView
                     android:id="@+id/tv_artist2"
@@ -132,6 +130,7 @@
                     android:paddingTop="3dp" />
 
             </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -141,16 +140,14 @@
                 android:paddingLeft="10dp"
                 android:focusable="false"
                 android:gravity="center">
+
                 <Button
                     android:id="@+id/btn_my"
                     android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    />
+                    android:layout_height="36dp" />
             </LinearLayout>
 
         </LinearLayout>
-
-
 
 
     </LinearLayout>

@@ -23,7 +23,9 @@
 
     <!-- 은주 -->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
@@ -46,6 +48,7 @@
     <style name="MainActivity" parent="AppTheme.NoActionBar">
         <item name="colorPrimaryDark">@color/D2Gray</item>
     </style>
+
     <style name="SearchActivity" parent="AppTheme.NoActionBar">
         <item name="colorPrimaryDark">@color/D2Gray</item>
     </style>
@@ -56,6 +59,7 @@
         <item name="colorControlNormal">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorAccent</item>
     </style>
+
     <style name="ViewerGeneralActivity" parent="AppTheme.NoActionBar">
         <item name="colorPrimaryDark">@color/D2Gray</item>
     </style>

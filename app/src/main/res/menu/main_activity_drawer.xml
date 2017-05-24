@@ -3,9 +3,9 @@
 
     <item android:title="부가기능">
         <menu>
-                <item
-                    android:id="@+id/webtoonRanking"
-                    android:title="웹툰 랭킹" />
+            <item
+                android:id="@+id/webtoonRanking"
+                android:title="웹툰 랭킹" />
 
             <item
                 android:id="@+id/moreMyWebtoon"
@@ -25,7 +25,7 @@
 
             <item
                 android:id="@+id/appInfo"
-                android:title="프로그램 정보" />
+                android:title="개발자 정보" />
 
         </menu>
     </item>

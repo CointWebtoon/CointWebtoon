@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/kakao"
+    <item
+        android:id="@+id/kakao"
         android:icon="@android:drawable/ic_menu_add"
         android:title="카카오톡 공유하기" />
 
-    <item android:id="@+id/line"
+    <item
+        android:id="@+id/line"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="LINE 공유하기" />
 </menu>

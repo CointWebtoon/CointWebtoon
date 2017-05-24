@@ -101,9 +101,9 @@ public class COINT_SQLiteManager {
         int is_adult;                   //성인웹툰
         int is_updated;                         //업데이트
 
-        try{
+        try {
             db.beginTransaction();
-            for(Webtoon webtoon : webtoons){
+            for (Webtoon webtoon : webtoons) {
                 id = webtoon.getId();
                 title = webtoon.getTitle();
                 artist = webtoon.getArtist();
@@ -124,9 +124,9 @@ public class COINT_SQLiteManager {
                         + " WHERE Id=" + id + ";");
             }
             db.setTransactionSuccessful();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.endTransaction();
         }
     }
@@ -146,8 +146,8 @@ public class COINT_SQLiteManager {
         int likes_E;                                //좋아요
 
         db.beginTransaction();
-        try{
-            for(Episode episode : episodes){
+        try {
+            for (Episode episode : episodes) {
                 id_E = episode.getId();
                 episode_id = episode.getEpisode_id();
                 episode_title = episode.getEpisode_title().replace("\'", "\''").replace("\"", "\"");
@@ -164,9 +164,9 @@ public class COINT_SQLiteManager {
                         + " WHERE Id_E=" + id_E + " AND Episode_id=" + episode_id + ";");
             }
             db.setTransactionSuccessful();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.endTransaction();
         }
     }
@@ -180,16 +180,16 @@ public class COINT_SQLiteManager {
         int weekdayValue;                               //웹툰 요일
 
         db.beginTransaction();
-        try{
-            for(Weekday weekday : weekdays){
+        try {
+            for (Weekday weekday : weekdays) {
                 id = weekday.getId();
                 weekdayValue = weekday.getWeekday();
                 db.execSQL("INSERT OR IGNORE INTO WEEKDAY(Id_W, Weekday) VALUES(" + id + ", " + weekdayValue + ");");
             }
             db.setTransactionSuccessful();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.endTransaction();
         }
     }
@@ -203,16 +203,16 @@ public class COINT_SQLiteManager {
         String genreValue;                               //웹툰 장르
 
         db.beginTransaction();
-        try{
-            for(Genre genre : genres){
+        try {
+            for (Genre genre : genres) {
                 id = genre.getId();
                 genreValue = genre.getGenre();
                 db.execSQL("INSERT OR IGNORE INTO GENRE(Id_G, Genre) VALUES(" + id + ", '" + genreValue + "');");
             }
             db.setTransactionSuccessful();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             db.endTransaction();
         }
     }
@@ -222,7 +222,7 @@ public class COINT_SQLiteManager {
      * Input Parameter : 회차 정보를 얻어올 웹툰의 고유 ID
      * Output : 쿼리 결과가 담긴 Cursor (해당 웹툰의 모든 회차 데이터)
      */
-    public Cursor getEpisodes(int toonId){
+    public Cursor getEpisodes(int toonId) {
         //Episode Constructor
         //int id_E, int episode_id, String episode_title, float ep_starScore, String ep_thumbURL, String reg_date, String mention, int likes_E, Is_read
         return db.rawQuery("SELECT Id_E, Episode_id, Episode_title, Ep_starscore, Ep_thumburl, Reg_date, Mention, Likes_E, Is_read " +
@@ -232,36 +232,36 @@ public class COINT_SQLiteManager {
     }
 
     //ViewerActivity 를 통해 사용자가 본 웹툰을 EpisodeActivity 에서 사용자가 읽은 웹툰이라고 표시하기 위해 SQLite 를 업데이트 하는 메소드
-    public void updateEpisodeRead(int toonId, int episodeId){
+    public void updateEpisodeRead(int toonId, int episodeId) {
         db.execSQL("UPDATE EPISODE SET Is_read=1 WHERE Id_E=" + String.valueOf(toonId) + " AND Episode_id=" + String.valueOf(episodeId) + "");
     }
 
     //ViewerActivity 에서 다음 화가 존재하는지 확인하기 위해서 해당 웹툰의 가장 최신 회차의 ID를 알아오는 메소드
     //에러 시 -1 RETURN
-    public int maxEpisodeId(int toonId){
+    public int maxEpisodeId(int toonId) {
         Cursor queryResult = db.rawQuery("SELECT Episode_id FROM EPISODE WHERE Id_E=" + String.valueOf(toonId) + " ORDER BY Episode_id DESC LIMIT 1;", null);
-        if(queryResult.moveToNext()){
+        if (queryResult.moveToNext()) {
             return queryResult.getInt(0);
-        }else {
+        } else {
             return -1;
         }
     }
 
     //웹툰 고유 ID와 회차 ID를 이용해 해당 회차의 제목을 SQLite 에서 가져오는 메소드
     //에러 시 NULL RETURN
-    public String getEpisodeTitle(int toonId, int episodeId){
+    public String getEpisodeTitle(int toonId, int episodeId) {
         Cursor queryResult = db.rawQuery("SELECT Episode_title FROM EPISODE WHERE Id_E=" + String.valueOf(toonId) + " AND Episode_id=" + String.valueOf(episodeId) + ";", null);
-        if(queryResult.moveToNext()){
+        if (queryResult.moveToNext()) {
             return queryResult.getString(0);
-        }else{
+        } else {
             return null;
         }
     }
 
-    public Episode getEpisodeInstance(int id, int ep_id){
+    public Episode getEpisodeInstance(int id, int ep_id) {
         //Episode 생성자 :
         Cursor cursor = db.rawQuery("SELECT Episode_title, Ep_starscore, Ep_thumbURL, Reg_date, Mention, Likes_E FROM EPISODE WHERE Id_E=" + id + " AND Episode_id=" + ep_id, null);
-        if(cursor.moveToNext())
+        if (cursor.moveToNext())
             return new Episode(id, ep_id, cursor.getString(0), cursor.getFloat(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), 1);
         else
             return null;
@@ -269,7 +269,7 @@ public class COINT_SQLiteManager {
 
 
     //테스트용 --> 모든 Episode를 안읽은 상태로 만드는 메소드
-    public void initializeEpisodeRead(){
+    public void initializeEpisodeRead() {
         db.execSQL("UPDATE EPISODE SET Is_read=0");
     }
 
@@ -277,17 +277,17 @@ public class COINT_SQLiteManager {
     /**
      * 1차 통합 은주 부분 추가 메소드
      */
-    public Cursor  topHits(int position){           // TODO - 웹툰의 모든 속성 가져오는 걸로 변경했음! --> 더 다양한 데이터 표시
+    public Cursor topHits(int position) {           // TODO - 웹툰의 모든 속성 가져오는 걸로 변경했음! --> 더 다양한 데이터 표시
         position *= 3;
-        return db.rawQuery("SELECT * FROM WEBTOON ORDER BY Hits DESC LIMIT 3 OFFSET "+Integer.toString(position), null);
+        return db.rawQuery("SELECT * FROM WEBTOON ORDER BY Hits DESC LIMIT 3 OFFSET " + Integer.toString(position), null);
         //position으로부터 내림차순 정리된 것 중 세개의 정보를 리턴함.
     }
 
-    public Cursor  favorite(int position, String genre){           // TODO - 웹툰의 모든 속성 가져오는 걸로 변경했음! --> 더 다양한 데이터 표시
+    public Cursor favorite(int position, String genre) {           // TODO - 웹툰의 모든 속성 가져오는 걸로 변경했음! --> 더 다양한 데이터 표시
         position *= 3;
         return db.rawQuery("SELECT * FROM WEBTOON WHERE Is_mine = 0 AND " +
-                "Id IN ( SELECT Id_G FROM GENRE WHERE Genre = '"+ genre + "') " +
-                "ORDER BY Hits DESC LIMIT 3 OFFSET "+Integer.toString(position), null);
+                "Id IN ( SELECT Id_G FROM GENRE WHERE Genre = '" + genre + "') " +
+                "ORDER BY Hits DESC LIMIT 3 OFFSET " + Integer.toString(position), null);
         //position으로부터 내림차순 정리된 것 중 세개의 정보를 리턴함.
     }
 
@@ -297,15 +297,15 @@ public class COINT_SQLiteManager {
         db.execSQL("UPDATE WEBTOON SET Is_mine = " +
                 "CASE WHEN Is_mine = 0 THEN 1 " +
                 "ELSE 0 END " +
-                "WHERE Id = " +id);
+                "WHERE Id = " + id);
 
         //My Webtoon에 추가 여부 판단
-        c = db.rawQuery("SELECT Is_mine FROM WEBTOON WHERE Id = "+id,null);
+        c = db.rawQuery("SELECT Is_mine FROM WEBTOON WHERE Id = " + id, null);
         c.moveToFirst();
-        if(c.getInt(0)==0){
+        if (c.getInt(0) == 0) {
             Log.i("MY WEBTOON", c.getString(0).toString());
             return "마이 웹툰 해제";
-        }else{
+        } else {
             Log.i("MY WEBTOON", c.getString(0).toString());
             return "마이 웹툰 설정";
         }
@@ -315,34 +315,34 @@ public class COINT_SQLiteManager {
         return db.rawQuery("SELECT * " +
                 "FROM WEBTOON " +
                 "WHERE Is_mine=1"
-                +" ORDER BY title ASC", null);
+                + " ORDER BY title ASC", null);
     }
 
     public Cursor searchquery(String s) {
-        return db.rawQuery("SELECT * "+
-                "FROM WEBTOON WHERE Title Like \"%"+s+"%\" OR Artist Like \"%"+s+"%\"",null);
+        return db.rawQuery("SELECT * " +
+                "FROM WEBTOON WHERE Title Like \"%" + s + "%\" OR Artist Like \"%" + s + "%\"", null);
     }
 
     public Cursor Top100Ranking() {
         return db.rawQuery("SELECT * FROM WEBTOON ORDER BY Hits DESC LIMIT 100", null);
     }
 
-    public ArrayList<Genre> getGenreAll(){
+    public ArrayList<Genre> getGenreAll() {
         Cursor cursor = db.rawQuery("SELECT * FROM Genre", null);
         ArrayList<Genre> genreArrayList = new ArrayList<>();
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             genreArrayList.add(new Genre(cursor.getInt(0), cursor.getString(1)));
         }
         return genreArrayList;
     }
 
-    public Episode getLatestEpisode(int toonId){
+    public Episode getLatestEpisode(int toonId) {
         Episode episode = null;
-        Cursor cursor = db.rawQuery("SELECT * "+
-                                                        "FROM EPISODE "+
-                                                        "WHERE Is_read = 1 AND Id_E ="+ Integer.toString(toonId)+
-                                                        " ORDER BY Episode_id DESC LIMIT 1",null);
-        if(cursor.moveToNext()){
+        Cursor cursor = db.rawQuery("SELECT * " +
+                "FROM EPISODE " +
+                "WHERE Is_read = 1 AND Id_E =" + Integer.toString(toonId) +
+                " ORDER BY Episode_id DESC LIMIT 1", null);
+        if (cursor.moveToNext()) {
             return new Episode(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getFloat(3), cursor.getString(4),
                     cursor.getString(5), cursor.getString(6), cursor.getInt(7), cursor.getInt(8));
         }
@@ -350,7 +350,7 @@ public class COINT_SQLiteManager {
 
     }
 
-    public void removeAllMyWebtoon(){
+    public void removeAllMyWebtoon() {
         db.execSQL("UPDATE WEBTOON SET Is_mine=0");
     }
     /**
@@ -361,52 +361,53 @@ public class COINT_SQLiteManager {
      * 1차 통합 원형 부분 추가 메소드
      */
     /* 요일별 웹툰 아이템요소 데이터 리턴 쿼리문 */
-    public Cursor getListItem(int weekday){
+    public Cursor getListItem(int weekday) {
         return db.rawQuery("SELECT  * " +
                         "FROM WEBTOON " +
                         "WHERE ID IN (SELECT ID_W FROM WEEKDAY WHERE Weekday=" + String.valueOf(weekday) + ")" +
                         "ORDER BY Hits DESC"
                 , null);
     }
+
     /**
      * 1차 통합 원형 부분 추가 메소드 end
      */
 
-    public Webtoon getWebtoonInstance(int id){
+    public Webtoon getWebtoonInstance(int id) {
         Cursor cursor = db.rawQuery("SELECT * FROM WEBTOON WHERE ID=" + id, null);
-        if(cursor.getCount() > 0){
+        if (cursor.getCount() > 0) {
             cursor.moveToNext();
             return new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11));
-        }else{
+                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                    cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11));
+        } else {
             return null;
         }
     }
 
-    public ArrayList<Webtoon> getWebtoonsByGenre(String genre){
+    public ArrayList<Webtoon> getWebtoonsByGenre(String genre) {
         ArrayList<Webtoon> returnList = new ArrayList<>();
-        if(genre.equals("BRANDETC")){
+        if (genre.equals("BRANDETC")) {
             Cursor cursor = db.rawQuery("SELECT * FROM WEBTOON WHERE Id NOT IN(SELECT DISTINCT Id_G FROM GENRE) ORDER BY Id DESC", null);
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 returnList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                        cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                        cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
             }
             cursor.close();
             cursor = db.rawQuery("SELECT * FROM WEBTOON, GENRE WHERE Id=Id_G AND Genre='BRAND' ORDER BY Id DESC", null);
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 returnList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                        cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                        cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
             }
             cursor.close();
-        }else{
+        } else {
             Cursor cursor = db.rawQuery("SELECT * FROM WEBTOON, GENRE WHERE Id=Id_G AND Genre='" + genre + "' ORDER BY Id DESC", null);
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 returnList.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                        cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+                        cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                        cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
             }
             cursor.close();
         }
@@ -415,16 +416,17 @@ public class COINT_SQLiteManager {
 
     /**
      * 에피소드 내 별점 업데이트
+     *
      * @param id
      * @param ep_id
      * @param score
      * @return true : 성공 false : 실패
      */
-    public boolean updateMyStarScore(int id, int ep_id, float score){
-        try{
+    public boolean updateMyStarScore(int id, int ep_id, float score) {
+        try {
             db.execSQL("UPDATE EPISODE SET My_star=" + score + " WHERE Id_E=" + id + " AND Episode_id=" + ep_id + ";");
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -433,16 +435,16 @@ public class COINT_SQLiteManager {
     /**
      * 로그아웃 시 내 별점 초기화
      */
-    public void initMyStar(){
+    public void initMyStar() {
         db.execSQL("UPDATE EPISODE SET My_star=-1;");
     }
 
-    public float getMyStar(int id, int ep_id){
+    public float getMyStar(int id, int ep_id) {
         Cursor c = db.rawQuery("SELECT My_star FROM EPISODE WHERE Id_E=" + id + " AND Episode_id=" + ep_id, null);
-        if(c.getCount() > 0){
+        if (c.getCount() > 0) {
             c.moveToNext();
             return c.getFloat(0);
-        }else{
+        } else {
             return -1;
         }
     }

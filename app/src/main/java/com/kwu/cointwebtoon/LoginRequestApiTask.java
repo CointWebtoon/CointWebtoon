@@ -2,9 +2,7 @@ package com.kwu.cointwebtoon;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.nhn.android.naverlogin.OAuthLogin;
 
@@ -29,7 +27,7 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
     /**
      * Constructor
      */
-    public LoginRequestApiTask(Context mContext, Application_UserInfo application){
+    public LoginRequestApiTask(Context mContext, Application_UserInfo application) {
         userInfo = application;
         this.mContext = mContext;
         loginInstance = userInfo.getLoginInstance();
@@ -41,15 +39,16 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
         String at = loginInstance.getAccessToken(mContext);
         return loginInstance.requestApi(mContext, at, url);
     }
+
     protected void onPostExecute(String content) {
         XMLDOMParser parser = new XMLDOMParser();
-        if(parser.parse(content)){
-            Log.i("coint" , "유저 정보 저장 성공");
-            Log.i("coint", "닉네임 : " + userInfo.getUserName() + " 성인 여부 : "  + userInfo.isUserAdult() +  " 성별 : " + userInfo.getUserGender());
-            if(mContext instanceof LoginActivity){
+        if (parser.parse(content)) {
+            Log.i("coint", "유저 정보 저장 성공");
+            Log.i("coint", "닉네임 : " + userInfo.getUserName() + " 성인 여부 : " + userInfo.isUserAdult() + " 성별 : " + userInfo.getUserGender());
+            if (mContext instanceof LoginActivity) {
                 ((LoginActivity) mContext).finish();
             }
-        }else{
+        } else {
             userInfo.initUserInfo();
         }
     }
@@ -62,7 +61,7 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
         private DocumentBuilder builder;
         private Document doc;
 
-        public XMLDOMParser(){
+        public XMLDOMParser() {
             super();
             builderFactory = DocumentBuilderFactory.newInstance();
             doc = null;
@@ -73,18 +72,18 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
             }
         }
 
-        public boolean parse(String xmlData){
-            try{
-                String id,nickname, age, gender;
+        public boolean parse(String xmlData) {
+            try {
+                String id, nickname, age, gender;
                 doc = builder.parse(new InputSource(new StringReader(xmlData)));
                 doc.getDocumentElement().normalize();
                 Element root = doc.getDocumentElement();
-                Element resultElement = (Element)root.getElementsByTagName("result").item(0);
-                resultElement = (Element)resultElement.getElementsByTagName("resultcode").item(0);
-                if(resultElement == null | !resultElement.getTextContent().equals("00"))
+                Element resultElement = (Element) root.getElementsByTagName("result").item(0);
+                resultElement = (Element) resultElement.getElementsByTagName("resultcode").item(0);
+                if (resultElement == null | !resultElement.getTextContent().equals("00"))
                     throw new ResultCodeNotSuccessException("ResultCode : " + resultElement);
 
-                Element responseElement = (Element)root.getElementsByTagName("response").item(0);
+                Element responseElement = (Element) root.getElementsByTagName("response").item(0);
                 id = responseElement.getElementsByTagName("id").item(0).getTextContent();
                 nickname = responseElement.getElementsByTagName("nickname").item(0).getTextContent();
                 age = responseElement.getElementsByTagName("age").item(0).getTextContent();
@@ -94,18 +93,17 @@ public class LoginRequestApiTask extends AsyncTask<Void, Void, String> {
 
                 Log.i("coint", userInfo.getUserName() + " " + userInfo.isUserAdult() + " " + userInfo.getUserGender());
                 return true;
-            } catch (ResultCodeNotSuccessException e){
+            } catch (ResultCodeNotSuccessException e) {
                 Log.e("coint", "Result Code is not SUCCESS : 로그인 안 된 상태");
                 return false;
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("coint", "Parsing Failed");
                 return false;
             }
         }
 
-        public class ResultCodeNotSuccessException extends Exception{
+        public class ResultCodeNotSuccessException extends Exception {
             public ResultCodeNotSuccessException(String detailMessage) {
                 super(detailMessage);
             }

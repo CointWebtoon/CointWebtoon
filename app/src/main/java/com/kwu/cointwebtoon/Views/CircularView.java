@@ -4,12 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 public class CircularView extends LinearLayout {
     private int h = 0;
-    private float fullScaleFactor=0.8f;
+    private float fullScaleFactor = 0.8f;
 
     public CircularView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,12 +40,12 @@ public class CircularView extends LinearLayout {
 
     private float calculateScale(int top, int h) {
         float result;
-        float k = (1f - 0.55f* Math.abs((top - h / 2.5f)) / (h / 2.5f)) * fullScaleFactor;
+        float k = (1f - 0.55f * Math.abs((top - h / 2.5f)) / (h / 2.5f)) * fullScaleFactor;
         float x = (top - h) * fullScaleFactor;
-        result = -0.0001f*x*x - 0.2f*x + 500f*k - 300;
+        result = -0.0001f * x * x - 0.2f * x + 500f * k - 300;
 
-        if(result > 0.0f){
-            result *= (0.5 + ((200-result)*(200-result)*0.00001375));
+        if (result > 0.0f) {
+            result *= (0.5 + ((200 - result) * (200 - result) * 0.00001375));
         }
 
         return result;

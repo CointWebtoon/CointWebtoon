@@ -14,11 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOError;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -26,9 +23,7 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 
-import static android.R.attr.id;
-
-public class GetServerData extends Observable{
+public class GetServerData extends Observable {
     private static HashSet<Observer> observers = new HashSet<>();
     private static COINT_SQLiteManager coint_sqLiteManager = null;
 
@@ -38,22 +33,22 @@ public class GetServerData extends Observable{
 
 
     //--------------Observer Pattern-----------------//
-    public void registerObserver(Observer observer){
+    public void registerObserver(Observer observer) {
         observers.add(observer);
     }
 
-    public void removeObserver(Observer observer){
+    public void removeObserver(Observer observer) {
         observers.remove(observer);
     }
 
-    private void updateObservers(){
-        for(Observer observer : observers){
+    private void updateObservers() {
+        for (Observer observer : observers) {
             observer.update(this, null);
         }
     }
 
-    private void updateObservers(Object objectToSend){
-        for(Observer observer : observers){
+    private void updateObservers(Object objectToSend) {
+        for (Observer observer : observers) {
             observer.update(this, objectToSend);
         }
     }
@@ -63,8 +58,8 @@ public class GetServerData extends Observable{
      * 메인 액티비티에서 스플래시 액티비티를 띄우기 전에 실행해놓아야 할 웹툰 목록 업데이트 메소드
      * 액티비티를 Observer 를 구현한 클래스로 만들고 update 메소드에 목록 업데이트가 완료되면 할 행동을 지정해주면 되겠다!
      */
-    public void getWebtoonFromServer(){
-        GetWebtoon webtoon =  new GetWebtoon();
+    public void getWebtoonFromServer() {
+        GetWebtoon webtoon = new GetWebtoon();
         webtoon.execute();
     }
 
@@ -73,27 +68,29 @@ public class GetServerData extends Observable{
      * Input Parameter : 회차정보를 얻어올 웹툰의 고유 ID
      * Episode Activity 에서 밖에 사용할 일이 없음!!
      */
-    public void getEpisodesFromServer(int toonId){
+    public void getEpisodesFromServer(int toonId) {
         GetEpisode episode = new GetEpisode();
         episode.execute(toonId);
     }
 
     /**
      * 서버에서 이미지 목록을 가져오는 메소드 --> Viewer 에서 사용
-     * @param toonId : 웹툰 고유 ID
+     *
+     * @param toonId    : 웹툰 고유 ID
      * @param episodeId : 에피소드 ID
      */
-    public void getImagesFromServer(int toonId, int episodeId){
-        String url = "http://coint.iptime.org:8080/Image_Client.jsp?id="  + String.valueOf(toonId) + "&ep_id=" + String.valueOf(episodeId);
+    public void getImagesFromServer(int toonId, int episodeId) {
+        String url = "http://coint.iptime.org:8080/Image_Client.jsp?id=" + String.valueOf(toonId) + "&ep_id=" + String.valueOf(episodeId);
         GetImage getImage = new GetImage();
         getImage.execute(url);
     }
 
     /**
      * 서버의 웹툰의 조회수를 올려주는 메소드
+     *
      * @param id : 웹툰 고유 ID
      */
-    public void plusHit(int id){
+    public void plusHit(int id) {
         String url = "http://coint.iptime.org:8080/Hits.jsp?id=" + id;
         URLRequest request = new URLRequest();
         request.execute(url);
@@ -101,25 +98,27 @@ public class GetServerData extends Observable{
 
     /**
      * 서버의 웹툰의 좋아요를 올리고 내리는 메소드
-     * @param id : 웹툰 고유 ID
+     *
+     * @param id        : 웹툰 고유 ID
      * @param plusMinus : 좋아요를 올리는 행동이면 'plus' 내리는 행동이면 'minus'
      */
-    public void likeWebtoon(int id, String plusMinus){
+    public void likeWebtoon(int id, String plusMinus) {
         String url = "http://coint.iptime.org:8080/Likes.jsp?type=webtoon&id=" + id + "&value=" + plusMinus;
         URLRequest request = new URLRequest();
         request.execute(url);
     }
 
-    public void getComments(String url){
+    public void getComments(String url) {
         GetComment comment = new GetComment();
         comment.execute(url);
     }
 
     /**
      * 서버의 댓글의 좋아요를 올리는 메소드
+     *
      * @param commentID : 댓글 고유 ID
      */
-    public void likeComment(int commentID){
+    public void likeComment(int commentID) {
         String url = "http://coint.iptime.org:8080/Comment_Like.jsp?comment_id=" + commentID;
         URLRequest request = new URLRequest();
         request.execute(url);
@@ -127,18 +126,19 @@ public class GetServerData extends Observable{
 
     /**
      * 서버의 댓글을 삭제하는 메소드
+     *
      * @param commentID : 댓글 고유 ID
      */
-    public void deleteComment(int commentID){
+    public void deleteComment(int commentID) {
         String url = "http://coint.iptime.org:8080/Comment_Delete.jsp?comment_id=" + commentID;
         URLRequest request = new URLRequest();
         request.execute(url);
     }
 
-    public void addComment(Comment comment){
+    public void addComment(Comment comment) {
         String url = "http://coint.iptime.org:8080/Comment_Add.jsp?id=" + comment.getId() + "&ep_id=" + comment.getEp_id() +
                 "&writer=" + comment.getWriter() + "&nickname=" + URLEncoder.encode(comment.getNickname()) + "&content=" + URLEncoder.encode(comment.getContent());
-        if(comment.getCutNumber() != -1){
+        if (comment.getCutNumber() != -1) {
             url += "&cutnumber=" + comment.getCutNumber();
         }
         URLRequest request = new URLRequest();
@@ -146,14 +146,14 @@ public class GetServerData extends Observable{
     }
 
     /**
-        GetWebtoon 클래스, GetWeekday 클래스, GetGenre 클래스는 연쇄적으로 호출되도록 구성하였다.
-        GetWebtoon의 AsyncTask를 execute하게 되면 연쇄적으로 GetWeekday, GetGenre가 자동으로 호출되므로
-        따로 호출해줄 필요 없다! 이 과정은 getWebtoonFromServer라는 메소드를 통해서만 진행하도록 하자.
+     * GetWebtoon 클래스, GetWeekday 클래스, GetGenre 클래스는 연쇄적으로 호출되도록 구성하였다.
+     * GetWebtoon의 AsyncTask를 execute하게 되면 연쇄적으로 GetWeekday, GetGenre가 자동으로 호출되므로
+     * 따로 호출해줄 필요 없다! 이 과정은 getWebtoonFromServer라는 메소드를 통해서만 진행하도록 하자.
      */
     //ToonList_Client.jsp
     private class GetWebtoon extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... urls) {
-            Log.i("PROGRESS","GETWEBTOON STARTED");
+            Log.i("PROGRESS", "GETWEBTOON STARTED");
 
             ArrayList<Webtoon> webtoons = new ArrayList<>();
             StringBuilder jsonHtml = new StringBuilder();
@@ -184,28 +184,28 @@ public class GetServerData extends Observable{
                     int id, likes, hits, isUpdated;        //is_update : 휴재면 2
                     char toonType;
                     boolean isCharged, isAdult;
-                        JSONObject root = new JSONObject(jsonHtml.toString());
-                        if (root.isNull("result") != true) {                                          //JSON으로 파싱할 내용이 있는지 검사
-                            JSONArray jsonArray = root.getJSONArray("result");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject root = new JSONObject(jsonHtml.toString());
+                    if (root.isNull("result") != true) {                                          //JSON으로 파싱할 내용이 있는지 검사
+                        JSONArray jsonArray = root.getJSONArray("result");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                                id = Integer.parseInt(jsonObject.getString("Id"));
-                                title = jsonObject.getString("Title");
-                                artist = jsonObject.getString("Artist");
-                                starscore = Float.parseFloat(jsonObject.getString("Starscore"));
-                                hits = Integer.parseInt(jsonObject.getString("Hits"));
-                                thumburl = jsonObject.getString("Thumburl");
-                                likes = Integer.parseInt(jsonObject.getString("Likes"));
-                                toonType = jsonObject.getString("Toontype").charAt(0);
-                                isAdult = Integer.parseInt(jsonObject.getString("Is_adult")) == 1 ? true : false;
-                                isCharged = Integer.parseInt(jsonObject.getString("Is_charged")) == 1 ? true : false;
-                                isUpdated = Integer.parseInt(jsonObject.getString("Is_updated"));
+                            id = Integer.parseInt(jsonObject.getString("Id"));
+                            title = jsonObject.getString("Title");
+                            artist = jsonObject.getString("Artist");
+                            starscore = Float.parseFloat(jsonObject.getString("Starscore"));
+                            hits = Integer.parseInt(jsonObject.getString("Hits"));
+                            thumburl = jsonObject.getString("Thumburl");
+                            likes = Integer.parseInt(jsonObject.getString("Likes"));
+                            toonType = jsonObject.getString("Toontype").charAt(0);
+                            isAdult = Integer.parseInt(jsonObject.getString("Is_adult")) == 1 ? true : false;
+                            isCharged = Integer.parseInt(jsonObject.getString("Is_charged")) == 1 ? true : false;
+                            isUpdated = Integer.parseInt(jsonObject.getString("Is_updated"));
 
-                                webtoons.add(new Webtoon(id, title, artist, starscore, thumburl, likes, hits, toonType, isCharged, isAdult, isUpdated));
-                            }
-                            coint_sqLiteManager.insertWebtoon(webtoons);//서버에서 웹툰 목록 받아서 SQLite 업데이트
+                            webtoons.add(new Webtoon(id, title, artist, starscore, thumburl, likes, hits, toonType, isCharged, isAdult, isUpdated));
                         }
+                        coint_sqLiteManager.insertWebtoon(webtoons);//서버에서 웹툰 목록 받아서 SQLite 업데이트
+                    }
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -220,10 +220,11 @@ public class GetServerData extends Observable{
             super.onPostExecute(aVoid);
         }
     }
+
     //Weekday.jsp
     private class GetWeekday extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... urls) {
-            Log.i("PROGRESS","GETWEEKDAY STARTED");
+            Log.i("PROGRESS", "GETWEEKDAY STARTED");
 
             int idW, weekdayValue;
             StringBuilder jsonHtml = new StringBuilder();
@@ -249,7 +250,7 @@ public class GetServerData extends Observable{
                         bufferedReader.close();
                     }
                     connection.disconnect();
-                }else{
+                } else {
                     throw new Exception("WEEKDAY CONNECTION ERR");
                 }
                 JSONObject root = new JSONObject(jsonHtml.toString());
@@ -285,10 +286,11 @@ public class GetServerData extends Observable{
             super.onPostExecute(aVoid);
         }
     }
+
     //Genre.jsp
     private class GetGenre extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... aVoid) {
-            Log.i("PROGRESS","GETGENRE STARTED");
+            Log.i("PROGRESS", "GETGENRE STARTED");
 
             int id_G;
             String genreValue;
@@ -315,7 +317,7 @@ public class GetServerData extends Observable{
                         bufferedReader.close();
                     }
                     connection.disconnect();
-                }else{
+                } else {
                     throw new Exception("GENRE CONNECTION ERR");
                 }
                 JSONObject root = new JSONObject(jsonHtml.toString());
@@ -342,14 +344,14 @@ public class GetServerData extends Observable{
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Log.i("coint","서버에서 데이터 가져오기 완료");
+            Log.i("coint", "서버에서 데이터 가져오기 완료");
             updateObservers();
             super.onPostExecute(aVoid);
         }
     }
 
     //Episode_Client.jsp
-    private class GetEpisode extends AsyncTask<Integer, Void, Void>{
+    private class GetEpisode extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... toonIds) {
 
@@ -379,7 +381,7 @@ public class GetServerData extends Observable{
                         bufferedReader.close();
                     }
                     connection.disconnect();
-                }else{
+                } else {
                     throw new Exception("EPISODE CONNECTION ERR");
                 }
                 JSONObject root = new JSONObject(jsonHtml.toString());
@@ -416,42 +418,43 @@ public class GetServerData extends Observable{
     }
 
     //Image_Client.jsp
-    private class GetImage extends AsyncTask<String, Void, Void>{
+    private class GetImage extends AsyncTask<String, Void, Void> {
         private ArrayList<String> imageUrls = new ArrayList<>();
-        protected Void doInBackground(String... urls){
+
+        protected Void doInBackground(String... urls) {
             StringBuilder jsonHtml = new StringBuilder();
             String image_url;
-            try{
+            try {
                 URL url = new URL(urls[0]); //연결 url 설정
-                HttpURLConnection connection = (HttpURLConnection)url.openConnection(); //커넥션 객체 생성
-                if(connection!=null){
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
+                if (connection != null) {
                     connection.setConnectTimeout(10000);
                     connection.setUseCaches(false);
-                    if(connection.getResponseCode()==HttpURLConnection.HTTP_OK){
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(),"EUC-KR"));
-                        for(;;){
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "EUC-KR"));
+                        for (; ; ) {
                             //웹상에 보여지는 텍스트를 라인단위로 읽어 저장
                             String line = bufferedReader.readLine();
                             if (line == null)
                                 break;
-                            jsonHtml.append(line+"\n");
+                            jsonHtml.append(line + "\n");
                         }
                         bufferedReader.close();
                     }
                     connection.disconnect();
                     JSONObject root = new JSONObject(jsonHtml.toString());
-                    if(root.isNull("result") != true){
+                    if (root.isNull("result") != true) {
                         JSONArray jsonArray = root.getJSONArray("result");
-                        for(int i=0; i<jsonArray.length();i++){
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             image_url = jsonObject.getString("image_url");
                             imageUrls.add(image_url);
                         }
                     }
-                }else {
+                } else {
                     throw new Exception("IMAGE CONNECTION ERROR");
                 }
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
             return null;
@@ -460,8 +463,8 @@ public class GetServerData extends Observable{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            for(Observer observer : observers){
-                if(!(observer instanceof ViewerCommentActivity)){
+            for (Observer observer : observers) {
+                if (!(observer instanceof ViewerCommentActivity)) {
                     observer.update(GetServerData.this, imageUrls);
                 }
             }
@@ -472,19 +475,19 @@ public class GetServerData extends Observable{
      * 조회수를 올린다던지, 좋아요를 올리고 내리는 등 페이지에 요청만 하고
      * 데이터를 따로 받아올 필요가 없는 것들을 처리
      */
-    private class URLRequest extends AsyncTask<String, Void, Void>{
+    private class URLRequest extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
-            try{
+            try {
                 URL url = new URL(params[0]); //연결 url 설정
-                HttpURLConnection connection = (HttpURLConnection)url.openConnection(); //커넥션 객체 생성
-                if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     Log.i("coint", "접속 성공");
                     connection.disconnect();
-                }else{
+                } else {
                     throw new Exception(params[0] + " 접속 중 Exception 발생");
                 }
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
             return null;
@@ -494,33 +497,34 @@ public class GetServerData extends Observable{
     /**
      * 댓글을 받아오는 Task
      */
-    private class GetComment extends AsyncTask<String, Void, Void>{
+    private class GetComment extends AsyncTask<String, Void, Void> {
         private ArrayList<Comment> comments = new ArrayList<>();
-        protected Void doInBackground(String... urls){
+
+        protected Void doInBackground(String... urls) {
             StringBuilder jsonHtml = new StringBuilder();
             String commentid, id, ep_id, writer, nickname, content, like, time, cutnumber;
-            try{
+            try {
                 URL url = new URL(urls[0]); //연결 url 설정
-                HttpURLConnection connection = (HttpURLConnection)url.openConnection(); //커넥션 객체 생성
-                if(connection!=null){
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //커넥션 객체 생성
+                if (connection != null) {
                     connection.setConnectTimeout(10000);
                     connection.setUseCaches(false);
-                    if(connection.getResponseCode()==HttpURLConnection.HTTP_OK){
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(),"EUC-KR"));
-                        for(;;){
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "EUC-KR"));
+                        for (; ; ) {
                             //웹상에 보여지는 텍스트를 라인단위로 읽어 저장
                             String line = bufferedReader.readLine();
                             if (line == null)
                                 break;
-                            jsonHtml.append(line+"\n");
+                            jsonHtml.append(line + "\n");
                         }
                         bufferedReader.close();
                     }
                     connection.disconnect();
                     JSONObject root = new JSONObject(jsonHtml.toString());
-                    if(root.isNull("result") != true){
+                    if (root.isNull("result") != true) {
                         JSONArray jsonArray = root.getJSONArray("result");
-                        for(int i=0; i<jsonArray.length();i++){
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             commentid = jsonObject.getString("Comment_id");
                             id = jsonObject.getString("Id_C");
@@ -535,19 +539,20 @@ public class GetServerData extends Observable{
                                     Integer.parseInt(ep_id), writer, nickname, content, Integer.parseInt(like), time, Integer.parseInt(cutnumber), false));
                         }
                     }
-                }else {
+                } else {
                     throw new Exception("COMMENT CONNECTION ERROR");
                 }
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            for(Observer observer : observers){
-                if(observer instanceof ViewerCommentActivity){
+            for (Observer observer : observers) {
+                if (observer instanceof ViewerCommentActivity) {
                     observer.update(GetServerData.this, comments);
                 }
             }

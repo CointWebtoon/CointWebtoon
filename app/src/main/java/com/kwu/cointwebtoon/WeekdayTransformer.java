@@ -3,7 +3,7 @@ package com.kwu.cointwebtoon;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-public class WeekdayTransformer implements ViewPager.PageTransformer{
+public class WeekdayTransformer implements ViewPager.PageTransformer {
     private static final float MIN_SCALE = 0.75f;
 
     @Override

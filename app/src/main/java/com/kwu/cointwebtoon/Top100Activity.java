@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
 import com.tsengvn.typekit.TypekitContextWrapper;
@@ -22,7 +21,7 @@ public class Top100Activity extends TypeKitActivity {
     Cursor cursor = null;
     COINT_SQLiteManager coint_sqLiteManager;
 
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mywebtoon_activity);
@@ -32,23 +31,23 @@ public class Top100Activity extends TypeKitActivity {
 
         resultQueries = new ArrayList<>();
 
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             resultQueries.add(new Webtoon(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getFloat(3),
-                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8)==1?true:false,
-                    cursor.getInt(9)==1?true:false, cursor.getInt(10)==1?true:false, cursor.getInt(11)));
+                    cursor.getInt(4), cursor.getString(5), cursor.getInt(6), cursor.getString(7).charAt(0), cursor.getInt(8) == 1 ? true : false,
+                    cursor.getInt(9) == 1 ? true : false, cursor.getInt(10) == 1 ? true : false, cursor.getInt(11)));
         }
-        TextView textView = (TextView)findViewById(R.id.emptyMy);
+        TextView textView = (TextView) findViewById(R.id.emptyMy);
         textView.setVisibility(View.GONE);
 
         listviewAdp = new MyWebtoonAdapter(this, resultQueries);
 
-        listView = (ListView)findViewById(R.id.searchView);
+        listView = (ListView) findViewById(R.id.searchView);
         listView.setAdapter(listviewAdp);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {             //리스트뷰 클릭 리스너로 id를 보내줌
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Webtoon target = (Webtoon)listviewAdp.getItem(position);
+                Webtoon target = (Webtoon) listviewAdp.getItem(position);
                 Intent episodeIntent = new Intent(Top100Activity.this, EpisodeActivity.class);
                 episodeIntent.putExtra("id", target.getId());
                 episodeIntent.putExtra("toontype", target.getToonType());
@@ -57,8 +56,9 @@ public class Top100Activity extends TypeKitActivity {
             }
         });
     }
+
     @Override
-    protected void attachBaseContext(Context newBase){
+    protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
     }
 }

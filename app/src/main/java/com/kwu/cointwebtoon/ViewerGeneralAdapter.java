@@ -18,7 +18,7 @@ import com.kwu.cointwebtoon.Views.GeneralToonImageView;
 
 import java.util.ArrayList;
 
-public class ViewerGeneralAdapter extends RecyclerView.Adapter{
+public class ViewerGeneralAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_IMAGE = 0;
     private static final int VIEW_TYPE_RATING = 1;
 
@@ -28,21 +28,21 @@ public class ViewerGeneralAdapter extends RecyclerView.Adapter{
     private int width;
     public RecyclerView.ViewHolder rating_holder_public;
 
-    public ViewerGeneralAdapter(ViewerGeneralActivity mContext){
+    public ViewerGeneralAdapter(ViewerGeneralActivity mContext) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         width = mContext.getWindowManager().getDefaultDisplay().getWidth();
     }
 
-    public void changeData(ArrayList<String> imageList){
-        if(imageList != null){
+    public void changeData(ArrayList<String> imageList) {
+        if (imageList != null) {
             images.clear();
             images.addAll(imageList);
             notifyDataSetChanged();
         }
     }
 
-    public void clearImage(){
+    public void clearImage() {
         images.clear();
         notifyDataSetChanged();
     }
@@ -50,13 +50,13 @@ public class ViewerGeneralAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder;
-        switch (viewType){
-            case VIEW_TYPE_IMAGE:{
+        switch (viewType) {
+            case VIEW_TYPE_IMAGE: {
                 View view = inflater.inflate(R.layout.viewer_general_image_item, null);
                 holder = new ViewHolder_TYPE_IMAGE(view);
                 return holder;
             }
-            case VIEW_TYPE_RATING:{
+            case VIEW_TYPE_RATING: {
                 View view = inflater.inflate(R.layout.viewer_general_rating_item, null);
                 holder = new ViewHolder_TYPE_RATING(view);
                 rating_holder_public = holder;
@@ -68,10 +68,10 @@ public class ViewerGeneralAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        try{
-            if(holder instanceof ViewHolder_TYPE_IMAGE){
-                ViewHolder_TYPE_IMAGE imageHolder = (ViewHolder_TYPE_IMAGE)holder;
-                if(position < images.size()){
+        try {
+            if (holder instanceof ViewHolder_TYPE_IMAGE) {
+                ViewHolder_TYPE_IMAGE imageHolder = (ViewHolder_TYPE_IMAGE) holder;
+                if (position < images.size()) {
                     imageHolder.imageItem.setClickable(false);
                     Glide.with(mContext)
                             .load(images.get(position))
@@ -81,7 +81,7 @@ public class ViewerGeneralAdapter extends RecyclerView.Adapter{
                             .placeholder(R.drawable.view_placeholder)
                             .into(imageHolder.imageItem);   //이미지 세팅
                 }
-            }else if(holder instanceof ViewHolder_TYPE_RATING) {
+            } else if (holder instanceof ViewHolder_TYPE_RATING) {
                 ViewHolder_TYPE_RATING ratingHolder = (ViewHolder_TYPE_RATING) holder;
                 if (position == images.size()) {
                     float rating = mContext.getMyStar();
@@ -114,32 +114,39 @@ public class ViewerGeneralAdapter extends RecyclerView.Adapter{
                     //-----별점 셋팅----//
                 }
             }
-        }catch (Exception e){return;}
+        } catch (Exception e) {
+            return;
+        }
     }
 
     @Override
     public int getItemCount() {
-        try{return images.size() + 1;}catch (Exception e){return 1;}
+        try {
+            return images.size() + 1;
+        } catch (Exception e) {
+            return 1;
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position == images.size()){
+        if (position == images.size()) {
             return VIEW_TYPE_RATING;
-        }else{
+        } else {
             return VIEW_TYPE_IMAGE;
         }
     }
 
-    public class ViewHolder_TYPE_IMAGE extends RecyclerView.ViewHolder{
+    public class ViewHolder_TYPE_IMAGE extends RecyclerView.ViewHolder {
         public GeneralToonImageView imageItem;
+
         public ViewHolder_TYPE_IMAGE(View itemView) {
             super(itemView);
-            imageItem = (GeneralToonImageView)itemView.findViewById(R.id.GeneralToonImageView);
+            imageItem = (GeneralToonImageView) itemView.findViewById(R.id.GeneralToonImageView);
         }
     }
 
-    public class ViewHolder_TYPE_RATING extends RecyclerView.ViewHolder{
+    public class ViewHolder_TYPE_RATING extends RecyclerView.ViewHolder {
         public TextView starTv, artistTv, mention;
         public RatingBar ratingBar;
         public Button givingStar;

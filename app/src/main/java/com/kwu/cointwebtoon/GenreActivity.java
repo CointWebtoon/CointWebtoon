@@ -1,8 +1,7 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
-import com.nhn.android.naverlogin.OAuthLogin;
 
 import java.util.ArrayList;
 
@@ -91,16 +88,16 @@ public class GenreActivity extends TypeKitActivity
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         View headerview = navigationView.getHeaderView(0);
-        navStatus = (TextView)headerview.findViewById(R.id.nav_status);
-        navHeader = (Button)headerview.findViewById(R.id.nav_login);
-        navHeader.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(userInfo.isLogin()){
+        navStatus = (TextView) headerview.findViewById(R.id.nav_status);
+        navHeader = (Button) headerview.findViewById(R.id.nav_login);
+        navHeader.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (userInfo.isLogin()) {
                     userInfo.onLogOut(GenreActivity.this);
                     Toast.makeText(GenreActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                     navHeader.setBackgroundResource(R.drawable.login);
                     navStatus.setText("로그인 해주세요");
-                }else{
+                } else {
                     startActivity(new Intent(GenreActivity.this, LoginActivity.class));
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -111,7 +108,7 @@ public class GenreActivity extends TypeKitActivity
         /**
          * Nav 공통 요소 end
          */
-        fab = (FloatingActionButton)findViewById(R.id.genre_floating_home);
+        fab = (FloatingActionButton) findViewById(R.id.genre_floating_home);
         fab.setOnClickListener(this);
         dialog = new CointProgressDialog(this);
         gridView = (GridView) findViewById(R.id.genre_grid);
@@ -150,7 +147,7 @@ public class GenreActivity extends TypeKitActivity
         taskInstance = new GetGenreItems();
         taskInstance.execute(COMIC);
         layoutWidth = getWindowManager().getDefaultDisplay().getWidth();
-        userInfo = (Application_UserInfo)getApplication();
+        userInfo = (Application_UserInfo) getApplication();
     }
 
     /**
@@ -350,6 +347,29 @@ public class GenreActivity extends TypeKitActivity
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
+            case R.id.customService:
+                new AlertDialog.Builder(this)
+                        .setTitle("코인트 고객센터")
+                        .setMessage("광운대학교\n" +
+                                "서울특별시 노원구 광운로 20\n" +
+                                "융합SW교육혁신추진단\n(새빛관 404호)\n" +
+                                "Tel : 02-940-5654\nE-Mail : syjin@kw.ac.kr\n")
+                        .setPositiveButton("닫기", null)
+                        .show();
+                break;
+            case R.id.error:
+                new AlertDialog.Builder(this)
+                        .setTitle("오류 신고")
+                        .setMessage("광운대학교\n" +
+                                "컴퓨터 소프트웨어학과\nTEAM COINT 팀장 최은주\n" +
+                                "E-Mail : epcej0020@gmail.com\n")
+                        .setPositiveButton("닫기", null)
+                        .show();
+                break;
+            case R.id.appInfo:
+                AppInfoDialog dialog = new AppInfoDialog(this);
+                dialog.show();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -401,6 +421,7 @@ public class GenreActivity extends TypeKitActivity
         }
         return false;
     }
+
     /**
      * Nav 공통 요소 end
      */
@@ -408,10 +429,10 @@ public class GenreActivity extends TypeKitActivity
     protected void onResume() {
         super.onResume();
 
-        if(userInfo.isLogin()){
+        if (userInfo.isLogin()) {
             navHeader.setBackgroundResource(R.drawable.logout);
-            navStatus.setText(userInfo.getUserName()+"님");
-        }else{
+            navStatus.setText(userInfo.getUserName() + "님");
+        } else {
             navHeader.setBackgroundResource(R.drawable.login);
             navStatus.setText("로그인 해주세요");
         }

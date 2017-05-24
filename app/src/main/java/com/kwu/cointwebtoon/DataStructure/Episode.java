@@ -61,7 +61,9 @@ public class Episode {
         return likes_E;
     }
 
-    public int getIs_read(){ return is_read;}
+    public int getIs_read() {
+        return is_read;
+    }
 
 /*    public int getIs_saved() { return is_saved;}
 
@@ -79,7 +81,7 @@ public class Episode {
     ///------------- ArrayList.Contains 기능 사용하기 위해 만든 메소드------//////
     @Override
     public boolean equals(Object obj) {
-        if(obj == null | this == null )
+        if (obj == null | this == null)
             return false;
         Episode episode = (Episode) obj;
         if (this.id_E == episode.id_E && this.episode_id == episode.episode_id)

@@ -1,6 +1,5 @@
 package com.kwu.cointwebtoon;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,28 +13,30 @@ public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnC
     private TextView starTextView;
     private float number = 0.0f;
     private RatingBar ratingbar;
+
     @Override
-    protected  void onCreate(Bundle saveInstanceState) {
+    protected void onCreate(Bundle saveInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(saveInstanceState);
         setContentView(R.layout.viewer_starscore_activity);
-        starTextView = (TextView)findViewById(R.id.txtView);
+        starTextView = (TextView) findViewById(R.id.txtView);
         setContent();
-        ratingbar = (RatingBar)findViewById(R.id.dialog_rating);
+        ratingbar = (RatingBar) findViewById(R.id.dialog_rating);
         ratingbar.setMax(10);
         ratingbar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean onTouch) {
-                if(rating == 0){
+                if (rating == 0) {
                     ratingBar.setRating(0.5f);
                     rating = 0.5f;
                 }
-                starTextView.setText(String.valueOf((int)(rating * 2)));
+                starTextView.setText(String.valueOf((int) (rating * 2)));
                 number = rating * 2;
                 System.out.println(number);
             }
         });
     }
+
     private void setContent() {
         mConfirm = (Button) findViewById(R.id.btnConfirm);
         mCancle = (Button) findViewById(R.id.btnCancel);
@@ -43,6 +44,7 @@ public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnC
         mConfirm.setOnClickListener(this);
         mCancle.setOnClickListener(this);
     }
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnConfirm:
@@ -52,7 +54,9 @@ public class ViewerStarScoreActivity extends TypeKitActivity implements View.OnC
                     resultIntent.putExtra("SCORE", number);
                     setResult(RESULT_OK, resultIntent);
                     finish();
-                }catch (Exception ex) { ex.printStackTrace();}
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 break;
             case R.id.btnCancel:
                 this.finish();

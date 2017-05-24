@@ -15,14 +15,18 @@ public class Weekday {
         return id_W;
     }
 
-    public int getWeekday(){ return weekday;}
+    public int getWeekday() {
+        return weekday;
+    }
 
     //Setter Method
     public void setId(int id) {
         this.id_W = id;
     }
 
-    public void setWeekday(int weekday){ this.weekday = weekday;}
+    public void setWeekday(int weekday) {
+        this.weekday = weekday;
+    }
 
     ///------------- ArrayList.Contains 기능 사용하기 위해 만든 메소드------//////
     @Override

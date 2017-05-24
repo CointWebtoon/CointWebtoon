@@ -32,7 +32,7 @@ public class Webtoon {
     //SQLite에서 데이터 꺼내쓸 때 사용하는 생성자.
     //Id Title Artist Starscore Hits Thumburl Likes Toontype Is_adult Is_charged Is_mine Is_updated 순서
     public Webtoon(int id, String title, String artist, float starScore,
-                   int hits, String thumbURL, int likes, char toonType, boolean is_adult, boolean is_charged, boolean is_mine, int is_updated){
+                   int hits, String thumbURL, int likes, char toonType, boolean is_adult, boolean is_charged, boolean is_mine, int is_updated) {
         this.id = id;
         this.title = title;
         this.artist = artist;
@@ -48,7 +48,7 @@ public class Webtoon {
     }
 
     //먼저 인스턴스를 생성해놓고 setting하는 경우
-    public Webtoon(){
+    public Webtoon() {
         this.id = -1;
         this.title = null;
         this.artist = null;
@@ -84,22 +84,36 @@ public class Webtoon {
         return thumbURL;
     }
 
-    public char getToonType(){return toonType;}
+    public char getToonType() {
+        return toonType;
+    }
 
-    public boolean isCharged(){return is_charged;}
+    public boolean isCharged() {
+        return is_charged;
+    }
 
-    public int isUpdated(){return is_updated;}
+    public int isUpdated() {
+        return is_updated;
+    }
 
-    public boolean isAdult(){return is_adult;}
+    public boolean isAdult() {
+        return is_adult;
+    }
 
-    public boolean isMine(){return is_mine;}
+    public boolean isMine() {
+        return is_mine;
+    }
 
-    public int getHits(){return hits;}
+    public int getHits() {
+        return hits;
+    }
 
-    public int getLikes(){return likes;}
+    public int getLikes() {
+        return likes;
+    }
 
     //Setter Method
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -107,7 +121,9 @@ public class Webtoon {
         this.title = title;
     }
 
-    public void setArtist(String artist) {this.artist = artist;}
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
 
     public void setStarScore(float starScore) {
         this.starScore = starScore;
@@ -117,19 +133,33 @@ public class Webtoon {
         this.thumbURL = thumbURL;
     }
 
-    public void setToonType(char toonType){this.toonType =  toonType;}
+    public void setToonType(char toonType) {
+        this.toonType = toonType;
+    }
 
-    public void setIsCharged(boolean is_charged){this.is_charged =  is_charged;}
+    public void setIsCharged(boolean is_charged) {
+        this.is_charged = is_charged;
+    }
 
-    public void setIsUpdated(int is_updated){this.is_updated =  is_updated;}
+    public void setIsUpdated(int is_updated) {
+        this.is_updated = is_updated;
+    }
 
-    public void setIs_adult(boolean is_adult){this.is_adult =  is_adult;}
+    public void setIs_adult(boolean is_adult) {
+        this.is_adult = is_adult;
+    }
 
-    public void setHits(int hits){this.hits = hits;}
+    public void setHits(int hits) {
+        this.hits = hits;
+    }
 
-    public void setLikes(int likes){this.likes = likes;}
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 
-    public void setIs_mine(boolean is_mine){this.is_mine = is_mine;}
+    public void setIs_mine(boolean is_mine) {
+        this.is_mine = is_mine;
+    }
 
     ///------------- ArrayList.Contains 기능 사용하기 위해 만든 메소드------//////
     @Override

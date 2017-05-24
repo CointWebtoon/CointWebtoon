@@ -12,14 +12,14 @@ import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 public class LoginActivity extends TypeKitActivity {
     /**
-     *  Login API Instance
+     * Login API Instance
      */
     private Application_UserInfo userInfo;
     private static OAuthLogin loginInstance;
     private OAuthLoginHandler loginCallBack;
 
     /**
-     *  Views
+     * Views
      */
     private OAuthLoginButton loginBtn;
     private TextView descTextView;
@@ -33,15 +33,15 @@ public class LoginActivity extends TypeKitActivity {
         getLoginInstance();
     }
 
-    private void initView(){
-        loginBtn = (OAuthLoginButton)findViewById(R.id.LoginActivity_LoginBtn);
+    private void initView() {
+        loginBtn = (OAuthLoginButton) findViewById(R.id.LoginActivity_LoginBtn);
         loginBtn.setOnClickListener(new onClick());
-        descTextView = (TextView)findViewById(R.id.LoginActivity_Description);
+        descTextView = (TextView) findViewById(R.id.LoginActivity_Description);
         descTextView.setText("COINT 웹툰은 네이버 아이디로 이용하실 수 있습니다.\n네이버 아이디로 로그인해주세요.");
     }
 
-    private void getLoginInstance(){
-        userInfo = (Application_UserInfo)getApplication();
+    private void getLoginInstance() {
+        userInfo = (Application_UserInfo) getApplication();
         loginInstance = userInfo.getLoginInstance();
         /**
          *  네아로 로그인 Activity(LoginActivity 말고 실제 로그인 액티비티) 종료 시 행동
@@ -49,21 +49,21 @@ public class LoginActivity extends TypeKitActivity {
         loginCallBack = new OAuthLoginHandler() {
             @Override
             public void run(boolean success) {
-                if(success){
+                if (success) {
                     LoginRequestApiTask apiTask = new LoginRequestApiTask(LoginActivity.this, userInfo);
                     apiTask.execute();
-                }else{
+                } else {
                     userInfo.initUserInfo();
                 }
             }
         };
     }
 
-    private class onClick implements View.OnClickListener{
+    private class onClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.LoginActivity_LoginBtn:{
+            switch (v.getId()) {
+                case R.id.LoginActivity_LoginBtn: {
                     loginInstance.startOauthLoginActivity(LoginActivity.this, loginCallBack);
                     break;
                 }

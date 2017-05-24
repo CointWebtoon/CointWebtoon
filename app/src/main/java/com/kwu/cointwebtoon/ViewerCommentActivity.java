@@ -80,7 +80,7 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
         registerForContextMenu(recycler);
         allComment = (Button) findViewById(R.id.allcomment);
         myComment = (Button) findViewById(R.id.mycomment);
-        noComment = (TextView)findViewById(R.id.comment_noComment);
+        noComment = (TextView) findViewById(R.id.comment_noComment);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
             if (Math.abs(gapX) > 200 && Math.abs(gapY) < 200) {
                 if (gapX < 0) {//다음
                     myComment.performClick();
-                }else {//이전
+                } else {//이전
                     allComment.performClick();
                 }
                 return true;
@@ -290,7 +290,7 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
             super.onPostExecute(aVoid);
             if (callbackList.size() == 0) {
                 noComment.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 noComment.setVisibility(View.GONE);
             }
             Log.i("coint", String.valueOf(callbackList.size()));
@@ -337,14 +337,14 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
         switch (item.getItemId()) {
             case R.id.kakao:
                 Intent kakaoIntent = getPackageManager().getLaunchIntentForPackage("com.kakao.talk");
-                if(target != null && kakaoIntent != null){
+                if (target != null && kakaoIntent != null) {
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.setPackage("com.kakao.talk");
                     intent.putExtra(Intent.EXTRA_SUBJECT, "COINT 웹툰 댓글 공유");
-                    intent.putExtra(Intent.EXTRA_TEXT, "\n[ " + target.getNickname() + " ]\n(" + target.getTime() + ")\n댓글 내용 : \n" + target.getContent() );
+                    intent.putExtra(Intent.EXTRA_TEXT, "\n[ " + target.getNickname() + " ]\n(" + target.getTime() + ")\n댓글 내용 : \n" + target.getContent());
                     startActivity(intent);
-                }else if(kakaoIntent == null){
+                } else if (kakaoIntent == null) {
                     Intent intent = new Intent();
                     intent.setData(Uri.parse("market://details?id=com.kakao.talk"));
                     intent.setAction(Intent.ACTION_VIEW);
@@ -353,14 +353,14 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
                 break;
             case R.id.line:
                 Intent lineIntent = getPackageManager().getLaunchIntentForPackage("jp.naver.line.android");
-                if(target != null && lineIntent != null){
+                if (target != null && lineIntent != null) {
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.setPackage("jp.naver.line.android");
                     intent.putExtra(Intent.EXTRA_SUBJECT, "COINT 웹툰 댓글 공유");
-                    intent.putExtra(Intent.EXTRA_TEXT, "[ " + target.getNickname() + " ]\n(" + target.getTime() + ")\n댓글 내용 : \n" + target.getContent() );
+                    intent.putExtra(Intent.EXTRA_TEXT, "[ " + target.getNickname() + " ]\n(" + target.getTime() + ")\n댓글 내용 : \n" + target.getContent());
                     startActivity(intent);
-                }else if(lineIntent == null){
+                } else if (lineIntent == null) {
                     Intent intent = new Intent();
                     intent.setData(Uri.parse("market://details?id=jp.naver.line.android"));
                     intent.setAction(Intent.ACTION_VIEW);

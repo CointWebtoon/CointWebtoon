@@ -3,12 +3,15 @@
     android:id="@+id/favoriteChart"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart"
                 android:layout_width="match_parent"
@@ -20,7 +23,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/pieChart"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"/>
+                android:layout_height="33dp" />
+
             <TextView
                 android:id="@+id/favoriteText"
                 android:layout_width="match_parent"

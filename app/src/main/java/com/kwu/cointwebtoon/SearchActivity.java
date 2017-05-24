@@ -1,5 +1,6 @@
 package com.kwu.cointwebtoon;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -24,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Webtoon;
-import com.nhn.android.naverlogin.OAuthLogin;
 
 import java.util.ArrayList;
 
@@ -47,7 +47,7 @@ public class SearchActivity extends TypeKitActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);//키보드 숨김
-        userInfo = (Application_UserInfo)getApplication();
+        userInfo = (Application_UserInfo) getApplication();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,16 +65,16 @@ public class SearchActivity extends TypeKitActivity
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         View headerview = navigationView.getHeaderView(0);
-        navStatus = (TextView)headerview.findViewById(R.id.nav_status);
-        navHeader = (Button)headerview.findViewById(R.id.nav_login);
-        navHeader.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(userInfo.isLogin()){
+        navStatus = (TextView) headerview.findViewById(R.id.nav_status);
+        navHeader = (Button) headerview.findViewById(R.id.nav_login);
+        navHeader.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (userInfo.isLogin()) {
                     userInfo.onLogOut(SearchActivity.this);
                     Toast.makeText(SearchActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                     navHeader.setBackgroundResource(R.drawable.login);
                     navStatus.setText("로그인 해주세요");
-                }else{
+                } else {
                     startActivity(new Intent(SearchActivity.this, LoginActivity.class));
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -93,7 +93,7 @@ public class SearchActivity extends TypeKitActivity
         searchAdapter = new SearchAdapter(this, new ArrayList<Webtoon>());
         gridView.setAdapter(searchAdapter);
         gridView.setOnItemClickListener(this);
-        fab = (FloatingActionButton)findViewById(R.id.search_floating_home);
+        fab = (FloatingActionButton) findViewById(R.id.search_floating_home);
         fab.setOnClickListener(this);
         onSearch(something);
     }
@@ -201,6 +201,29 @@ public class SearchActivity extends TypeKitActivity
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
+            case R.id.customService:
+                new AlertDialog.Builder(this)
+                        .setTitle("코인트 고객센터")
+                        .setMessage("광운대학교\n" +
+                                "서울특별시 노원구 광운로 20\n" +
+                                "융합SW교육혁신추진단\n(새빛관 404호)\n" +
+                                "Tel : 02-940-5654\nE-Mail : syjin@kw.ac.kr\n")
+                        .setPositiveButton("닫기", null)
+                        .show();
+                break;
+            case R.id.error:
+                new AlertDialog.Builder(this)
+                        .setTitle("오류 신고")
+                        .setMessage("광운대학교\n" +
+                                "컴퓨터 소프트웨어학과\nTEAM COINT 팀장 최은주\n" +
+                                "E-Mail : epcej0020@gmail.com\n")
+                        .setPositiveButton("닫기", null)
+                        .show();
+                break;
+            case R.id.appInfo:
+                AppInfoDialog dialog = new AppInfoDialog(this);
+                dialog.show();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -252,10 +275,10 @@ public class SearchActivity extends TypeKitActivity
 
     protected void onResume() {
         super.onResume();
-        if(userInfo.isLogin()){
+        if (userInfo.isLogin()) {
             navHeader.setBackgroundResource(R.drawable.logout);
-            navStatus.setText(userInfo.getUserName()+"님");
-        }else{
+            navStatus.setText(userInfo.getUserName() + "님");
+        } else {
             navHeader.setBackgroundResource(R.drawable.login);
             navStatus.setText("로그인 해주세요");
         }

@@ -1,17 +1,12 @@
 package com.kwu.cointwebtoon;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 public class CoachAdapter extends PagerAdapter {
     LayoutInflater inflater;
@@ -60,7 +55,7 @@ public class CoachAdapter extends PagerAdapter {
 
         //추가버튼과 각각의 RelativeLayout에 setOnClickListener 설정
 
-       // view.findViewById(R.id.top).setOnClickListener(onClickListener);
+        // view.findViewById(R.id.top).setOnClickListener(onClickListener);
 
         //만들어진 View안에 있는 ImageView, TextView들을 가져옴
         //위에서 inflated 되어 만들어진 view로부터 findViewById()를 해야한다.
@@ -74,8 +69,8 @@ public class CoachAdapter extends PagerAdapter {
         ImageView botPlusBtn = (ImageView)view.findViewById(R.id.addBotBtn);
         botPlusBtn.setTag(Integer.valueOf(position));
 */
-        imageView = (ImageView)view.findViewById(R.id.coach_image);
-        switch (position){
+        imageView = (ImageView) view.findViewById(R.id.coach_image);
+        switch (position) {
             case 0:
                 imageView.setImageResource(R.drawable.coach_main);
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -122,11 +117,11 @@ public class CoachAdapter extends PagerAdapter {
         return v == obj;
     }
 
-    public int getReturnPosition(){
+    public int getReturnPosition() {
         return returnPosition;
     }
 
-    public int getItemPosition(Object object){
+    public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
 }

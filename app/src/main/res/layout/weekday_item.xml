@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <com.kwu.cointwebtoon.Views.CircularView
         android:id="@+id/circular"
         android:layout_width="match_parent"
@@ -11,8 +12,8 @@
         android:focusable="false"
 
         >
-        <com.daimajia.swipe.SwipeLayout
-            xmlns:swipe="http://schemas.android.com/apk/res-auto"
+
+        <com.daimajia.swipe.SwipeLayout xmlns:swipe="http://schemas.android.com/apk/res-auto"
             android:id="@+id/swipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,14 +38,14 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_margin="3dp"
-                    android:focusable="false"
-                    />
+                    android:focusable="false" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MY"
                     android:textColor="@color/D2Gray"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <RelativeLayout
@@ -57,8 +58,8 @@
                 android:paddingBottom="5dp"
                 android:focusable="false"
                 android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                >
+                android:paddingLeft="10dp">
+
                 <ImageView
                     android:id="@+id/iv_thumbnail"
                     android:layout_width="80dp"
@@ -71,6 +72,7 @@
                     android:scaleType="centerCrop"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true" />
+
                 <TextView
                     android:id="@+id/tv_star_score"
                     android:layout_width="wrap_content"
@@ -85,34 +87,33 @@
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="10sp" />
 
-                    <TextView
-                        android:id="@+id/tv_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@id/tv_star_score"
-                        android:layout_above="@id/tv_star_score"
-                        android:ellipsize="marquee"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:singleLine="true"
-                        android:text="Title"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_star_score"
+                    android:layout_above="@id/tv_star_score"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:text="Title"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_update_icon"
-                        android:layout_marginRight="2dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:gravity="center"
-                        android:textSize="9sp"
-                        android:layout_toEndOf="@id/tv_star_score"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:paddingBottom="3dp"
-                        android:paddingTop="3dp"
-                        />
+                <TextView
+                    android:id="@+id/tv_update_icon"
+                    android:layout_marginRight="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="9sp"
+                    android:layout_toEndOf="@id/tv_star_score"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp" />
 
                 <TextView
                     android:id="@+id/tv_toontype_icon"
@@ -127,8 +128,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingBottom="3dp"
-                    android:paddingTop="3dp"
-                    />
+                    android:paddingTop="3dp" />
 
                 <TextView
                     android:id="@+id/tv_artist"
@@ -152,8 +152,8 @@
                     android:textAlignment="center"
                     android:textColor="@color/D2Gray"
                     android:layout_alignLeft="@id/iv_thumbnail"
-                    android:layout_alignTop="@id/iv_thumbnail"
-                    />
+                    android:layout_alignTop="@id/iv_thumbnail" />
+
                 <TextView
                     android:id="@+id/tv_adult_icon"
                     android:layout_width="wrap_content"

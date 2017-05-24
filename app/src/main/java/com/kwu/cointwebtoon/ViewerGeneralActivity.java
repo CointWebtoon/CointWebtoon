@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
+public class ViewerGeneralActivity extends TypeKitActivity implements Observer {
     /**
      * UI Components
      */
@@ -122,8 +122,8 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
         episodeIdTextView = (TextView) findViewById(R.id.GeneralToont_current_pos);
         goodCount = (TextView) findViewById(R.id.GeneralToont_count_txt);
         good = (ImageButton) findViewById(R.id.GeneralToontgood);
-        runButton = (ImageButton)findViewById(R.id.general_run);
-        autoScrollButton = (ImageButton)findViewById(R.id.general_auto_scroll);
+        runButton = (ImageButton) findViewById(R.id.general_run);
+        autoScrollButton = (ImageButton) findViewById(R.id.general_auto_scroll);
 
         //오른쪽 스크롤바
         scrollSection = (RelativeLayout) findViewById(R.id.scrollSection);
@@ -170,17 +170,17 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
     }
 
     private void autoScroll() {
-        layoutManager.smoothScrollToPosition(recycler, new RecyclerView.State() , images.size());
+        layoutManager.smoothScrollToPosition(recycler, new RecyclerView.State(), images.size());
     }
 
-    public void showToolbars(boolean show){
-        if(show){
+    public void showToolbars(boolean show) {
+        if (show) {
             toolbarShowing = true;
             GeneralToonTopToolbar.animate().translationY(0).withLayer();
             GeneralToonBottomToolbar.animate().translationY(0).withLayer();
             scrollSection.animate().translationX(0).withLayer();
             scrollbar.animate().translationX(0).withLayer();
-        }else{
+        } else {
             toolbarShowing = false;
             GeneralToonTopToolbar.animate().translationY((-1) * toolbarHeight).withLayer();
             GeneralToonBottomToolbar.animate().translationY(toolbarHeight).withLayer();
@@ -210,7 +210,7 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
     //---onClick Listener--//
     public void givingStarBtnClick(View v) {
         try {
-            if(!userInfo.isLogin()){
+            if (!userInfo.isLogin()) {
                 new AlertDialog.Builder(this)
                         .setTitle("로그인")
                         .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -229,6 +229,7 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             e.printStackTrace();
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -262,10 +263,10 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             }
             case R.id.general_run: {
                 //정주행 모드
-                if(runMode){
+                if (runMode) {
                     runMode = false;
                     runButton.setImageDrawable(getDrawable(R.drawable.run_inactive));
-                }else{
+                } else {
                     runMode = true;
                     runButton.setImageDrawable(getDrawable(R.drawable.run_active));
                 }
@@ -280,7 +281,7 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             case R.id.GeneralToont_count_txt:
             case R.id.GeneralToontgood: {
                 //하트
-                if(!userInfo.isLogin()){
+                if (!userInfo.isLogin()) {
                     new AlertDialog.Builder(this)
                             .setTitle("로그인")
                             .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -294,18 +295,17 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
                 }
                 SharedPreferences.Editor editor = likePreference.edit();
                 count++;
-                if(count % 2 != 0) {
+                if (count % 2 != 0) {
                     getServerData.likeWebtoon(toonId, "plus");
                     editor.putBoolean(String.valueOf(toonId), true);
                     good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
-                    if(webtoonInstance != null)
+                    if (webtoonInstance != null)
                         goodCount.setText(String.valueOf(webtoonInstance.getLikes() + 1));
-                }
-                else if(count % 2 == 0 && likePreference.getBoolean(String.valueOf(toonId), false)){
+                } else if (count % 2 == 0 && likePreference.getBoolean(String.valueOf(toonId), false)) {
                     getServerData.likeWebtoon(toonId, "minus");
                     editor.putBoolean(String.valueOf(toonId), false);
                     good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
-                    if(webtoonInstance != null)
+                    if (webtoonInstance != null)
                         goodCount.setText(String.valueOf(webtoonInstance.getLikes()));
                 }
                 editor.commit();
@@ -332,7 +332,8 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
                         new GetInstances().execute();
                         getServerData.getImagesFromServer(toonId, episodeId);
                     }
-                }catch (NullPointerException ex){}
+                } catch (NullPointerException ex) {
+                }
                 break;
             }
             case R.id.GeneralToont_next: {
@@ -346,17 +347,19 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
                         new GetInstances().execute();
                         getServerData.getImagesFromServer(toonId, episodeId);
                     }
-                }catch (NullPointerException ex){}
+                } catch (NullPointerException ex) {
+                }
                 break;
             }
         }
     }
 
-    private class RecyclerViewClickListener implements View.OnTouchListener{
+    private class RecyclerViewClickListener implements View.OnTouchListener {
         private float x, y;
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()){
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     x = event.getX();
                     y = event.getY();
@@ -364,7 +367,7 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
                 case MotionEvent.ACTION_UP:
                     float gapX = Math.abs(x - event.getX());
                     float gapY = Math.abs(y - event.getY());
-                    if(gapX < 15 && gapY < 15){
+                    if (gapX < 15 && gapY < 15) {
                         showToolbars(!toolbarShowing);
                         return true;
                     }
@@ -418,11 +421,12 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
 
     private class RecyclerOnScroll extends RecyclerView.OnScrollListener {
         private boolean scrollFirst = true;
+
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             if (images.size() == 0)
                 return;
-            if(scrollFirst){
+            if (scrollFirst) {
                 scrollFirst = false;
                 return;
             }
@@ -440,7 +444,7 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
             if (runMode && runModeOnce) {
                 if (currentItemPosition == images.size()) {
                     runModeOnce = false;
-                    if(episodeId > 0 && (episodeId < manager.maxEpisodeId(toonId))){
+                    if (episodeId > 0 && (episodeId < manager.maxEpisodeId(toonId))) {
                         episodeId += 1;
                         dialog.show();
                         recycler.scrollToPosition(0);
@@ -480,11 +484,12 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
                 } else {
                     good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
                 }
-            }catch (NullPointerException ex){}
+            } catch (NullPointerException ex) {
+            }
         }
     }
 
-    private  class CustomLinearLayoutManager extends LinearLayoutManager{
+    private class CustomLinearLayoutManager extends LinearLayoutManager {
         public CustomLinearLayoutManager(Context context) {
             super(context);
         }

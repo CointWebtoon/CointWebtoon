@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.tsengvn.typekit.Typekit;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
-public class TypeKitActivity extends AppCompatActivity{
+public class TypeKitActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

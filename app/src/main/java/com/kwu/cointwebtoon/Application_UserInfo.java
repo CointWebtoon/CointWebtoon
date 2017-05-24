@@ -10,7 +10,7 @@ import com.nhn.android.naverlogin.OAuthLogin;
 
 public class Application_UserInfo extends Application {
     /**
-     *  Login API Client Info
+     * Login API Client Info
      */
     public static String API_CLIENT_ID = "6pk7u9S1BMLuEF0jnJr4";
     public static String API_CLIENT_SECRET = "FYcZMaLCKp";
@@ -31,14 +31,31 @@ public class Application_UserInfo extends Application {
     /**
      * Getter Methods
      */
-    public String getUserName(){return userName;}
-    public boolean isUserAdult(){return userAdult;}
-    public char getUserGender(){return userGender;}
-    public OAuthLogin getLoginInstance(){return loginInstance;}
-    public String getUserID(){return userID;}
-    public boolean isLogin(){return login;}
+    public String getUserName() {
+        return userName;
+    }
 
-    public void initUserInfo(){
+    public boolean isUserAdult() {
+        return userAdult;
+    }
+
+    public char getUserGender() {
+        return userGender;
+    }
+
+    public OAuthLogin getLoginInstance() {
+        return loginInstance;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public boolean isLogin() {
+        return login;
+    }
+
+    public void initUserInfo() {
         userName = null;
         userAdult = false;
         userGender = 'N';
@@ -54,7 +71,7 @@ public class Application_UserInfo extends Application {
         manager = COINT_SQLiteManager.getInstance(this);
     }
 
-    public void onLogIn(String ID, String name, boolean adult, char gender){
+    public void onLogIn(String ID, String name, boolean adult, char gender) {
         login = true;
         userID = ID;
         userName = name;
@@ -63,7 +80,7 @@ public class Application_UserInfo extends Application {
         Log.i("coint", "onLogIn");
     }
 
-    public void onLogOut(Context mContext){
+    public void onLogOut(Context mContext) {
         SharedPreferences preferences = getSharedPreferences("episode_like", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
@@ -80,6 +97,7 @@ public class Application_UserInfo extends Application {
         loginInstance.logoutAndDeleteToken(mContext);
         manager.initMyStar();
     }
+
     @Override
     public void onLowMemory() {
         super.onLowMemory();

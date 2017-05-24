@@ -106,7 +106,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             }
 
         });
-        userInfo = (Application_UserInfo)getApplication();
+        userInfo = (Application_UserInfo) getApplication();
         flipper.setBackgroundColor(Color.WHITE);
         Intent getIntent = getIntent();
         toonId = getIntent.getIntExtra("id", -1);
@@ -129,19 +129,20 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         try {
             episodeTitleTextView.setText(manager.getEpisodeTitle(toonId, episodeId));
             episodeIdTextView.setText(String.valueOf(episodeId));
-        }catch (Exception ex){}
+        } catch (Exception ex) {
+        }
         this.imageURLs = (ArrayList<String>) o;
         imageIndex = 0;
         if (imageURLs != null) {
-            for(int i = 0 ; i < imageURLs.size(); i++){
+            for (int i = 0; i < imageURLs.size(); i++) {
                 newImageView = new Smart_Cut_ImageView(this);
-                if(i==0){
+                if (i == 0) {
                     Glide.with(this)
                             .load(imageURLs.get(i))
                             .asBitmap()
                             .placeholder(R.drawable.viewer_sc_placeholder)
                             .into(newImageView);
-                }else{
+                } else {
                     Glide.with(this)
                             .load(imageURLs.get(i))
                             .asBitmap()
@@ -160,7 +161,9 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 starTV = (TextView) view.findViewById(R.id.cut_starScore);
                 givingStar = (Button) view.findViewById(R.id.cut_giving_star);
                 new ViewerCutActivity.GetCurrentToonInfo().execute();
-            }catch (NullPointerException ex){ ex.printStackTrace(); }
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
         }
         getServerData.plusHit(toonId);
     }
@@ -199,6 +202,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             }
         }
     }
+
     public int dpToPixel(int dp) {
         float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
@@ -232,7 +236,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
     }
 
     public void HeartBtn(View v) {
-        if(!userInfo.isLogin()){
+        if (!userInfo.isLogin()) {
             new AlertDialog.Builder(this)
                     .setTitle("로그인")
                     .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -246,17 +250,16 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         }
         SharedPreferences.Editor editor = likePreference.edit();
         count++;
-        if(count % 2 != 0) {
+        if (count % 2 != 0) {
             getServerData.likeWebtoon(toonId, "plus");
             editor.putBoolean(String.valueOf(toonId), true);
             good.setImageDrawable(getDrawable(R.drawable.episode_heart_active));
             good_count.setText(String.valueOf(cut_like + 1));
-        }
-        else if(count % 2 == 0 && likePreference.getBoolean(String.valueOf(toonId), false)){
+        } else if (count % 2 == 0 && likePreference.getBoolean(String.valueOf(toonId), false)) {
             getServerData.likeWebtoon(toonId, "minus");
             editor.putBoolean(String.valueOf(toonId), false);
             good.setImageDrawable(getDrawable(R.drawable.episode_heart_inactive));
-            if(cut_like >= 0) {
+            if (cut_like >= 0) {
                 good_count.setText(String.valueOf(cut_like));
             }
         }
@@ -273,18 +276,23 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 comment_intent.putExtra("cutnum", imageIndex + 1);
             }
             startActivity(comment_intent);
-        }catch (NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
+
     public void Previous(View v) {
-        try{
-        if(episodeId > 1){
-            flipper.removeAllViews();
-            imageURLs.clear();
-            episodeId -= 1;
-            getServerData.getImagesFromServer(toonId, episodeId);
-            manager.updateEpisodeRead(toonId, episodeId);
-        }}catch (NullPointerException ex){}
+        try {
+            if (episodeId > 1) {
+                flipper.removeAllViews();
+                imageURLs.clear();
+                episodeId -= 1;
+                getServerData.getImagesFromServer(toonId, episodeId);
+                manager.updateEpisodeRead(toonId, episodeId);
+            }
+        } catch (NullPointerException ex) {
+        }
     }
+
     public void Next(View v) {
         try {
             if (episodeId > 0 && (episodeId < manager.maxEpisodeId(toonId))) {
@@ -294,23 +302,22 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 getServerData.getImagesFromServer(toonId, episodeId);
                 manager.updateEpisodeRead(toonId, episodeId);
             }
-        }catch (NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
+
     public void timerClick(View v) {
         ImageButton my = (ImageButton) v;
-        if(sleepTime == -1) {
+        if (sleepTime == -1) {
             my.setImageDrawable(getDrawable(R.drawable.viewer_2sec));
             sleepTime = 2000;
-        }
-        else if(sleepTime == 2000) {
+        } else if (sleepTime == 2000) {
             my.setImageDrawable(getDrawable(R.drawable.viewer_3sec));
             sleepTime = 3000;
-        }
-        else if(sleepTime == 3000) {
+        } else if (sleepTime == 3000) {
             my.setImageDrawable(getDrawable(R.drawable.viewer_4sec));
             sleepTime = 4000;
-        }
-        else if(sleepTime == 4000) {
+        } else if (sleepTime == 4000) {
             my.setImageDrawable(getDrawable(R.drawable.viewer_defaultset));
             sleepTime = -1;
             try {
@@ -343,6 +350,7 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
         });
         autoThread.start();
     }
+
     private class SwipeDetector implements View.OnTouchListener {
         public final int HORIZONTAL_MIN_DISTANCE = 40;
         private float downX, upX;
@@ -383,9 +391,10 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             return false;
         }
     }
+
     public void cut_givingStarBtnClick(View v) {
         try {
-            if(!userInfo.isLogin()){
+            if (!userInfo.isLogin()) {
                 new AlertDialog.Builder(this)
                         .setTitle("로그인")
                         .setMessage("로그인이 필요한 서비스 입니다. 로그인 하시겠습니까?")
@@ -400,33 +409,40 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             Intent intent = new Intent(this, ViewerStarScoreActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivityForResult(intent, REQUEST_CODE_RATING);
-        }catch (Exception e) { e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_RATING) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_RATING) {
+            if (resultCode == RESULT_OK) {
                 try {
                     float SCORE = data.getExtras().getFloat("SCORE");
-                    if(starTV != null && ratingbar != null){
+                    if (starTV != null && ratingbar != null) {
                         starTV.setText(String.valueOf(SCORE));
                         ratingbar.setMax(10);
-                        ratingbar.setRating((SCORE)/2);
+                        ratingbar.setRating((SCORE) / 2);
                         myStar = SCORE;
                         manager.updateMyStarScore(toonId, episodeId, SCORE);
                         Log.i("coint", String.valueOf(manager.getMyStar(toonId, episodeId)));
                         givingStar.setEnabled(false);
                     }
-                }catch (NullPointerException ex) {ex.printStackTrace();}
+                } catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
+
     @Override
     protected void onDestroy() {
         getServerData.removeObserver(this);
         super.onDestroy();
     }
+
     private class GetCurrentToonInfo extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -435,14 +451,17 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
             myStar = manager.getMyStar(toonId, episodeId);
             return null;
         }
+
         @Override
         protected void onPostExecute(Void aVoid) {
             try {
                 cut_like = webtoon_instance.getLikes();
                 good_count.setText(String.valueOf(cut_like));
-            }catch (NullPointerException ex){ex.printStackTrace();}
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
             super.onPostExecute(aVoid);
-            if(!userInfo.isLogin()){
+            if (!userInfo.isLogin()) {
                 likePreference.edit().putBoolean(String.valueOf(toonId), false).commit();
             }
             if (likePreference.getBoolean(String.valueOf(toonId), false)) {
@@ -462,7 +481,8 @@ public class ViewerCutActivity extends TypeKitActivity implements Observer {
                 mention.setText(episode_instance.getMention());
                 artistTV.setText("작가의 말 (" + webtoon_instance.getArtist() + ")");
                 artistTV.setPaintFlags(artistTV.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-            }catch (NullPointerException ex){}
+            } catch (NullPointerException ex) {
+            }
         }
     }
 }

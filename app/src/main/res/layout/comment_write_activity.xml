@@ -53,9 +53,11 @@
                 android:textSize="15dp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"></RelativeLayout>
+
     <TextView
         android:id="@+id/comment_write_userid"
         android:layout_width="wrap_content"
@@ -67,7 +69,9 @@
         android:textColor="#FFFFFF"
         android:textSize="15dp"
         android:textStyle="bold" />
-    <TextView android:id="@+id/num_of_comment"
+
+    <TextView
+        android:id="@+id/num_of_comment"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/comment_write_toolbar"
@@ -78,7 +82,8 @@
         android:layout_marginLeft="270dp"
         android:layout_alignParentStart="true" />
 
-    <TextView android:id="@+id/comment_max"
+    <TextView
+        android:id="@+id/comment_max"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/comment_write_toolbar"
