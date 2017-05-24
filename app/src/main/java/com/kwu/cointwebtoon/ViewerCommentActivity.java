@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwu.cointwebtoon.DataStructure.Comment;
@@ -37,6 +39,7 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
     private ViewerCommentAdapter adapter;
     private Button allComment, myComment;
     private CointProgressDialog dialog;
+    private TextView noComment;
 
     /**
      * List data
@@ -50,6 +53,7 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
      */
     private Application_UserInfo userInfo;
     private SharedPreferences commentPreference;
+    private Comment target;
     private int id, ep_id, cutNumber;
     private float x, y;
     private int currentList = 0;
@@ -76,6 +80,7 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
         registerForContextMenu(recycler);
         allComment = (Button) findViewById(R.id.allcomment);
         myComment = (Button) findViewById(R.id.mycomment);
+        noComment = (TextView)findViewById(R.id.comment_noComment);
     }
 
     /**
@@ -129,7 +134,7 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
 
     public void onRecyclerItemClick(View v) {
         ViewerCommentAdapter.ViewHolder holder = (ViewerCommentAdapter.ViewHolder) v.getTag();
-        Comment target = (Comment) holder.nicknameTV.getTag();
+        target = (Comment) holder.nicknameTV.getTag();
         v.showContextMenu();
     }
 
@@ -284,7 +289,9 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if (callbackList.size() == 0) {
-                Toast.makeText(ViewerCommentActivity.this, "표시할 댓글이 없습니다.", Toast.LENGTH_LONG).show();
+                noComment.setVisibility(View.VISIBLE);
+            }else{
+                noComment.setVisibility(View.GONE);
             }
             Log.i("coint", String.valueOf(callbackList.size()));
             adapter.changeItem(callbackList, false);
@@ -329,8 +336,36 @@ public class ViewerCommentActivity extends TypeKitActivity implements Observer, 
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.kakao:
+                Intent kakaoIntent = getPackageManager().getLaunchIntentForPackage("com.kakao.talk");
+                if(target != null && kakaoIntent != null){
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.setPackage("com.kakao.talk");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "COINT 웹툰 댓글 공유");
+                    intent.putExtra(Intent.EXTRA_TEXT, "\n[ " + target.getNickname() + " ]\n(" + target.getTime() + ")\n댓글 내용 : \n" + target.getContent() );
+                    startActivity(intent);
+                }else if(kakaoIntent == null){
+                    Intent intent = new Intent();
+                    intent.setData(Uri.parse("market://details?id=com.kakao.talk"));
+                    intent.setAction(Intent.ACTION_VIEW);
+                    startActivity(intent);
+                }
                 break;
             case R.id.line:
+                Intent lineIntent = getPackageManager().getLaunchIntentForPackage("jp.naver.line.android");
+                if(target != null && lineIntent != null){
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.setPackage("jp.naver.line.android");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "COINT 웹툰 댓글 공유");
+                    intent.putExtra(Intent.EXTRA_TEXT, "[ " + target.getNickname() + " ]\n(" + target.getTime() + ")\n댓글 내용 : \n" + target.getContent() );
+                    startActivity(intent);
+                }else if(lineIntent == null){
+                    Intent intent = new Intent();
+                    intent.setData(Uri.parse("market://details?id=jp.naver.line.android"));
+                    intent.setAction(Intent.ACTION_VIEW);
+                    startActivity(intent);
+                }
                 break;
         }
         return super.onContextItemSelected(item);

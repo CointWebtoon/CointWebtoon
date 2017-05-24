@@ -198,7 +198,11 @@ public class MainActivity extends TypeKitActivity
         myToonAdapter8 = new Main_MyToonAdapter(this, 0);
         recyclerView.setAdapter(myToonAdapter8);
 
-        onCoachMark();
+        sharedPreferences = getSharedPreferences("isFirstLaunch", MODE_PRIVATE);
+
+        if(sharedPreferences.getBoolean("first", true)){
+            onCoachMark();
+        }
     }
 
 
@@ -207,7 +211,7 @@ public class MainActivity extends TypeKitActivity
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setContentView(R.layout.main_coachmark);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(false);
 
         //for dismissing anywhere you touch
         View masterView = dialog.findViewById(R.id.coach);
@@ -215,7 +219,7 @@ public class MainActivity extends TypeKitActivity
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                /*preferences.edit().putBoolean("COACH_MARK_MAIN_SHOWN", true).commit();*/
+                sharedPreferences.edit().putBoolean("first", false).commit();
             }
         });
         dialog.show();

@@ -71,7 +71,7 @@
                     android:background="@color/D2Dark"
                     android:onClick="episodeToolbarClick"
                     android:scaleType="fitXY"
-                    android:src="@drawable/my_release" />
+                    android:src="@drawable/my_star_unactive" />
 
                 <TextView
                     android:id="@+id/episode_like_text"

@@ -175,11 +175,11 @@ public class ViewerGeneralActivity extends TypeKitActivity implements Observer{
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            recycler.scrollBy(0, 1);
+                            recycler.scrollBy(0, 10);
                         }
                     });
                     try {
-                        Thread.sleep(2);
+                        Thread.sleep(10);
                     } catch (InterruptedException e) {
                         break;
                     }

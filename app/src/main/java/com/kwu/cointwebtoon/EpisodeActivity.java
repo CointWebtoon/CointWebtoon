@@ -101,6 +101,12 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
         progressDialog.show();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new GetCurrentToonInfo().execute();
+    }
+
     private void initData() {
         userInfo = (Application_UserInfo)getApplication();
         likePreference = getSharedPreferences("episode_like", MODE_PRIVATE);
@@ -234,6 +240,10 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             progressDialog.dismiss();
         } catch (Exception e) {
         }
+        try{
+            timeOutThread.interrupt();
+        }catch (Exception e){
+        }
         getServerData.removeObserver(this);
         super.onDestroy();
     }
@@ -266,6 +276,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent generalIntent = new Intent(this, ViewerGeneralActivity.class);
                 generalIntent.putExtra("id", target.getId());
                 generalIntent.putExtra("ep_id", target.getEpisode_id());
+                generalIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(generalIntent);
                 break;
             }
@@ -274,6 +285,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent cutIntent = new Intent(this, ViewerCutActivity.class);
                 cutIntent.putExtra("id", target.getId());
                 cutIntent.putExtra("ep_id", target.getEpisode_id());
+                cutIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(cutIntent);
                 break;
             }
@@ -282,6 +294,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent smartIntent = new Intent(this, ViewerSmartActivity.class);
                 smartIntent.putExtra("id", target.getId());
                 smartIntent.putExtra("ep_id", target.getEpisode_id());
+                smartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(smartIntent);
                 break;
             }
@@ -290,6 +303,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 Intent motionIntent = new Intent(this, ViewerMotionActivity.class);
                 motionIntent.putExtra("id", target.getId());
                 motionIntent.putExtra("ep_id", target.getEpisode_id());
+                motionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(motionIntent);
                 break;
             }
@@ -393,6 +407,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent generalIntent = new Intent(this, ViewerGeneralActivity.class);
                         generalIntent.putExtra("id", currentToonId);
                         generalIntent.putExtra("ep_id", 1);
+                        generalIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(generalIntent);
                         break;
                     }
@@ -401,6 +416,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent cutIntent = new Intent(this, ViewerCutActivity.class);
                         cutIntent.putExtra("id", currentToonId);
                         cutIntent.putExtra("ep_id", 1);
+                        cutIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(cutIntent);
                         break;
                     }
@@ -409,6 +425,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent smartIntent = new Intent(this, ViewerSmartActivity.class);
                         smartIntent.putExtra("id", currentToonId);
                         smartIntent.putExtra("ep_id", 1);
+                        smartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(smartIntent);
                         break;
                     }
@@ -417,6 +434,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                         Intent motionIntent = new Intent(this, ViewerMotionActivity.class);
                         motionIntent.putExtra("id", currentToonId);
                         motionIntent.putExtra("ep_id", 1);
+                        motionIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(motionIntent);
                         break;
                     }
@@ -431,7 +449,8 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 break;
             case R.id.episode_floating_home:
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finishAffinity();
                 break;
@@ -472,10 +491,10 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
                 String result = manager.updateMyWebtoon(String.valueOf(currentWebtoon.getId()));
                 if (result.equals("마이 웹툰 설정")) {
                     currentWebtoon.setIs_mine(true);
-                    myImageButton.setImageDrawable(getDrawable(R.drawable.my_set));
+                    myImageButton.setImageDrawable(getDrawable(R.drawable.my_star_active));
                 } else if (result.equals("마이 웹툰 해제")) {
                     currentWebtoon.setIs_mine(false);
-                    myImageButton.setImageDrawable(getDrawable(R.drawable.my_release));
+                    myImageButton.setImageDrawable(getDrawable(R.drawable.my_star_unactive));
                 }
                 Toast.makeText(this, currentWebtoon.getTitle() + " " + result, Toast.LENGTH_SHORT).show();
                 break;
@@ -552,7 +571,7 @@ public class EpisodeActivity extends TypeKitActivity implements Observer {
             super.onPostExecute(aVoid);
             title.setText(currentWebtoon.getTitle());
             if (currentWebtoon.isMine()) {
-                myImageButton.setImageDrawable(getDrawable(R.drawable.my_set));
+                myImageButton.setImageDrawable(getDrawable(R.drawable.my_star_active));
             }
             if(!userInfo.isLogin()){
                 likePreference.edit().putBoolean(String.valueOf(currentToonId), false).commit();

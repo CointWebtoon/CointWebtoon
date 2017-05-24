@@ -22,13 +22,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 
 import static android.R.attr.id;
 
 public class GetServerData extends Observable{
-    private static ArrayList<Observer> observers = new ArrayList<>();
+    private static HashSet<Observer> observers = new HashSet<>();
     private static COINT_SQLiteManager coint_sqLiteManager = null;
 
     GetServerData(Context context) {
@@ -459,9 +460,9 @@ public class GetServerData extends Observable{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            for(int  i  = 0 ; i < observers.size(); i++){
-                if(!(observers.get(i) instanceof ViewerCommentActivity)){
-                    observers.get(i).update(GetServerData.this, imageUrls);
+            for(Observer observer : observers){
+                if(!(observer instanceof ViewerCommentActivity)){
+                    observer.update(GetServerData.this, imageUrls);
                 }
             }
         }
@@ -545,9 +546,9 @@ public class GetServerData extends Observable{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            for(int  i  = 0 ; i < observers.size(); i++){
-                if(observers.get(i) instanceof ViewerCommentActivity){
-                    observers.get(i).update(GetServerData.this, comments);
+            for(Observer observer : observers){
+                if(observer instanceof ViewerCommentActivity){
+                    observer.update(GetServerData.this, comments);
                 }
             }
         }

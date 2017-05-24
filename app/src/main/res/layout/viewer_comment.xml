@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/background_bricks">
+    android:background="@drawable/week_background">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/comment_toolbar"
@@ -55,6 +54,8 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
+        android:id="@+id/comment_subtoolbar"
+        android:layout_below="@id/comment_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -81,7 +82,15 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/comment_subtoolbar"
         android:id="@+id/comment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</LinearLayout>
+    <TextView
+        android:id="@+id/comment_noComment"
+        android:layout_centerInParent="true"
+        android:text="표시할 댓글이 없습니다."
+        android:textSize="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

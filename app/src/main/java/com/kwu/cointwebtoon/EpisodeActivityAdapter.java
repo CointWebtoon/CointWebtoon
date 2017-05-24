@@ -71,10 +71,12 @@ public class EpisodeActivityAdapter extends RecyclerView.Adapter {
 
     public void addEpisodes(final ArrayList<Episode> items) {
         final EpisodeActivityAdapter adapter = this;
+        final ArrayList<Episode> tempEpisodes = new ArrayList<>();
+        tempEpisodes.addAll(items);
         new Thread(){
             public void run(){
                 TypeKitActivity activity = (TypeKitActivity)mContext;
-                for(Episode ep : items){
+                for(Episode ep : tempEpisodes){
                     if(!episodes.contains(ep))
                         episodes.add(ep);
                 }

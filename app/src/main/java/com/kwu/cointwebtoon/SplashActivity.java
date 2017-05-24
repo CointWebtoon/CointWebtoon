@@ -20,8 +20,23 @@ public class SplashActivity extends AppCompatActivity implements Observer {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.splash_activity);
         getServerData = new GetServerData(this);
-        getServerData.registerObserver(this);
-        getServerData.getWebtoonFromServer();
+        if(getSharedPreferences("isFirstLaunch", MODE_PRIVATE).getBoolean("first", true)){
+            //처음 실행
+            getServerData.registerObserver(this);
+            getServerData.getWebtoonFromServer();
+        }else{
+            //두 번째 이상 실행
+            getServerData.getWebtoonFromServer();
+            new Handler().postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                /* 메뉴액티비티를 실행하고 로딩화면을 죽인다.*/
+                    Intent mainIntent = new Intent(SplashActivity.this,MainActivity.class);
+                    startActivity(mainIntent);
+                    SplashActivity.this.finish();
+                }
+            }, 2000);
+        }
     }
 
     @Override
@@ -32,7 +47,7 @@ public class SplashActivity extends AppCompatActivity implements Observer {
 
     @Override
     protected void onDestroy() {
-        getServerData.removeObserver(this);
+        try{getServerData.removeObserver(this);}catch (Exception e){}
         super.onDestroy();
     }
 }
