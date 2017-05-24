@@ -3,43 +3,50 @@
     android:id="@+id/favoriteChart"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pieChart"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="340dp"
-        android:layout_marginTop="20dp" />
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="340dp"
+                android:layout_marginTop="20dp" />
 
-    <RelativeLayout
-        android:background="@drawable/view_button_state_confirm"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/pieChart"
-        android:layout_width="match_parent"
-        android:layout_height="33dp"/>
-    <TextView
-        android:id="@+id/favoriteText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pieChart"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:text="  이런 웹툰은 어떠세요?"
-        android:textSize="20dp" />
+            <RelativeLayout
+                android:background="@drawable/view_button_state_confirm"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"/>
+            <TextView
+                android:id="@+id/favoriteText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pieChart"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:text="  이런 웹툰은 어떠세요?"
+                android:textSize="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/favoriteText"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:onClick="moveToGenre"
-        android:text="장르별 웹툰 GO"
-        android:textColor="@color/D2Dark"
-        android:textSize="13dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/favoriteText"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:onClick="moveToGenre"
+                android:text="장르별 웹툰 GO"
+                android:textColor="@color/D2Dark"
+                android:textSize="13dp" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/favoriteViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_below="@+id/favoriteText" />
+            <android.support.v4.view.ViewPager
+                android:id="@+id/favoriteViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_below="@+id/favoriteText" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>
