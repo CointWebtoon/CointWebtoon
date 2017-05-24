@@ -134,8 +134,10 @@ public class SearchAdapter extends BaseAdapter {
                     ex.printStackTrace();
                 }
                 if(result.equals("마이 웹툰 설정")){
+                    resultQuery.get(position).setIs_mine(true);
                     addWebtoon.setImageResource(R.drawable.my_star_active);
                 }else{
+                    resultQuery.get(position).setIs_mine(false);
                     addWebtoon.setImageResource(R.drawable.my_star_unactive);
                 }
             }
