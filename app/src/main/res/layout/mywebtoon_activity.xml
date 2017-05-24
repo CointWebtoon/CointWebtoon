@@ -8,6 +8,13 @@
     android:orientation="vertical"
     android:weightSum="1">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emptyMy"
+        android:layout_marginTop="180dp"
+        android:textAlignment="center"
+        android:layout_gravity="center"/>
 
     <ListView
         android:id="@+id/searchView"
