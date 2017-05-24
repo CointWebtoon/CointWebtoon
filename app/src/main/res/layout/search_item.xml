@@ -74,7 +74,7 @@
                 android:src="@drawable/main_addmark" />
 
             <TextView
-                android:layout_width="24dp"
+                android:layout_width="25dp"
                 android:layout_height="15dp"
                 android:id="@+id/search_adult"
                 android:textColor="#ffffff"
@@ -85,7 +85,7 @@
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:layout_width="24dp"
+                android:layout_width="25dp"
                 android:layout_height="15dp"
                 android:id="@+id/search_cuttoon"
                 android:textColor="@color/D2Light"
@@ -96,7 +96,7 @@
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:layout_width="24dp"
+                android:layout_width="25dp"
                 android:layout_height="15dp"
                 android:id="@+id/search_update"
                 android:gravity="center"

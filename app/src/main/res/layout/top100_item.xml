@@ -78,7 +78,7 @@
                 <TextView
                     android:layout_gravity="bottom"
                     android:id="@+id/cuttoon"
-                    android:layout_width="24dp"
+                    android:layout_width="26dp"
                     android:layout_height="15dp"
                     android:gravity="center"
                     android:textAlignment="center"
@@ -87,7 +87,7 @@
                 <TextView
                     android:layout_gravity="bottom"
                     android:id="@+id/adult"
-                    android:layout_width="24dp"
+                    android:layout_width="26dp"
                     android:layout_height="15dp"
                     android:gravity="center"
                     android:textAlignment="center"

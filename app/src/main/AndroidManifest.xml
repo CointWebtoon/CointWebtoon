@@ -18,6 +18,11 @@
             android:theme="@style/MainActivity"/>
 
         <activity
+            android:name=".CoachActivity"
+            android:theme="@style/MainActivity"
+            android:label="Coach Activity"/>
+
+        <activity
             android:name=".SearchActivity"
             android:theme="@style/SearchActivity"
             android:label="Search List"/>

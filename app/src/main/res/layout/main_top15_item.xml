@@ -85,7 +85,7 @@
 
         <TextView
             android:id="@+id/adultTop"
-            android:layout_width="24dp"
+            android:layout_width="26dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankTop"
             android:layout_marginLeft="5dp"
@@ -97,7 +97,7 @@
 
         <TextView
             android:id="@+id/cuttonTop"
-            android:layout_width="24dp"
+            android:layout_width="26dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankTop"
             android:layout_marginLeft="5dp"
@@ -201,7 +201,7 @@
 
         <TextView
             android:id="@+id/adultMid"
-            android:layout_width="24dp"
+            android:layout_width="26dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankMiddle"
             android:layout_marginLeft="5dp"
@@ -213,7 +213,7 @@
 
         <TextView
             android:id="@+id/cuttonMid"
-            android:layout_width="24dp"
+            android:layout_width="26dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankMiddle"
             android:layout_marginLeft="5dp"
@@ -308,7 +308,7 @@
 
         <TextView
             android:id="@+id/adultBot"
-            android:layout_width="24dp"
+            android:layout_width="26dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankBottom"
             android:layout_marginLeft="5dp"
@@ -320,7 +320,7 @@
 
         <TextView
             android:id="@+id/cuttonBot"
-            android:layout_width="24dp"
+            android:layout_width="26dp"
             android:layout_height="15dp"
             android:layout_alignBaseline="@+id/rankBottom"
             android:layout_marginLeft="5dp"
