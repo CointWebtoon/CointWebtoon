@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,6 +94,7 @@ public class ArtistActivityAdapter extends RecyclerView.Adapter<ArtistActivityAd
         binding.tvTitle.setText(dataSet.get(position).getTitle());
         binding.tvTitle.setSelected(true);
         binding.tvStarScore.setText("★" + String.valueOf(dataSet.get(position).getStarScore()));
+        binding.tvArtist2.setText(dataSet.get(position).getArtist());
         Glide.with(mContext)
                 .load(dataSet.get(position).getThumbURL())
                 .centerCrop()
@@ -109,6 +111,56 @@ public class ArtistActivityAdapter extends RecyclerView.Adapter<ArtistActivityAd
             binding.btnMy.setBackgroundResource(R.drawable.my_star_unactive);
         }
 
+        //Update상태 아이콘 표시
+        if(dataSet.get(position).isUpdated() == 0){
+            binding.tvUpdateIcon.setVisibility(View.GONE);
+        }
+        else if(dataSet.get(position).isUpdated() == 1){
+            //Updated
+            setToonIcon(binding.tvUpdateIcon, R.drawable.week_icon_update, "UP", "#fc6c00");
+        }
+        else if(dataSet.get(position).isUpdated() == 2){
+            //Dormant
+            setToonIcon(binding.tvUpdateIcon, R.drawable.week_icon_dormant, "휴재", "#ffffff");
+        }
+
+        //성인 여부 표시
+        if(dataSet.get(position).isAdult()){
+            setToonIcon(binding.tvAdultIcon, R.drawable.main_icon_adult, "성인", "#ffffff");
+        }
+        else{
+            binding.tvAdultIcon.setVisibility(View.GONE);
+        }
+
+        //Webtoon type 아이콘 표시
+        switch (dataSet.get(position).getToonType()){
+            case 'C':
+            {
+                //컷툰
+                setToonIcon(binding.tvToontypeIcon, R.drawable.week_icon_cuttoon, "컷툰", "#28dcbe");
+                break;
+            }
+            case 'M':
+            {
+                //모션툰
+                setToonIcon(binding.tvToontypeIcon, R.drawable.week_icon_motiontoon, "모션", "#6d1daf");
+                break;
+            }
+            case 'S':
+            {
+                //스마트툰
+                setToonIcon(binding.tvToontypeIcon, R.drawable.week_icon_smarttoon, "스마트", "#0050b4");
+                break;
+            }
+            case  'G':
+            default:
+            {
+                //일반
+                binding.tvToontypeIcon.setVisibility(View.GONE);
+                break;
+            }
+
+        }
         //Item onClick설정
         binding.itemWebtoon.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -157,4 +209,11 @@ public class ArtistActivityAdapter extends RecyclerView.Adapter<ArtistActivityAd
     public HashMap<String, Integer> getMapIndex() {
         return this.mapIndex;
     }
+    public void setToonIcon(TextView icon, int resId, String text, String textColorString){
+        icon.setVisibility(View.VISIBLE);
+        icon.setBackgroundResource(resId);
+        icon.setText(text);
+        icon.setTextColor(Color.parseColor(textColorString));
+    }
+
 }
