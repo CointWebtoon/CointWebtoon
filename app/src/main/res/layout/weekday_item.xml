@@ -59,6 +59,18 @@
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
                 >
+                <ImageView
+                    android:id="@+id/iv_thumbnail"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="centerCrop"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
                 <TextView
                     android:id="@+id/tv_star_score"
                     android:layout_width="wrap_content"
@@ -128,18 +140,7 @@
                     android:text="Artist"
                     android:textSize="12sp" />
 
-                <ImageView
-                    android:id="@+id/iv_thumbnail"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
 
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:scaleType="centerCrop"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true" />
                 <TextView
                     android:id="@+id/tv_my"
                     android:layout_width="25dp"
